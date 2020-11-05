@@ -79,7 +79,7 @@ public class FileController {
 				.body(file.getData());
 	}
 	
-	@GetMapping("/load")
+	@GetMapping("/load/{id}")
 	public ResponseEntity<byte[]> getFile(@PathVariable String id) {
 		File file = fileService.getFile(id);
 
