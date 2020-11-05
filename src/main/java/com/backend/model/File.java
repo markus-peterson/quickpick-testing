@@ -7,6 +7,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class File {
 	private String type;
 
 	@Lob
+	@Type(type = "org.hibernate.type.ImageType")
 	private byte[] data;
 
 
