@@ -37,4 +37,11 @@ public class User {
 	
 	private String profileFileId;
 	private String resumeFileId;
+	
+	public void setProfileFileId(String profileFileId) {
+		this.profileFileId = profileFileId;
+	}
+	public void setResumeFileId(String resumeFileId) {
+		this.resumeFileId = resumeFileId;
+	}
 }
