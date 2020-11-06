@@ -103,8 +103,8 @@ public class FileController {
 	}
 	
 	@GetMapping("/getFileName/{id}")
-	public UploadFileResponse getFileName(@PathVariable String id) {
+	public String getFileName(@PathVariable String id) {
 		File file = fileService.getFile(id);
-		return new UploadFileResponse(file.getName());
+		return file.getName();
 	}
 }
