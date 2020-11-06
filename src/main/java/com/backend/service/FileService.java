@@ -8,17 +8,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.dao.FileDao;
-import com.backend.dao.UserDao;
 import com.backend.model.File;
-import com.backend.model.User;
 
 @Service
 public class FileService {
 
 	@Autowired
 	private FileDao fileDao;
-	@Autowired
-	private UserDao userDao;
 
 	public File storeProfile(String username, MultipartFile file) throws IOException {
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
