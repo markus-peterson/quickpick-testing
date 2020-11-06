@@ -1,6 +1,5 @@
 package com.backend.controller;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -94,13 +93,13 @@ public class FileController {
 	}
 	
 	@GetMapping("/load/{id}")
-	public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+	public ResponseEntity<Resource> getFile(@PathVariable String id) {
 		File file = fileService.getFile(id);
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(file.getType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-				.body(Base64.encodeBase64(file.getData(), false));
+				.body(new ByteArrayResource(file.getData()));
 	}
 	
 	@GetMapping("/getFileName/{id}")
