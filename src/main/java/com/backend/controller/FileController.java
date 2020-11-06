@@ -101,4 +101,10 @@ public class FileController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
 				.body(new ByteArrayResource(file.getData()));
 	}
+	
+	@GetMapping("/getFileName/{id}")
+	public UploadFileResponse getFileName(@PathVariable String id) {
+		File file = fileService.getFile(id);
+		return new UploadFileResponse(file.getName());
+	}
 }
