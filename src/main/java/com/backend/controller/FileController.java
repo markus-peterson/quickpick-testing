@@ -93,13 +93,13 @@ public class FileController {
 	}
 	
 	@GetMapping("/load/{id}")
-	public ResponseEntity<Resource> getFile(@PathVariable String id) {
+	public ResponseEntity<byte[]> getFile(@PathVariable String id) {
 		File file = fileService.getFile(id);
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(file.getType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-				.body(new ByteArrayResource(file.getData()));
+				.body(file.getData());
 	}
 	
 	@GetMapping("/getFileName/{id}")
