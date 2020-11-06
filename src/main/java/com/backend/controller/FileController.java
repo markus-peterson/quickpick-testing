@@ -58,7 +58,7 @@ public class FileController {
 		try {
 			File newFile = fileService.storeResume(username, file);
 			User user = userDao.findByusername(username);
-			user.setProfileFileId(newFile.getId());
+			user.setResumeFileId(newFile.getId());
 			userDao.save(user);
 			String fileLoadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 	                .path("/load/")
