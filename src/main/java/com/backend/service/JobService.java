@@ -9,15 +9,14 @@ import com.backend.dao.JobDao;
 import com.backend.model.Job;
 
 @Service
-public class JobService implements JobServiceInterface{
+public class JobService implements JobServiceInterface {
 	
 	@Autowired
 	private JobDao jobDao;
 
 	@Override
-	public String addNewJob(Job jobDetails ) {
-		jobDao.save(jobDetails);
-		return "Job Added";
+	public Job addNewJob(Job jobDetails ) {
+		return jobDao.save(jobDetails);
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class JobService implements JobServiceInterface{
 	
 	
 	@Override
-	public List<Job> getJobsByFilter(Job jobDetails ) {
+	public List<Job> getJobsByFilter(Job jobDetails) {
 		
 //		if(uniqueId != null) { 
 //			Job result = jobDao.findByUniqueId(uniqueId);

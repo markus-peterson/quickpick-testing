@@ -35,6 +35,6 @@ public class FileService {
 	}
 
 	public File getFile(String id) {
-		return fileDao.findById(id);
+		return fileDao.findById(id).orElse(null);
 	}
 }

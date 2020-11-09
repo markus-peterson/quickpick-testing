@@ -31,7 +31,7 @@ public class UserService implements UserServiceInterface {
 		for(User current : userDao.findAll()) {
 			if(current.getUsername().equals(username)) {
 				target = current;
-//				System.out.println(current.getProfile() != null ? current.getProfile().getName() : current.getProfile());
+				//System.out.println(current.getProfile() != null ? current.getProfile().getName() : current.getProfile());
 			}
 		}
 		return target;
@@ -59,7 +59,7 @@ public class UserService implements UserServiceInterface {
 	}
 	
 	public String checkIfUsernameExists(String username) {
-		if(username != null) { 
+		if(username != null) {
 			User result = userDao.findByusername(username);
 			if(result!= null) {
 				return "Username not available";
@@ -69,5 +69,4 @@ public class UserService implements UserServiceInterface {
 		}
 		return "Something went wrong";
 	}
-
 }

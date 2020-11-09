@@ -16,18 +16,11 @@ import com.backend.service.JobService;
 
 @RestController
 @RequestMapping("/job")
-//@CrossOrigin(origins = "https://quick-pick-job.herokuapp.com")
 @CrossOrigin(origins = "*")
 public class JobController {
 
 	@Autowired
 	JobService jobService;
-	
-	@PostMapping("/addNewJob")
-	public String addNewJob(@RequestBody Job jobDetails) {
-		jobService.addNewJob(jobDetails);
-		return "Saved Successfully ";
-	}
 	
 	@GetMapping("/getAllJobs")
 	public List<Job> getUsers(){
@@ -37,6 +30,16 @@ public class JobController {
 	@GetMapping("/getJob/{uniqueId}")
 	public Job getUser(@PathVariable String uniqueId) {
 		return jobService.getJobByID(uniqueId);
+	}
+
+	@PostMapping("/createJob")
+	public String createJob(@RequestBody Job jobDetails) {
+		try {
+			jobService.addNewJob(jobDetails);
+			return "Job Created Successfully";
+		} catch (Exception e) {
+			return "Could Not Create Job";
+		}
 	}
 	
 }

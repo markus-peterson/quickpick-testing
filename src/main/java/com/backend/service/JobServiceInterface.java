@@ -6,7 +6,7 @@ import com.backend.model.Job;
 
 public interface JobServiceInterface {
 
-	public String addNewJob(Job job);
+	public Job addNewJob(Job job);
 	
 	public List<Job> getJobs();
 	

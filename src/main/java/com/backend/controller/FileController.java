@@ -1,8 +1,6 @@
 package com.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.backend.dao.FileDao;
 import com.backend.dao.UserDao;
 import com.backend.message.UploadFileResponse;
 import com.backend.service.FileService;
@@ -28,6 +27,8 @@ public class FileController {
 	@Autowired
 	private FileService fileService;
 	@Autowired
+	private FileDao fileDao;
+	@Autowired
 	private UserDao userDao;
 
 	@PostMapping("/uploadProfile/{username}")
@@ -36,6 +37,8 @@ public class FileController {
 		try {
 			File newFile = fileService.storeProfile(username, file);
 			User user = userDao.findByusername(username);
+			if(user.getProfileFileId() != null)
+				fileDao.deleteById(user.getProfileFileId());
 			user.setProfileFileId(newFile.getId());
 			userDao.save(user);
 			String fileLoadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -43,12 +46,9 @@ public class FileController {
 	                .path(newFile.getId())
 	                .toUriString();
 			return new UploadFileResponse(newFile.getName(), fileLoadUri, file.getContentType(), file.getSize());
-//			message = "Uploaded the file successfully: " + file.getOriginalFilename();
-//			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 		} catch (Exception e) {
 			message = "Could not upload the file: " + file.getOriginalFilename() + "!";
 			return new UploadFileResponse(message);
-//			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 		}
 	}
 
@@ -58,6 +58,8 @@ public class FileController {
 		try {
 			File newFile = fileService.storeResume(username, file);
 			User user = userDao.findByusername(username);
+			if(user.getResumeFileId() != null)
+				fileDao.deleteById(user.getResumeFileId());
 			user.setResumeFileId(newFile.getId());
 			userDao.save(user);
 			String fileLoadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -65,12 +67,9 @@ public class FileController {
 	                .path(newFile.getId())
 	                .toUriString();
 			return new UploadFileResponse(newFile.getName(), fileLoadUri, file.getContentType(), file.getSize());
-//			message = "Uploaded the file successfully: " + file.getOriginalFilename();
-//			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 		} catch (Exception e) {
 			message = "Could not upload the file: " + file.getOriginalFilename() + "!";
 			return new UploadFileResponse(message);
-//			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 		}
 	}
 	
