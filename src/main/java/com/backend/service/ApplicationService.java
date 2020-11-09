@@ -49,4 +49,17 @@ public class ApplicationService {
 		}
 		return null;
 	}
+	
+	public String checkIfApplied(Application app) {
+		if(app != null) {
+			List<Application> appList = appDao.findAllByJobID(app.getJobID());
+			for(Application apps : appList) {
+				if(apps.getUsername().equals(app.getUsername())) {
+					return apps.getStatus();
+				}
+			}
+			return null;
+		}
+		return null;
+	}
 }

@@ -46,5 +46,10 @@ public class ApplicationController {
 	public List<Application> getApplied(@PathVariable String username) {
 		return appService.getUserApps(username);
 	}
+	
+	@PostMapping("/checkIfApplied")
+	public String checkIfUsernameExists(@RequestBody Application app){
+		return appService.checkIfApplied(app);
+	}
 }
 
