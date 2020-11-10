@@ -22,7 +22,7 @@ import com.backend.model.File;
 import com.backend.model.User;
 
 @RestController
-@CrossOrigin(origins = "*") // local
+@CrossOrigin(origins = "https://quickpick-front.herokuapp.com/") 
 public class FileController {
 	@Autowired
 	private FileService fileService;
