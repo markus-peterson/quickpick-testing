@@ -29,6 +29,6 @@ public class SpringSecurityConfigurationBasicAuth extends WebSecurityConfigurerA
 	  public void configure(WebSecurity web) throws Exception {
 	    web
 	      .ignoring()
-	         .antMatchers("/resources/**"); // #3
+	         .antMatchers("/load/**"); // #3
 	  }
 }
