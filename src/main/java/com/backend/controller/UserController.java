@@ -34,7 +34,7 @@ public class UserController {
 	@PostMapping("/register")
 	public String registerUser(@RequestBody User user) {
 		userService.registerUser(user);
-		return "Saved Successfully ";
+		return "Saved Successfully";
 	}
 	
 	@GetMapping("/getUsers")
@@ -49,7 +49,11 @@ public class UserController {
 	
 	@GetMapping("/checkUsername/{username}")
 	public String checkIfUsernameExists(@PathVariable String username){
-		return userService.checkIfUsernameExists(username);
+		if(userService.checkIfUsernameExists(username).contains("not")) {
+			return "registered";
+		}else {
+			return "new";
+		}
 	}
 	
 	@PostMapping("/updateUser/{username}")
