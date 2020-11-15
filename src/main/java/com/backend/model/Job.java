@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +25,10 @@ public class Job {
 	private String dateAdded;
 	private String hasExpired;
 	private String jobBoard;
+	
+	@Lob
 	private String jobDescription;
+	
 	private String jobTitle;
 	private String jobType;
 	private String location;
