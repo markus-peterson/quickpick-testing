@@ -9,6 +9,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import TextField from '@material-ui/core/TextField';
 import output from '../api/connections';
 import '../css/RegisterComponent.css'
+import '../css/Profile.css'
 
 import AuthenticationService from '../api/AuthenticationService';
 
@@ -126,7 +127,7 @@ class ProfileComponent extends Component {
 							}
 							{isUserLoggedIn &&
 								<Grid container>
-									<Grid item sm>
+									<Grid item sm className="profile-image-section">
 											{this.state.profile_loaded && (
 												<img src={output + '/load/' + this.state.userObj.profileFileId} alt={this.state.userObj.username + "-profile-image"} style={style.image}/>
 											)}
