@@ -21,12 +21,21 @@
 
 .dash-inner {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content-sections{
+    /* max-width: fit-content; */
+    display: flex;
+    flex-direction: row;
     justify-content: center;
 }
+
 .content-container{
     overflow-y: scroll;
     position: sticky;
-    top: 90px;
+    top: 0px;
     height: 91vh;
     margin-left: 0;
 }
@@ -50,11 +59,11 @@
 .job-list {
     margin: 0px 20px 0px 20px;
     width: 400px;
-    padding: 20px 0px;
+    padding: 20px 0;
     overflow-y: scroll;
     position: sticky;
-    top: 90px;
-    height: 87vh;
+    top: 0px;
+    height: 81vh;
     margin-left: 0;
 }
 .job-list::-webkit-scrollbar {
@@ -121,7 +130,7 @@
 
 
 #searchBar {
-    width: 100%;
+    width: fit-content;
     height: 40px;
     background-color: rgb(240, 240, 240);
     display: flex;
@@ -129,9 +138,9 @@
     align-items: center;
     border-radius: 4px;
     padding: 10px 0px;
-    position: fixed;
-    top: 0;
-    z-index: 100;
+    position: static;
+    margin-bottom: 0px;
+    width: 400px;
 }
 
 #searchBar:hover {

@@ -27,9 +27,14 @@ class Dashboard extends Component {
             <div className="dash-contianer">
                 <div className="background-container"/>
                 <div className="dash-inner">
-                    <JobListItems jobSelect={this.changeJob}/>
-                    <div className="content-container">
-                        <SelectedJob job={this.state.job} />
+                    {/* <div className="search-section">
+                        <SearchBar  holder="Search by title..." search={this.updateInput}/>
+                    </div> */}
+                    <div className="content-sections">
+                        <JobListItems jobSelect={this.changeJob}/>
+                        <div className="content-container">
+                            <SelectedJob job={this.state.job} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,22 +137,32 @@ class JobListItems extends Component {
         }else{
             if(this.state.jobs.length === 0){
                 return(
-                    <p>No jobs found</p>
+                    <div className="search-list-container">
+                        <SearchBar  holder="Search by title..." search={this.updateInput}/>
+                        <div className="job-list">
+                            <div className="leftItem" style={this.inactive}>
+                                <p style={{'margin': '16px auto'}}>No jobs found</p>
+                            </div>
+                        </div>
+                    </div>
                 )
             }
             return(
-                <div className="job-list">
-                    {
-                        this.state.jobs.map(function(JobItem, index) {
-                            const style = this.state.activeIndex === index ? this.active : this.inactive;
-                            return(
-                            <div className="leftItem" onClick={this.handleUpdateCurrent.bind(this, index, this.props)} style={style} key={index}>
-                                {JobItem}
-                            </div>
-                            );
-                        }, this)
-                    }
-                    {this.state.moreToLoad && <button type="button" onClick={this.loadmore}>Load more</button>}
+                <div className="search-list-container">
+                    <SearchBar  holder="Search by title..." search={this.updateInput}/>
+                    <div className="job-list">
+                        {
+                            this.state.jobs.map(function(JobItem, index) {
+                                const style = this.state.activeIndex === index ? this.active : this.inactive;
+                                return(
+                                <div className="leftItem" onClick={this.handleUpdateCurrent.bind(this, index, this.props)} style={style} key={index}>
+                                    {JobItem}
+                                </div>
+                                );
+                            }, this)
+                        }
+                        {this.state.moreToLoad && <button type="button" onClick={this.loadmore}>Load more</button>}
+                    </div>
                 </div>
             )
         }
@@ -200,7 +215,7 @@ class SelectedJob extends Component {
         if (this.props.job == null){
             return(
                 <div className="content" id="selectJob">
-                    <p className="NoJob">No jobs available</p>
+                    <p style={{'margin': '20px auto', 'width' : 'fit-content'}}>No jobs available</p>
                 </div>
             )
         } else {
