@@ -20,3 +20,17 @@
 button span {
     color: black;
 }
+
+.google-outer {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-button {
+    width: fit-content;
+    border: var(--grey-color) 1px solid;
+    border-radius: 2px;
+}
