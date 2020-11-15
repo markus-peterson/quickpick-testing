@@ -17,15 +17,6 @@ class Dashboard extends Component {
         this.changeJob = this.changeJob.bind(this);
     }
     
-    // async changeJob(id) {
-    //     console.log(id)
-    //     const data = await	JobService
-    //                             .executeGetJob(id)
-    //                             .then(result => result.data);
-    //                             console.log('loading data ...');
-    //     this.setState({job : data, loading: false});
-    //     console.log(this.state.job);
-    // }
     
     changeJob(id){
         this.setState({job : id});
@@ -34,11 +25,12 @@ class Dashboard extends Component {
     render(){
         return(
             <div className="dash-contianer">
-                <div className="left">
+                <div className="background-container"/>
+                <div className="dash-inner">
                     <JobListItems jobSelect={this.changeJob}/>
-                </div>
-                <div className="right">
-                    <SelectedJob job={this.state.job} />
+                    <div className="content-container">
+                        <SelectedJob job={this.state.job} />
+                    </div>
                 </div>
             </div>
         )
@@ -62,12 +54,12 @@ class JobListItems extends Component {
         this.leftToLoad = 0;
         this.allJobs = null;
         this.inactive = {
-            border: "gray solid 2px",
-            background: "#fffad1"
+            border: "gray solid 1px",
+            background: "var(--yellow-color-transparent)"
         };
         this.active = {
-            border: "var(--light-blue) solid 2px",
-            background: "var(--light-blue)"
+            border: "var(--light-blue) solid 1px",
+            background: "var(--light-blue-transparent)"
         };
     }
 
@@ -101,7 +93,7 @@ class JobListItems extends Component {
         this.props.jobSelect(id);
     }
 
-    handleUpdateCurrent(index, props){
+    handleUpdateCurrent(index){
         this.props.jobSelect(this.state.jobsIndex[index]);
         this.setState({activeIndex: index});
     }
@@ -144,8 +136,7 @@ class JobListItems extends Component {
                 )
             }
             return(
-                <div>
-                    <SearchBar  holder="Search by title..." search={this.updateInput}/>
+                <div className="job-list">
                     {
                         this.state.jobs.map(function(JobItem, index) {
                             const style = this.state.activeIndex === index ? this.active : this.inactive;
@@ -240,7 +231,7 @@ class SelectedJob extends Component {
                         <h2>{this.props.job.jobTitle}</h2>
                         <p>{this.props.job.organization}</p>
                         <p>{this.props.job.location} {this.props.job.country}</p>
-                        <div dangerouslySetInnerHTML={{__html: this.props.job.jobDescription}} />
+                        <div className="description" dangerouslySetInnerHTML={{__html: this.props.job.jobDescription}} />
                         <p>{this.props.job.jobSalary}</p>
                         <p>{this.props.job.pageUrl}</p>
                         {!this.state.appStatus && isUserLoggedIn && <button type="button" onClick={this.apply}>Apply</button>}

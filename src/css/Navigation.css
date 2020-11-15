@@ -2,9 +2,12 @@
 	--darkest-color: #1F2833;
 	--dark-color: #293a4e;
 	--grey-color: #999999;
-	--light-blue: #98d8fd;
+    --light-blue: #98d8fd;
+    --light-blue-transparent: #98d8fde6;
 	--yellow-color: #ffec3e;
-	--dark-blue: #00A29E;
+	--yellow-color-transparent: #fffad1e6;
+    --dark-blue: #00A29E;
+    --white-transparent: rgba(255, 255, 255, 0.9);
 }
 
 .navBar {
@@ -12,11 +15,10 @@
     background-color: var(--darkest-color);
     position: sticky;
     top: 0;
-    /* padding: 12px 12px 0px 12px; */
     box-shadow: 0px 1px 8px var(--dark-color);
     display: flex;
-    /* align-items: center; */
     justify-content: flex-end;
+    z-index: 10;
 }
 
 .rightNav {
