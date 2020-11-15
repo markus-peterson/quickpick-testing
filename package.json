@@ -1,0 +1,54 @@
+{
+  "name": "quick-pick",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.56",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.20.0",
+    "bootstrap": "^4.5.3",
+    "draft-js": "^0.11.7",
+    "draft-js-block-breakout-plugin": "2.0.1",
+    "draft-js-export-html": "^1.4.1",
+    "pdf-viewer-reactjs": "^2.1.2",
+    "react": "^16.14.0",
+    "react-bootstrap": "^1.4.0",
+    "react-dom": "^16.14.0",
+    "react-dropzone": "^11.2.0",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.22",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.0",
+    "reactstrap": "^8.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "postinstall": "npm run build"
+  },
+  "engines": {
+    "node": "14.x",
+    "npm": "6.x"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
