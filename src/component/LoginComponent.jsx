@@ -243,13 +243,17 @@ class LoginComponenet extends Component {
                             onClick={this.loginClicked}>
                                 Sign In
                         </Button>
-                        <Typography component="h5" variant="h5" style={{"padding-bottom": "10px"}}>or</Typography>
-                        <GoogleLogin
-                            clientId="388896389881-5je3ulqa0qfii59cgpq3ldnfiof49pfv.apps.googleusercontent.com"
-                            buttonText="Login"
-                            onSuccess={this.handleGoogleLogin}
-                            onFailure={this.handleError}
-                            cookiePolicy={'single_host_origin'} />
+                        <div className="google-outer">
+                            <Typography component="h5" variant="h5" style={{ "padding-bottom": "10px" }}>or</Typography>
+                            <div className="google-button">
+                                <GoogleLogin
+                                    clientId="388896389881-5je3ulqa0qfii59cgpq3ldnfiof49pfv.apps.googleusercontent.com"
+                                    buttonText="Login"
+                                    onSuccess={this.handleGoogleLogin}
+                                    onFailure={this.handleError}
+                                    cookiePolicy={'single_host_origin'} />
+                            </div>
+                        </div>
                         <div style={{"height": "20px"}}></div>
                         <Grid container>
                             <Grid item xs>
