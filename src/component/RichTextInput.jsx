@@ -72,13 +72,13 @@ export default class RichTextInput extends Component {
 
     render() {
         const { editorState } = this.state;
-        let className = 'RichEditor-editor';
-        var contentState = editorState.getCurrentContent();
-        if (!contentState.hasText()) {
-            if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-                className += ' RichEditor-hidePlaceholder';
-            }
-        }
+        // let className = 'RichEditor-editor';
+        // var contentState = editorState.getCurrentContent();
+        // if (!contentState.hasText()) {
+        //     if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+        //         className += ' RichEditor-hidePlaceholder';
+        //     }
+        // }
         return (
             <div>
                 <form>

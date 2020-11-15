@@ -4,7 +4,7 @@ import '../css/Dashboard.css'
 import SearchBar from './SearchBar';
 import JobService from '../api/JobService';
 import ApplicationService from '../api/ApplicationService';
-import AuthenticationService from './AuthenticationService';
+import AuthenticationService from '../api/AuthenticationService';
 
 
 class Dashboard extends Component {
@@ -164,11 +164,6 @@ class JobListItems extends Component {
 }
 
 class BuildJobItem extends Component{
-    constructor(){
-        super();
-        
-    }
-
     render(){
         return(
             <div className="leftInner" >

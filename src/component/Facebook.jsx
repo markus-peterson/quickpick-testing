@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import FacebookLogin from 'react-facebook-login';
-import AutheticationService from './AuthenticationService.js'
+import AutheticationService from '../api/AuthenticationService.js'
 import UserService from '../api/UserService';
 
 export default class Facebook extends Component {

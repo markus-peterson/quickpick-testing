@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import output from '../api/connections';
 import '../css/RegisterComponent.css'
 
-import AuthenticationService from './AuthenticationService';
+import AuthenticationService from '../api/AuthenticationService';
 
 class ProfileComponent extends Component {
 	constructor() {

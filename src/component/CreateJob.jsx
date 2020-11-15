@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import '../css/CreateJob.css';
 import RichTextInput from './RichTextInput';
-import AuthenticationService from './AuthenticationService';
+import AuthenticationService from '../api/AuthenticationService';
 import JobService from '../api/JobService';
 import { Link } from 'react-router-dom';
 import { Paper, Grid } from '@material-ui/core/';

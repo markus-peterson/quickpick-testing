@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AuthenticationService from './AuthenticationService';
+import AuthenticationService from '../api/AuthenticationService';
 import '../css/Navigation.css';
 import logo from '../img/quickpick-logo2-transparent-small.png';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,7 +15,7 @@ export default function Navgiation() {
     const isMenuOpen = Boolean(anchorEl);
     const menuId = "primary-search-account-menu";
     const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
-    let user = sessionStorage.getItem('authenticatedUser');
+    // let user = sessionStorage.getItem('authenticatedUser');
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
