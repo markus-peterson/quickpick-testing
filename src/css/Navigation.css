@@ -1,0 +1,99 @@
+:root {
+	--darkest-color: #1F2833;
+	--dark-color: #293a4e;
+	--grey-color: #999999;
+	--light-blue: #98d8fd;
+	--yellow-color: #ffec3e;
+	--dark-blue: #00A29E;
+}
+
+.navBar {
+    width: 100%;
+    background-color: var(--darkest-color);
+    position: sticky;
+    top: 0;
+    /* padding: 12px 12px 0px 12px; */
+    box-shadow: 0px 1px 8px var(--dark-color);
+    display: flex;
+    /* align-items: center; */
+    justify-content: flex-end;
+}
+
+.rightNav {
+    display: flex;
+    align-items: center;
+    height: 90px;
+    width: 90px;
+}
+.rightNav li {
+    padding: 0;
+    border-radius: 50%;
+}
+
+.logo {
+    position: absolute;
+    left: 0;
+    height: 70px;
+    padding: 10px 20px;
+}
+
+nav {
+    height: 100%;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* justify-content: flex-end;
+    align-items: baseline; */
+    justify-content: center;
+    /* background-color: #ffec3e; */
+    margin-right: 20px;
+}
+
+.navButton{
+    text-decoration: none;
+    width: fit-content;
+    margin: 0px 25px;
+    color: white;
+    height: 30px;
+    font-size: 20px;
+}
+
+.navButton:hover {
+    border-bottom: 1px white solid;
+}
+
+.account {
+    display: flex;
+    border-radius: 50%;
+    position: relative;
+    width: min-content;
+    height: min-content;
+}
+
+.profileMenuLink{
+    text-decoration: none;
+}
+
+#accountIcon {
+    width: 1.5em;
+    height: 1.5em;
+    color: var(--grey-color);
+}
+
+
+
+#accountIconMenuItem{
+    text-decoration: none;
+    color: black;
+}
+
+.loginButton:hover {
+    box-shadow: 1px 1px 3px grey;
+    color: #ffec3e;
+    font-weight: 700;
+}
+
+.MultiTouchRipple-root {
+    position: relative;
+}

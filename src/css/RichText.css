@@ -1,0 +1,31 @@
+.DraftEditor-root {
+    min-height: 300px;
+}
+.public-DraftEditor-content {
+    min-height: 300px;
+    min-width: 700px;
+}
+
+.card-header {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px inset;
+    border: 1px solid rgb(56, 61, 63);
+    border-radius: 4px;
+    min-height: 20px;
+    padding: 19px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.break  {
+    margin: 0px 16px 0px 0px;
+    width: 2px;
+    height: 20px;
+    background-color: black;
+}
+.card-body {
+    margin-top: 10px;
+    padding: 15px;
+    border: rgb(58, 62, 65) 1px solid;
+    border-radius: 4px;
+
+}
