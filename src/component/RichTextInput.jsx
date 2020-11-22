@@ -15,13 +15,17 @@ export default class RichTextInput extends Component {
         this.state = { editorState: EditorState.createEmpty() };
 
         this.focus = () => this.refs.editor.focus();
-        this.onChange = (editorState) => this.setState({ editorState });
+        this.onChange = (editorState) => {
+            this.setState({ editorState })
+            let html = stateToHTML(this.state.editorState.getCurrentContent());
+            this.props.updateParent(html)
+        };
 
         this.handleKeyCommand = this._handleKeyCommand.bind(this);
         this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
         this.toggleBlockType = this._toggleBlockType.bind(this);
         this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleFinish = this.handleFinish.bind(this);
     }
 
     _handleKeyCommand(command, editorState) {
@@ -65,53 +69,41 @@ export default class RichTextInput extends Component {
             )
         );
     }
-    handleSubmit() {
+    handleFinish() {
         let html = stateToHTML(this.state.editorState.getCurrentContent());
-        this.props.setDescription(html);
+        return html;
     }
 
     render() {
         const { editorState } = this.state;
-        // let className = 'RichEditor-editor';
-        // var contentState = editorState.getCurrentContent();
-        // if (!contentState.hasText()) {
-        //     if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-        //         className += ' RichEditor-hidePlaceholder';
-        //     }
-        // }
         return (
             <div>
-                <form>
-                    <Card>
-                        <Card.Header style={{ marginBottom: 0 }}>
-                            <InlineStyleControls
-                                editorState={editorState}
-                                onToggle={this.toggleInlineStyle}
-                            />
-                            <div className='break'></div>
-                            <BlockStyleControls
-                                editorState={editorState}
-                                onToggle={this.toggleBlockType}
-                            />
-                        </Card.Header>
-                        <Card.Body>
-                            <Editor
-                                blockStyleFn={getBlockStyle}
-                                customStyleMap={styleMap}
-                                editorState={editorState}
-                                handleKeyCommand={this.handleKeyCommand}
-                                keyBindingFn={this.mapKeyToEditorCommand}
-                                onChange={this.onChange}
-                                placeholder="Tell a story..."
-                                ref="editor"
-                                spellCheck={true}
-                            />
-                        </Card.Body>
-                    </Card>
-                    <div id='field'>
-                        <button type="button" onClick={this.handleSubmit}>Submit</button>
-                    </div>
-                </form>
+                <Card>
+                    <Card.Header style={{ marginBottom: 0 }}>
+                        <InlineStyleControls
+                            editorState={editorState}
+                            onToggle={this.toggleInlineStyle}
+                        />
+                        <div className='break'></div>
+                        <BlockStyleControls
+                            editorState={editorState}
+                            onToggle={this.toggleBlockType}
+                        />
+                    </Card.Header>
+                    <Card.Body>
+                        <Editor
+                            blockStyleFn={getBlockStyle}
+                            customStyleMap={styleMap}
+                            editorState={editorState}
+                            handleKeyCommand={this.handleKeyCommand}
+                            keyBindingFn={this.mapKeyToEditorCommand}
+                            onChange={this.onChange}
+                            placeholder="Tell a story..."
+                            ref="editor"
+                            spellCheck={true}
+                        />
+                    </Card.Body>
+                </Card>
             </div>
         );
     }

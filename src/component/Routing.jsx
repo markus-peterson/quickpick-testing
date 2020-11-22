@@ -7,30 +7,33 @@ import LoginComponent from './LoginComponent';
 import ErrorComponent from './ErrorComponent';
 import ProfileComponent from './ProfileComponent';
 import CreateJob from './CreateJob';
+import LandingComponent from './LandingComponent';
 
 class AppRouting extends Component {
     render() {
-      return (
-        <div className="applicationHome">
-            <Router>
-                <>
-                    <Navgiation/>
-                    <Switch>
-                        <Route path="/" exact component= {Dashboard}/>
-                        <Route path="/login" component= {LoginComponent}/>
-                        <Route path="/register" component= {RegisterComponent}/>
-                        <Route path="/postjob" component= {CreateJob}/>
-                        <Route path="/profile" component= {ProfileComponent}/>
-                        {/* <AuthenticatedRoute path="/dashboard" component= {Dashboard}/> */}
-                        <Route component = {ErrorComponent}/>
-                    </Switch>
-                    {/* <FooterComponent/> */}
-                </>
-            </Router>
-        </div>
-      );
+        return (
+            <div className="applicationHome">
+                <Router>
+                    <>
+                        <Navgiation/>
+                        <Switch >
+                            <Route path="/"           exact component = {LandingComponent}/>
+                            <Route path="/dash"       exact component = {Dashboard}/>
+                            <Route path="/dash/?k=:keyword" component = {Dashboard}/>
+                            <Route path="/login"            component = {LoginComponent}/>
+                            <Route path="/register"         component = {RegisterComponent}/>
+                            <Route path="/postjob"          component = {CreateJob}/>
+                            <Route path="/profile/:name"    component = {ProfileComponent}/>
+                            {/* <AuthenticatedRoute path="/dashboard" component= {Dashboard}/> */}
+                            <Route component = {ErrorComponent}/>
+                        </Switch>
+                        {/* <FooterComponent/> */}
+                    </>
+                </Router>
+            </div>
+        );
     }
-  }
+}
 
 
 export default AppRouting

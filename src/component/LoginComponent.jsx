@@ -59,7 +59,9 @@ class LoginComponenet extends Component {
 			status: '',
             hasLoginFailed: false,
             showSuccessMessage:false,
-            noUserFound:false
+            noUserFound:false,
+            externalCond: false,
+            userObj: null
         }
         this.handleChange = this.handleChange.bind(this)
         this.loginClicked = this.loginClicked.bind(this)
@@ -101,24 +103,22 @@ class LoginComponenet extends Component {
     }
 
     handleSuccessResponse(response){
-        console.log(response)
         if (response.status === 200) {
-            if (response.data === "Login Successful"){
-                // console.log(this.props.history)
-                console.log('Successful Login registered')
-                AutheticationService.registerSuccessfulLogin(this.state.username,this.state.password)
+            // if (response.data === "Login Successful"){
+                console.log('Successful Login')
+                AutheticationService.registerSuccessfulLogin(response.data.username)
+				
+                console.log(response.data.username)
 				this.props.history.push(`/`)
 				window.location.reload() // temp solution to user API call bug
-				//this.props.history.push(`/profile/${this.state.username}`)
-				console.log(this.state.username)
-                // this.props.history.push(`/dashboard/${this.state.username}`)
-            }else if (response.data === "Login Failed"){
-               // this.setState({showSuccessMessage : false   })
-                this.setState({hasLoginFailed: true})
-            }else if (response.data === "User Not Found"){
-               // this.setState({showSuccessMessage : false   })
-                this.setState({noUserFound : true})
-            }
+                
+            // }else if (response.data === "Login Failed"){
+            //    this.setState({showSuccessMessage : false   })
+            //     this.setState({hasLoginFailed: true})
+            // }else if (response.data === "User Not Found"){
+            //    this.setState({showSuccessMessage : false   })
+            //     this.setState({noUserFound : true})
+            // }
         } else {
             window.alert(response)
         }
@@ -132,35 +132,40 @@ class LoginComponenet extends Component {
     handleGoogleLogin(response){
         UserService.executeCheckRegisteredExternal(response.profileObj.email)
         .then((res) => {
+            console.log(res)
             if(res.data === "registered"){
                 this.loginGoogle(response);
             }else{
-                this.registerGoogle(response)
+                this.setState({externalCond: true, userObj: response});
             }
         })
 		.catch(error => this.handleError(error));
     }
     
-    registerGoogle(response){
+    registerGoogle(){
+        const response = this.state.userObj
         const user = {
-			username: response.profileObj.email,
-			firstName: response.profileObj.givenName,
-			lastName: response.profileObj.familyName,
-			address: null,
-			emailId: response.profileObj.email,
-			password: 'google'
+			password: 'google',
+            emailId: response.profileObj.email,
+            firstName: response.profileObj.givenName,
+            address: null,
+            lastName: response.profileObj.familyName,
+            username: this.state.username
         };
         this.setState({
             password: 'google',
-            username: response.profileObj.email,
+            emailId: response.profileObj.email,
+            firstName: response.profileObj.givenName,
+            address: null,
+            lastName: response.profileObj.familyName,
+            username: this.state.username,
         });
-		console.log(`before-${user}`);
 		console.log(user);
 		UserService.executePostUserRegisterService(user)
         .then(res => {
             if(res.status === 200) {
                 console.log('Register Successful')
-			    this.loginGoogle(response)
+                this.loginGoogle(response)
             }
         })
         .catch(error => this.handleError(error))
@@ -169,15 +174,15 @@ class LoginComponenet extends Component {
     loginGoogle(response){
         this.setState({
             password: 'google',
-            username: response.profileObj.email,
+            emailId: response.profileObj.email,
         });
         const user = {
             password: 'google',
-            username: response.profileObj.email,
+            emailId: response.profileObj.email,
             firstName: null,
             lastName: null,
             address: null,
-            emailId: null          
+            username: null
         }
         
         UserService.registerLogin(user)
@@ -191,88 +196,124 @@ class LoginComponenet extends Component {
     render(){
 
         const { classes } = this.props;
-        return(
-            <Container component="main" maxWidth="xs">
-                <div className="registerBack"></div>
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    
-                    
-                    <form className={classes.form} noValidate  onSubmit={this.onSubmit} >
-                        <Typography component="h1" variant="h5">Sign in</Typography>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            value={this.state.username}
-                            autoFocus
-                            inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                            }}/>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            value={this.state.password}
-                            autoComplete="current-password"
-                            inputProps={{
-                                type: "password",
+        if (this.state.externalCond){
+            return(
+                <Container component="main" maxWidth="xs">
+                    <div className="registerBack"></div>
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <form className={classes.form} noValidate  onSubmit={this.onSubmit} >
+                            <Typography component="h1" variant="h5">Sign in</Typography>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                value={this.state.username}
+                                autoFocus
+                                inputProps={{
+                                    type: "text",
+                                    onChange: this.handleChange,
+                                    autoComplete: "off"
+                                }}/>
+                            <Button type="Button" fullWidth variant="contained" color="primary"
+                                className={classes.submit}
+                                onClick={this.registerGoogle}>
+                                    Finish Registration
+                            </Button>
+                        </form>
+                    </div>
+                </Container>
+            );
+        }else{
+            return(
+                <Container component="main" maxWidth="xs">
+                    <div className="registerBack"></div>
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <form className={classes.form} noValidate  onSubmit={this.onSubmit} >
+                            <Typography component="h1" variant="h5">Sign in</Typography>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                value={this.state.username}
+                                autoFocus
+                                inputProps={{
+                                type: "text",
                                 onChange: this.handleChange,
                                 autoComplete: "off"
-                            }}/>
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me" />
-                        <Button type="Button" fullWidth variant="contained" color="primary"
-                            className={classes.submit}
-                            onClick={this.loginClicked}>
-                                Sign In
-                        </Button>
-                        <div className="google-outer">
-                            <Typography component="h5" variant="h5" style={{ "padding-bottom": "10px" }}>or</Typography>
-                            <div className="google-button">
-                                <GoogleLogin
-                                    clientId="388896389881-5je3ulqa0qfii59cgpq3ldnfiof49pfv.apps.googleusercontent.com"
-                                    buttonText="Login"
-                                    onSuccess={this.handleGoogleLogin}
-                                    onFailure={this.handleError}
-                                    cookiePolicy={'single_host_origin'} />
+                                }}/>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                value={this.state.password}
+                                autoComplete="current-password"
+                                inputProps={{
+                                    type: "password",
+                                    onChange: this.handleChange,
+                                    autoComplete: "off"
+                                }}/>
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me" />
+                            <Button type="Button" fullWidth variant="contained" color="primary"
+                                className={classes.submit}
+                                onClick={this.loginClicked}>
+                                    Sign In
+                            </Button>
+                            <div className="google-outer">
+                                <Typography component="h5" variant="h5" style={{ "padding-bottom": "10px" }}>or</Typography>
+                                <div className="google-button">
+                                    <GoogleLogin
+                                        clientId="388896389881-5je3ulqa0qfii59cgpq3ldnfiof49pfv.apps.googleusercontent.com"
+                                        buttonText="Login"
+                                        onSuccess={this.handleGoogleLogin}
+                                        onFailure={this.handleError}
+                                        cookiePolicy={'single_host_origin'} />
+                                </div>
                             </div>
-                        </div>
-                        <div style={{"height": "20px"}}></div>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
+                            <div style={{"height": "20px"}}></div>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="#" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link href="/register" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Link href="/register" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </div>
-                <Box mt={8}>
-                </Box>
-            </Container>
-        );
+                        </form>
+                    </div>
+                    <Box mt={8}>
+                    </Box>
+                </Container>
+            );
+        }
     }
 }
 export default withStyles(styles, { withTheme: true })(LoginComponenet);

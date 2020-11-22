@@ -1,0 +1,21 @@
+.hovereffect {
+	position: relative;
+}
+  
+.overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color: #f1f1f1;
+	transition: .5s ease;
+	opacity:0;
+	color: white;
+	font-size: 125px;
+	text-align: center;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	cursor: pointer;
+}
+
+.hovereffect:hover .overlay {
+	opacity: 1;
+}

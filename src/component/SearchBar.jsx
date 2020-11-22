@@ -1,6 +1,26 @@
 import React from 'react';
-import SearchIcon from '@material-ui/icons/Search';
 import { Component } from 'react';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from "@material-ui/core/styles";
+import GridContainer from "../Design/Grid/GridContainer.js";
+import GridItem from "../Design/Grid/GridItem.js";
+import Button from "../Design/CustomButtons/Button.js";
+
+const styles = theme => ({
+	textField: {
+        width: '100%',
+		margin:"10px",
+		marginTop: theme.spacing(3),
+    },
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+		backgroundColor: theme.palette.info.light,
+    },
+    spacing:{
+        height:'700px',
+    }
+    
+});
 
 class SearchBar extends Component{
     constructor() {
@@ -8,7 +28,6 @@ class SearchBar extends Component{
         this.state = {
             value: ''
         }
-
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -23,16 +42,83 @@ class SearchBar extends Component{
     }
 
     render(){
+        const { classes } = this.props;
+        const style = {
+            search: {
+                backgroundColor: 'white',
+                opacity: '0.9',
+                borderRadius: '4px',
+                margin: '0 10px',
+                // height: '40px'
+            },
+            wrap: {
+                width: 'fit-content',
+                alignItems: 'center'
+            },
+            button: {
+                margin: '0 20px'
+            }
+        };
         return (
-            <form onSubmit={this.handleSubmit} id="searchBar">
-                <div className="searchIcon">
-                        <SearchIcon id="svgIcon"/>
-                </div>
-                <input type="text" placeholder={this.props.holder} className="searchInput" onChange={this.handleChange} value={this.state.value}/>
-                <input type="submit" value="Search" className="searchButton"/>
-                <input type="submit" style={{display: "none"}} />
-            </form>
+            <GridContainer container style={style.wrap}>
+                <GridItem item xs={12} sm={12} md={5} >
+                <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        fullHeight
+                        style={style.search}
+                        className={classes.textField}
+                        id="searchKey"
+                        label="KeyWord"
+                        name="Keyword"
+                        autoComplete="Keyword"
+                        value={this.state.Keyword}
+                        autoFocus
+                        inputProps={{
+                            type: "text",
+                            onChange: this.handleChange,
+                            autoComplete: "off"
+                        }}
+                    />
+                </GridItem>
+                <GridItem item xs={12} sm={12} md={5} >
+                    <TextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            fullHeight
+                            style={style.search}
+                            className={classes.textField}
+                            id="location"
+                            label="Location"
+                            name="location"
+                            autoComplete="location"
+                            value={this.state.location}
+                            autoFocus
+                            inputProps={{
+                                type: "text",
+                                onChange: this.handleChange,
+                                autoComplete: "off"
+                            }}
+                        />
+                </GridItem>
+                <GridItem item xs={12} sm={12} md={2}>
+                    <Button
+                            type="button"
+                            fullWidth
+                            fullHeight
+                            variant="contained"
+                            color="primary"
+                            style={style.button}
+                            className={classes.submit}
+                            onClick={this.handleSubmit}
+                        >
+                        Search 
+                        </Button>
+                </GridItem>
+            </GridContainer>
         );
     }
   }
-  export default SearchBar
+  export default withStyles(styles, { withTheme: true })(SearchBar);

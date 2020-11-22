@@ -2,7 +2,6 @@
     width: 100%;
     height: calc(100% - 90px);
     z-index: -2;
-    background-color: var(--grey-color);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -37,19 +36,24 @@ form {
     font-size: 18px;
 }
 
-#field {
+#buttons-set {
+    flex-direction: row;
+}
+
+.field {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin: 20px 20px;
     height: 54px;
 }
-#field label {
+
+.field label {
     font-size: 1.2rem;
 }
 
 /* #A85BFF */
-#field input[type=text], #field input[type=url] {
+.field input[type=text], .field input[type=url] {
     outline: none;
     font-size: 1rem;
     line-height: 1.5;
@@ -58,13 +62,13 @@ form {
     width: 98%;
 }
 
-#field input[type=text]:hover, #field input[type=url]:hover {
+.field input[type=text]:hover, .field input[type=url]:hover {
     transition-property: border-color;
     transition: linear 400ms;
     border-color: black;
 }
 
-#field input[type=text]:focus, #field input[type=url]:focus {
+.field input[type=text]:focus, .field input[type=url]:focus {
     transition: 400ms linear;
     transition-property: border-width, border-color, box-shadow;
     border-width: 2px;
@@ -72,7 +76,7 @@ form {
     box-shadow: 0px 0px 4px var(--light-blue);
 }
 
-#field button{
+.field button{
     margin: auto;
     margin-top: 20px;
     appearance: none;
@@ -86,7 +90,7 @@ form {
     border-radius: 2px;
 }
 
-#field button:hover {
+.field button:hover {
     cursor: pointer;
 }
 
