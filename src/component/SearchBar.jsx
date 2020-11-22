@@ -47,26 +47,23 @@ class SearchBar extends Component{
             search: {
                 backgroundColor: 'white',
                 opacity: '0.9',
-                borderRadius: '4px',
-                margin: '0 10px',
-                // height: '40px'
-            },
-            wrap: {
-                width: 'fit-content',
-                alignItems: 'center'
+                borderTopLeftRadius: '4px',
+                borderTopRightRadius: '4px',
+                margin: '0 10px'
             },
             button: {
                 margin: '0 20px'
             }
         };
         return (
-            <GridContainer container style={style.wrap}>
-                <GridItem item xs={12} sm={12} md={5} >
+            <GridContainer container justify="center" alignItems="center">
+                <GridItem item xs={12} sm={5}>
                 <TextField
-                        variant="outlined"
+                        variant="filled"
                         margin="normal"
                         fullWidth
                         fullHeight
+                        size="small"
                         style={style.search}
                         className={classes.textField}
                         id="searchKey"
@@ -74,7 +71,6 @@ class SearchBar extends Component{
                         name="Keyword"
                         autoComplete="Keyword"
                         value={this.state.Keyword}
-                        // autoFocus
                         inputProps={{
                             type: "text",
                             onChange: this.handleChange,
@@ -82,12 +78,13 @@ class SearchBar extends Component{
                         }}
                     />
                 </GridItem>
-                <GridItem item xs={12} sm={12} md={5} >
+                <GridItem item xs={12} sm={5}>
                     <TextField
-                            variant="outlined"
+                            variant="filled"
                             margin="normal"
                             fullWidth
                             fullHeight
+                            size="small"
                             style={style.search}
                             className={classes.textField}
                             id="location"
@@ -95,7 +92,6 @@ class SearchBar extends Component{
                             name="location"
                             autoComplete="location"
                             value={this.state.location}
-                            // autoFocus
                             inputProps={{
                                 type: "text",
                                 onChange: this.handleChange,
@@ -103,11 +99,11 @@ class SearchBar extends Component{
                             }}
                         />
                 </GridItem>
-                <GridItem item xs={12} sm={12} md={2}>
+                <GridItem item xs={12} sm={2}>
                     <Button
                             type="button"
-                            fullWidth
-                            fullHeight
+                            // fullWidth
+                            // fullHeight
                             variant="contained"
                             color="primary"
                             style={style.button}

@@ -132,7 +132,8 @@ class LandingComponent extends Component {
             search: {
                 backgroundColor: 'white',
                 opacity: '0.9',
-                borderRadius: '4px'
+                borderTopLeftRadius: '4px',
+                borderTopRightRadius: '4px'
             }
         };
 		return(
@@ -144,7 +145,7 @@ class LandingComponent extends Component {
                     <GridContainer container  justify="center" style={style.searchSection}>
                         <GridItem item xs={12} sm={12} md={3} >
                         <TextField
-                                variant="outlined"
+                                variant="filled"
                                 margin="normal"
                                 fullWidth
                                 style={style.search}
@@ -165,7 +166,7 @@ class LandingComponent extends Component {
                         <GridItem item xs={12} sm={12} md={3} style={{position: 'relative', display: 'inline-block'}}>
                             {/* <LocationOnIcon></LocationOnIcon> */}
                             <TextField
-                                    variant="outlined"
+                                    variant="filled"
                                     margin="normal"
                                     leftIcon= {LocationOnIcon}
                                     fullWidth

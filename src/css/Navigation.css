@@ -24,9 +24,8 @@
 .rightNav {
     display: flex;
     align-items: center;
-    /* height: 90px;
-    width: 90px; */
 }
+
 .rightNav li {
     padding: 0;
     border-radius: 50%;
@@ -34,11 +33,14 @@
 
 .nav-search-logo {
     display: flex;
+    width: fit-content;
     flex-direction: row;
     align-items: center;
 }
-.nav-search-logo form {
-    margin: 0 20px;
+
+.nav-search-logo a {
+    display: flex;
+    align-items: center;
 }
 
 .logo {
