@@ -154,7 +154,7 @@ class LandingComponent extends Component {
                                 name="Keyword"
                                 autoComplete="Keyword"
                                 value={this.state.Keyword}
-                                autoFocus
+                                // autoFocus
                                 inputProps={{
                                     type: "text",
                                     onChange: this.update,
@@ -176,7 +176,7 @@ class LandingComponent extends Component {
                                     name="location"
                                     autoComplete="location"
                                     value={this.state.location}
-                                    autoFocus
+                                    // autoFocus
                                     inputProps={{
                                         type: "text",
                                         onChange: this.update,
