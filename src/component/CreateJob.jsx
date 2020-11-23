@@ -1,12 +1,35 @@
 import React from 'react';
 import { Component } from 'react';
-import '../css/CreateJob.css';
 import RichTextInput from './RichTextInput';
 import AuthenticationService from '../api/AuthenticationService';
 import JobService from '../api/JobService';
 import { Link } from 'react-router-dom';
-import { Paper, Grid } from '@material-ui/core/';
+import { Paper, Grid, Container, Button} from '@material-ui/core/';
+import StartCreate from './StartCreate';
+import { withStyles } from "@material-ui/core/styles";
+import Alert from '@material-ui/lab/Alert';
 
+const styles = theme => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        alignItems: 'center',
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: 'fit-content', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+        backgroundColor: theme.palette.common.blue,
+    },
+});
 
 class CreateJob extends Component {
     constructor(){
@@ -91,31 +114,50 @@ class CreateJob extends Component {
     }
 
     render(){
-		const style = {Paper : {padding:20, marginTop:10, marginBottom:10}}
+        const classes = {
+            root: {
+                width: '80%',
+            },
+        };
+		const style = {
+            container:{
+                backgroundColor: 'white',
+                borderRadius: 5,
+                marginTop: 100
+            }
+        }
 		const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
 		if(!isUserLoggedIn) {
-			return( <Grid container justify="center">
-						<Grid item sm={6}>
-							<Paper style={style.Paper}>
-								<Grid container>
-									<Grid item sm>
-										Not Logged In
-									</Grid>
-								</Grid>
-							</Paper>
-						</Grid>
-					</Grid>)
+			return( 
+                <Grid container justify="center">
+                    <Grid item sm={6}>
+                        <Paper style={style.Paper}>
+                            <Grid container>
+                                <Grid item sm>
+                                    <Alert severity="warning" variant="filled">Not Logged In</Alert>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            )
 		}
         if(this.state.isSubmitted){
             return(
                 <div className='jobContainer'>
-                    <div className="inner">
-                        <form className="successForm">
-                            <div className="alert alert-success">Job successfully posted</div>
-                            <div id='field'>
-                                <Link to="/"><button type="button">Okay</button></Link>
-                            </div>
-                        </form>
+                    <div className="registerBack">
+                        <Container component="main" maxWidth="sm" style={style.container}>
+                            <Grid container spacing={3} direction="column" alignContent="center" justify="center">
+                                <Grid item></Grid>
+                                <Grid item sm style={{width: '100%'}}>
+                                    <Alert severity="success" variant="filled" >Job successfully posted</Alert>
+                                </Grid>
+                                <Grid item sm style={{margin: 'auto'}}>
+                                    <Link to="/" style={{textDecoration: 'none'}}><Button variant="contained" size="large">Okay</Button></Link>
+                                </Grid>
+                                <Grid item></Grid>
+                            </Grid>
+                        </Container>
                     </div>
                 </div>
             )
@@ -123,73 +165,35 @@ class CreateJob extends Component {
             return(
                 <div className='jobContainer'>
                     <div className="registerBack"></div>
-                    <div className="inner">
-                        <form >
-                            {this.state.page === 0 && <StartCreate updateParent={this.handleFirst}/>}
-                            {this.state.page === 1 && <RichTextInput updateParent={this.handleSecond}/>}
-                            <div className='field' id="buttons-set">
-                                {this.state.page !== 0 && <button type="button" onClick={this.back}>Back</button>}
-                                <button type="button" onClick={this.handleSubmit}>{this.state.buttonText}</button>
-                            </div>
-                        </form>
-                    </div>
+                    <form>
+                        <Container component="main" maxWidth={this.state.page === 1 ? "md":"sm"} style={style.container}>
+                            <Grid container justify="center" spacing={3} direction="column">
+                                {this.state.page === 0 && <StartCreate updateParent={this.handleFirst}/>}
+                                {this.state.page === 1 && <RichTextInput updateParent={this.handleSecond} />}
+                                <Grid item></Grid>
+                                <Grid container spacing={3} justify="center" alignItems="center">
+                                    <Grid item xs={2}>
+                                        <Button
+                                            variant="contained"
+                                            disabled={this.state.page === 0}
+                                            onClick={this.back}>
+                                            Back
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Button variant="contained" color="primary" onClick={this.handleSubmit}>
+                                            {this.state.page === 1 ? 'Finish' : 'Next'}
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                                <Grid item></Grid>
+                            </Grid>
+                        </Container>
+                    </form>
                 </div>
             )
         }
     }
 }
 
-class StartCreate extends Component {
-    constructor(){
-        super();
-        this.state = {
-            jobTitle: '',
-            organization: '',
-            country: '',
-            dateAdded: '',
-            location: '',
-            pageUrl: '',
-            jobSalary: ''
-        }
-        this.handleChange = this.handleChange.bind(this);
-    }
-    handleChange(event) {
-        this.setState({[event.target.id]: event.target.value});
-        this.props.updateParent(this.state);
-    }
-
-    render(){
-        return(
-            <div>
-                <div className='field'>
-                    <label htmlFor="jobTitle">Job title: </label>
-                    <input type="text" id="jobTitle" onChange={this.handleChange} required></input>
-                </div>
-                <div className='field'>
-                    <label htmlFor="organization">Company: </label>
-                    <input type="text" id="organization" autocomplete="on" onChange={this.handleChange} required></input>
-                </div>
-                <div className='field'>
-                    <label htmlFor="country">Country: </label>
-                    <input type="text" id="country" autocomplete="on" onChange={this.handleChange} required></input>
-                </div>
-                <div className='field'>
-                    <label htmlFor="location">Job location: </label>
-                    <input type="text" id="location" onChange={this.handleChange} required></input>
-                </div>
-                <div className='field'>
-                    <label htmlFor="jobSalary">Salary for job: </label>
-                    <input type="text" id="jobSalary" onChange={this.handleChange} required></input>
-                </div>
-                <div className='field'>
-                    <label htmlFor="pageUrl">Company URL: </label>
-                    <input type="url" id="pageUrl" onChange={this.handleChange}></input>
-                </div>
-            </div>
-        )
-    }
-}
-
-
-
-export default CreateJob
+export default withStyles(styles, { withTheme: true })(CreateJob);

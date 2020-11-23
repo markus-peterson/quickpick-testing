@@ -4,7 +4,7 @@ import '../css/Dashboard.css'
 import JobService from '../api/JobService';
 import ApplicationService from '../api/ApplicationService';
 import AuthenticationService from '../api/AuthenticationService';
-
+import { Paper, Grid, Container, Button} from '@material-ui/core/';
 
 class Dashboard extends Component {
     constructor() {
@@ -179,7 +179,7 @@ class JobListItems extends Component {
                                 );
                             }, this)
                         }
-                        {this.state.moreToLoad && <button type="button" onClick={this.loadmore}>Load more</button>}
+                        {this.state.moreToLoad && <Button variant="contained" size="small" onClick={this.loadmore}>Load more</Button>}
                     </div>
                 </div>
             )
@@ -256,7 +256,7 @@ class SelectedJob extends Component {
                         <div className="description" dangerouslySetInnerHTML={{__html: this.props.job.jobDescription}} />
                         <p>{this.props.job.jobSalary}</p>
                         <p>{this.props.job.pageUrl}</p>
-                        {!this.props.appStatus && !this.state.appiedStatus && isUserLoggedIn && <button type="button" onClick={this.apply}>Apply</button>}
+                        {!this.props.appStatus && !this.state.appiedStatus && isUserLoggedIn && <Button variant="contained" size="small" onClick={this.apply}>Apply</Button>}
                         {this.state.appiedStatus && this.props.appResponse === '' && isUserLoggedIn && <div>{this.state.appiedResponse}</div>}
                         {this.props.appStatus && isUserLoggedIn && <div>{this.props.appResponse}</div>}
                     </div>

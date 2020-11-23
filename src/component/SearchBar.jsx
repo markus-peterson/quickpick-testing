@@ -116,5 +116,5 @@ class SearchBar extends Component{
             </GridContainer>
         );
     }
-  }
-  export default withStyles(styles, { withTheme: true })(SearchBar);
+}
+export default withStyles(styles, { withTheme: true })(SearchBar);

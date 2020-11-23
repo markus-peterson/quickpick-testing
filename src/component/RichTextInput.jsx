@@ -6,6 +6,7 @@ import Draft from 'draft-js';
 import '../css/RichEditor.css';
 import '../css/RichText.css';
 import '../css/Draft.css';
+import { Grid, Divider} from '@material-ui/core/';
 
 const { Editor, EditorState, RichUtils, getDefaultKeyBinding } = Draft;
 
@@ -78,19 +79,25 @@ export default class RichTextInput extends Component {
         const { editorState } = this.state;
         return (
             <div>
-                <Card>
-                    <Card.Header style={{ marginBottom: 0 }}>
-                        <InlineStyleControls
-                            editorState={editorState}
-                            onToggle={this.toggleInlineStyle}
-                        />
-                        <div className='break'></div>
-                        <BlockStyleControls
-                            editorState={editorState}
-                            onToggle={this.toggleBlockType}
-                        />
-                    </Card.Header>
-                    <Card.Body>
+                <Grid container spacing={2}>
+                    <Grid item container justify="center" alignItems="center">
+                        <Grid item xs={4}>
+                            <InlineStyleControls
+                                editorState={editorState}
+                                onToggle={this.toggleInlineStyle}
+                            />
+                        </Grid>
+                        <Grid item xs={5}>
+                            <BlockStyleControls
+                                editorState={editorState}
+                                onToggle={this.toggleBlockType}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider />
+                    </Grid>
+                    <Grid item xs={12}>
                         <Editor
                             blockStyleFn={getBlockStyle}
                             customStyleMap={styleMap}
@@ -98,12 +105,12 @@ export default class RichTextInput extends Component {
                             handleKeyCommand={this.handleKeyCommand}
                             keyBindingFn={this.mapKeyToEditorCommand}
                             onChange={this.onChange}
-                            placeholder="Tell a story..."
+                            placeholder="Enter job description..."
                             ref="editor"
                             spellCheck={true}
                         />
-                    </Card.Body>
-                </Card>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -151,8 +158,6 @@ const BLOCK_TYPES = [
     { label: 'H1', style: 'header-two' },
     { label: 'H2', style: 'header-three' },
     { label: 'H3', style: 'header-four' },
-    { label: 'H4', style: 'header-five' },
-    { label: 'H5', style: 'header-six' },
     { label: 'Blockquote', style: 'blockquote' },
     { label: 'UL', style: 'unordered-list-item' },
     { label: 'OL', style: 'ordered-list-item' },
