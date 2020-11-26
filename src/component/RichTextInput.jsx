@@ -1,6 +1,5 @@
 import React from 'react';
 import { Component } from 'react';
-import { Card } from 'react-bootstrap';
 import { stateToHTML } from 'draft-js-export-html';
 import Draft from 'draft-js';
 import '../css/RichEditor.css';

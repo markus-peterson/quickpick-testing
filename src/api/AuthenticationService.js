@@ -3,7 +3,7 @@ import axios from 'axios'
 class AutheticationService{
     registerSuccessfulLogin(user){
         sessionStorage.setItem('authenticatedUser',user.username);
-        sessionStorage.setItem('authenticatedUserID',user.id);
+        sessionStorage.setItem('authenticatedUserId',user.id);
         this.setupAxiosInterceptors()
     }
 

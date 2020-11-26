@@ -8,8 +8,7 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 import ResumeUploader from './ResumeUploader';
 import ProfileUploader from './ProfileUploader';
-import CreatedJobList from './CreatedJobList';
-import AppliedJobList from './AppliedJobList';
+import ProfileJobList from './ProfileJobList';
 import UserService from '../api/UserService';
 import AuthenticationService from '../api/AuthenticationService';
 import '../css/RegisterComponent.css'
@@ -30,8 +29,11 @@ class ProfileComponent extends Component {
 			newEmail: '',
 			newAddress: '',
 			newBiography: '',
+			editBiography: false,
 			newUsername: '',
-			editable: false
+			editable: false,
+			userTag: window.location.href.split('profile/')[0] + 'profile/',
+			exists: false,
 		}
 		this.editing = this.editing.bind(this);
 		this.updateUser = this.updateUser.bind(this);
@@ -49,14 +51,15 @@ class ProfileComponent extends Component {
 			edit = true
 		}
 		this.setState({userObj : data, isLoading : false, editable : edit});
-		// console.log(data);
 		var evt = document.createEvent('Event');
-        evt.initEvent('load', false, false);
+		evt.initEvent('load', false, false);
 		window.dispatchEvent(evt);
 	}
 
 	async componentDidMount() {
 		const pathUser = window.location.href.split('profile/')[1];
+		let exist = await UserService.userExists(pathUser);
+		this.setState({exists : exist});
 		const data = await	UserService
 							.executeGetUserService(pathUser)
 							.then(result => result.data);
@@ -66,9 +69,8 @@ class ProfileComponent extends Component {
 			edit = true
 		}
 		this.setState({userObj : data, isLoading : false, editable : edit});
-		// console.log(data);
 		var evt = document.createEvent('Event');
-        evt.initEvent('load', false, false);
+		evt.initEvent('load', false, false);
 		window.dispatchEvent(evt);
 	}
 	
@@ -82,24 +84,20 @@ class ProfileComponent extends Component {
 	}
 
 	async updateUser() {
-        const user = {
-            firstName : this.state.newFirstName,
-            lastName : this.state.newLastName,
-            emailId : this.state.newEmail,
+		let user = {
+			firstName : this.state.newFirstName,
+			lastName : this.state.newLastName,
+			emailId : this.state.newEmail,
 			address : this.state.newAddress,
-			biography : this.state.newBiography,
+			biography : (this.state.editBiography ? this.state.newBiography : this.state.userObj.biography),
 			username : this.state.newUsername,
-        }
-		await UserService.updateUser(this.state.userObj.id, user)
-		.then((response) => {
-			AuthenticationService.updateUsername(response.data.username)
-			this.setState({
-				userObj: response.data
-			});
-		});
-		// this.componentDidMount();
-        this.setState({edit_mode: false});
-    }
+		}
+		this.setState({editBiography : false});
+		await UserService.updateUser(this.state.userObj.id, user);
+		await this.componentDidMount();
+		window.location.replace(this.state.userTag + sessionStorage.getItem('authenticatedUser'));
+		this.setState({edit_mode: false});
+	}
 
 	handleChange(event) {
 		const value = event.target.value;
@@ -107,6 +105,8 @@ class ProfileComponent extends Component {
 			...this.state,
 			[event.target.name]: value
 		});
+		if(event.target.name === 'newBiography')
+			this.setState({editBiography : true});
 	}
 
 	render() {
@@ -115,7 +115,23 @@ class ProfileComponent extends Component {
 			Paper : {padding:20, marginTop:10, marginBottom:10},
 			image : {'borderRadius':'50%', width:"200px", height:"200px", "objectfit":"cover"}
 		}
-
+		if(this.state.isLoading)
+			return (<div>Loading...</div>);
+		if(!isUserLoggedIn || !this.state.exists)
+			return (
+				<Grid container direction="row">
+					<Grid container justify="center">
+						<Grid item sm={3}></Grid>
+						<Grid item sm={6}>
+							<Paper style={style.Paper}>
+								<Grid container>
+									{!isUserLoggedIn ? <Grid item sm> Not Logged In </Grid> : <Grid item sm> User Not Found </Grid>}
+								</Grid>
+							</Paper>
+						</Grid>
+					</Grid>
+				</Grid>
+			)
 		const editingFalse = () => (
 			<List>
 				<ListItem>
@@ -134,7 +150,6 @@ class ProfileComponent extends Component {
 				</ListItem>
 			</List>
 		);
-
 		const editingTrue = () => (
 			<List>
 				<ListItem>
@@ -145,7 +160,8 @@ class ProfileComponent extends Component {
 				<Divider variant="inset" component="li" />
 				<ListItem>
 					<ListItemAvatar><Email fontSize="large" /></ListItemAvatar>
-					<TextField label={this.state.userObj.emailId} placeholder="email" name="newEmail" onChange={this.handleChange}/>
+					{/* <TextField label={this.state.userObj.emailId} placeholder="email" name="newEmail" onChange={this.handleChange}/> */}
+					<TextField disabled label="Disabled" defaultValue={this.state.userObj.emailId}/>
 				</ListItem>
 				<Divider variant="inset" component="li" />
 				<ListItem>
@@ -154,9 +170,6 @@ class ProfileComponent extends Component {
 				</ListItem>
 			</List>
 		);
-
-		if(this.state.isLoading)
-			return (<div>Loading...</div>);
 		return (
 			<div className="container">
 				<Grid container direction="row">
@@ -165,52 +178,48 @@ class ProfileComponent extends Component {
 						<Grid item sm={6}>
 							<Paper style={style.Paper}>
 								<Grid container>
-									{!isUserLoggedIn ?
-										<Grid item sm>
-											Not Logged In
-										</Grid>
-										:
-										<>
-											<Grid container direction="row" spacing={6}>
-												<Grid item sm={4}>
-													<ProfileUploader/>
-												</Grid>
-												<Grid item sm={7}>
-													<Grid container direction="column" alignItems="flex-start" spacing={2}>
-														<Grid item>
-															{!this.state.edit_mode ?
-																<h2>{this.state.userObj.username}</h2> :
-																<TextField label={this.state.userObj.username} placeholder="Username" name="newUsername" onChange={this.handleChange}/>
-															}
-														</Grid>
-														<Grid item >
-															{!this.state.edit_mode ?
-																<div align="left" style={{'wordBreak': 'break-word'}}>{this.state.userObj.biography !== null ? this.state.userObj.biography : "bio"}</div> :
-																<div width="10%">
-																	<TextareaAutosize cols="50" rows="4" name="newBiography" defaultValue={this.state.userObj.biography} onChange={this.handleChange}/>
-																</div>
-															}
-														</Grid>
+									<>
+										<Grid container direction="row" spacing={6}>
+											<Grid item sm={3}>
+												<ProfileUploader key={this.state.userObj.username} username={this.state.userObj.username}/>
+											</Grid>
+											<Grid item sm={8}>
+												<Grid container direction="column" alignItems="flex-start" spacing={2}>
+													<Grid item>
+														{!this.state.edit_mode ?
+															<h2>{this.state.userObj.username}</h2> :
+															<TextField label={this.state.userObj.username} placeholder="Username" name="newUsername" onChange={this.handleChange}/>
+														}
+													</Grid>
+													<Grid item >
+														{!this.state.edit_mode ?
+															<div align="left" style={{'wordBreak': 'break-word'}}>
+																{this.state.userObj != null && this.state.userObj.biography !== null && this.state.userObj.biography.length > 0 ? this.state.userObj.biography : "-empty-"}
+															</div> :
+															<div width="10%">
+																<TextareaAutosize cols="50" rows="4" name="newBiography" defaultValue={this.state.userObj.biography} onChange={this.handleChange}/>
+															</div>
+														}
 													</Grid>
 												</Grid>
-												<Grid item sm={1}>
-													{!this.state.edit_mode ? <EditIcon style={{cursor: "pointer"}} onClick={this.editing}/> : <SaveIcon style={{cursor: "pointer"}} onClick={this.editing}/>}
-												</Grid>
 											</Grid>
-											<Grid container direction="row">
-												<Grid item sm>
-													{!this.state.edit_mode ? editingFalse() : editingTrue()}
-												</Grid>
+											<Grid item sm={1}>
+												{this.state.editable && (!this.state.edit_mode ? <EditIcon style={{cursor: "pointer"}} onClick={this.editing}/> : <SaveIcon style={{cursor: "pointer"}} onClick={this.editing}/>)}
 											</Grid>
-										</>
-									}
+										</Grid>
+										<Grid container direction="row">
+											<Grid item sm>
+												{!this.state.edit_mode ? editingFalse() : editingTrue()}
+											</Grid>
+										</Grid>
+									</>
 								</Grid>
 							</Paper>
 						</Grid>
 						<Grid item sm={3}>
 							<Grid container direction="row">
 								<Paper style={style.Paper}>
-									<ResumeUploader/>
+									<ResumeUploader key={this.state.userObj.username} username={this.state.userObj.username}/>
 								</Paper>
 							</Grid>
 						</Grid>
@@ -218,17 +227,19 @@ class ProfileComponent extends Component {
 					<Grid container justify="center">
 						<Grid item sm={6}>
 							<Paper style={style.Paper}>
-								<CreatedJobList/>
+								<ProfileJobList key={this.state.userObj.username} username={this.state.userObj.username} jobType="created"/>
 							</Paper>
 						</Grid>
 					</Grid>
-					<Grid container justify="center">
-						<Grid item sm={6}>
-							<Paper style={style.Paper}>
-								<AppliedJobList/>
-							</Paper>
+					{this.state.editable && 
+						<Grid container justify="center">
+							<Grid item sm={6}>
+								<Paper style={style.Paper}>
+									<ProfileJobList key={this.state.userObj.username} username={this.state.userObj.username} jobType="applied"/>
+								</Paper>
+							</Grid>
 						</Grid>
-					</Grid>
+					}
 				</Grid>
 			</div>
 		);

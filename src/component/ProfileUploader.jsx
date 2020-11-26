@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import output from '../api/connections';
 import FileService from "../api/FileService";
 import UserService from '../api/UserService';
-import AuthenticationService from '../api/AuthenticationService';
 import blank_profile from '../img/blank-profile.png';
 import '../css/ProfileUploader.css';
 
@@ -23,7 +22,8 @@ export default class ProfileUploader extends Component {
 			userObj: null,
 			profile: null,
 			profileCond: false,
-			uploaded: false
+			uploaded: false,
+			uploadable: false,
 		};
 
 		this.selectFile = this.selectFile.bind(this);
@@ -31,9 +31,10 @@ export default class ProfileUploader extends Component {
 	}
 
 	async componentDidMount() {
+		if(this.props.username === sessionStorage.getItem('authenticatedUser'))
+			this.setState({uploadable : true});
 		const data = await	UserService
-							.executeGetUserService(sessionStorage
-							.getItem('authenticatedUser'))
+							.executeGetUserService(this.props.username)
 							.then(result => result.data);
 							console.log('loading data ...');
 		this.setState({userObj : data, isLoading : false});
@@ -50,6 +51,8 @@ export default class ProfileUploader extends Component {
 	}
 
 	async uploadProfile() {
+		if(!this.state.uploadable)
+			return null;
 		let currentFile = this.state.selectedFiles[0];
 		this.setState({ progress: 0, currentFile: currentFile});
 
@@ -86,7 +89,6 @@ export default class ProfileUploader extends Component {
 	}
 
 	render() {
-		const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
 		const style = {
 			Paper : {padding:20, marginTop:10, marginBottom:10},
 			image : {'borderRadius':'50%', width:"200px", height:"200px", "objectFit":"cover"}
@@ -98,11 +100,18 @@ export default class ProfileUploader extends Component {
 		}
 		if(this.state.isLoading)
 			return (<div>Loading...</div>);
-		if(!isUserLoggedIn)
-			return <></>
+		if(!this.state.uploadable)
+			return (
+				<div>
+				{this.state.userObj.profileFileId != null ?
+					(<img className="image" src={this.state.urlTag + this.state.userObj.profileFileId} alt={this.state.userObj.username + "-profile-image"} style={style.image}/>) :
+					(<img className="image" src={blank_profile} alt="profile-blank" style={style.image}/>)
+				}
+				</div>
+			);
 		return (
 			<label htmlFor="image" className="hovereffect">
-				<input type="file" name="image" id="image" onChange={this.selectFile} style={{"display":"none"}}/>
+				<input type="file" accept="image/*" name="image" id="image" onChange={this.selectFile} style={{"display":"none"}}/>
 				{this.state.userObj.profileFileId != null ?
 					(<img className="image" src={this.state.urlTag + this.state.userObj.profileFileId} alt={this.state.userObj.username + "-profile-image"} style={style.image}/>) :
 					(<img className="image" src={blank_profile} alt="profile-blank" style={style.image}/>)

@@ -6,14 +6,14 @@ class getJobListService{
 		jobTag : output + '/job/'
 	}
 // UNIQUE_ID  	COUNTRY  	DATE_ADDED  	HAS_EXPIRED  	JOB_BOARD  	JOB_DESCRIPTION  	JOB_SALARY  	JOB_TITLE  	JOB_TYPE  	LOCATION  	ORGANIZATION  	PAGE_URL  	SECTOR
-    executeGetJob(jobID){
+    executeGetJob(jobId){
 		const {jobTag} = this.state;
 		
         let usernameAuth = 'user'
 		let passwordAuth =  'password'
 		let basicAuthHeader = 'Basic '+window.btoa(usernameAuth+':'+passwordAuth)
 
-	   return axios.get(`${jobTag}getJob/${jobID}`,{
+	   return axios.get(`${jobTag}getJob/${jobId}`,{
 		   headers:{
 			   authorization: basicAuthHeader
 		   }

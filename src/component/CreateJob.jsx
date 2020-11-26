@@ -106,7 +106,7 @@ class CreateJob extends Component {
                 pageUrl : this.state.pageUrl,
                 jobSalary : this.state.jobSalary,
                 sector : this.state.sector,
-                author : sessionStorage.getItem('authenticatedUserID')
+                author : sessionStorage.getItem('authenticatedUserId')
             }
             JobService.executePostJobService(job);
             this.setState({isSubmitted: true});

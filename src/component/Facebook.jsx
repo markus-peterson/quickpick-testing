@@ -9,7 +9,7 @@ export default class Facebook extends Component {
 		super(props)
         this.state = {
             isLoggedIn :false,
-            userID:'',
+            userId:'',
             name:'',
             email:'',
             picture:'',
@@ -27,7 +27,7 @@ export default class Facebook extends Component {
         
         this.setState({
             isLoggedIn:true,
-            userID:response.userID,
+            userId:response.userId,
             name: response.name,
             email:response.email,
             picture:response.picture.data.url

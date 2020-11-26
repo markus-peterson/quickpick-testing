@@ -22,11 +22,11 @@ class Dashboard extends Component {
         console.log(newProps)
     }
     
-    changeJob(id){
-        this.setState({job : id});
-        if(id !== undefined){
+    changeJob(job){
+        this.setState({job : job});
+        if(job !== undefined){
         const application = {
-            jobID : id.uniqueId,
+            jobID : job.id,
             username : sessionStorage.getItem('authenticatedUser')
         }
         ApplicationService.checkApplied(application)
@@ -223,7 +223,7 @@ class SelectedJob extends Component {
 
     async apply(){
         const application = {
-            jobID : this.props.job.uniqueId,
+            jobID : this.props.job.id,
             username : sessionStorage.getItem('authenticatedUser')
         }
         await ApplicationService.executeApplication(application)

@@ -284,7 +284,7 @@ class LoginComponenet extends Component {
                                 <div className="google-button">
                                     <GoogleLogin
                                         clientId="388896389881-5je3ulqa0qfii59cgpq3ldnfiof49pfv.apps.googleusercontent.com"
-                                        buttonText="Login"
+                                        buttonText="Sign in With Google"
                                         onSuccess={this.handleGoogleLogin}
                                         onFailure={this.handleError}
                                         cookiePolicy={'single_host_origin'} />

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import output from './connections';
+import AuthenticationService from './AuthenticationService';
 
 class getUsersListService{
 	state = {  
@@ -21,6 +22,7 @@ class getUsersListService{
 			}
 		)
 	}
+
 	executeCheckRegisteredExternal(emailId) {
 		const {userTag} = this.state;
 
@@ -82,20 +84,34 @@ class getUsersListService{
         )
     }
 	
-	updateUser(id, user) {
+	async updateUser(id, user) {
 		const {userTag} = this.state;
-        let username = 'user'
+		let username = 'user'
 		let password = 'password'
-		let currentUsername = sessionStorage.getItem('authenticatedUser');
-        console.log("UPDATING INFO : " + currentUsername)
-        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-        return axios.post(userTag+'updateUser/'+ id, user, {
+		// let currentUsername = sessionStorage.getItem('authenticatedUser');
+		if(user.username.length <= 0)
+			user.username = sessionStorage.getItem('authenticatedUser');
+		let exist = await this.userExists(user.username);
+		if(!exist)
+			AuthenticationService.updateUsername(user.username);
+		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password);
+		return axios.post(userTag+'updateUser/'+ id, user, {
 				headers:{
 					authorization: basicAuthHeader
 				}
 			}
-        )
+		)
 	}
 
+	async userExists(username) {
+		const {userTag} = this.state;
+		let usernameAuth = 'user'
+		let passwordAuth = 'password'
+		let basicAuthHeader = 'Basic '+window.btoa(usernameAuth+':'+passwordAuth)
+		let result = 'new';
+		await axios.get(userTag+'checkUsername/'+username, {headers:{authorization: basicAuthHeader}}).then(val => result = val.data);
+		console.log("EXISTS? " + result);
+		return result === 'registered';
+	}
 }
 export default new getUsersListService();

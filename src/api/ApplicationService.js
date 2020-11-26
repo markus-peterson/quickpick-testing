@@ -23,7 +23,6 @@ class ApplicationService{
         let username = 'user'
 		let password = 'password'
 		let currentUsername = sessionStorage.getItem('authenticatedUser');
-        console.log("UPDATING INFO : " + currentUsername)
         let basicAuthHeader = 'Basic '+ window.btoa(username+':'+password)
 		return axios.get(appsTag+'userApplications/'+ currentUsername, {
 				headers:{

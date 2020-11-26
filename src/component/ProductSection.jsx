@@ -10,7 +10,7 @@ import GridContainer from "../Design/Grid/GridContainer.js";
 import GridItem from "../Design/Grid/GridItem.js";
 import InfoArea from "../Design/InfoArea/InfoArea.js"
 
-import { Grid } from '@material-ui/core/';
+// import { Grid } from '@material-ui/core/';
 
 export default function ProductSection() {
     const title = {
