@@ -22,7 +22,7 @@ import com.backend.model.File;
 import com.backend.model.User;
 
 @RestController
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*") // local
 public class FileController {
 	@Autowired
 	private FileService fileService;

@@ -31,6 +31,10 @@ public class File {
 	private byte[] data;
 
 
+	public File() {
+		super();
+	}
+
 	public File(String name, String type, byte[] data) {
 		this.name = name;
 		this.type = type;

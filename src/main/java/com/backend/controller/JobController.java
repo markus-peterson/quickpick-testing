@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.Job;
@@ -23,13 +24,18 @@ public class JobController {
 	JobService jobService;
 	
 	@GetMapping("/getAllJobs")
-	public List<Job> getUsers(){
+	public List<Job> getJobs(){
 		return jobService.getJobs();
 	}
 	
 	@GetMapping("/getJob/{uniqueId}")
-	public Job getUser(@PathVariable String uniqueId) {
+	public Job getjob(@PathVariable String uniqueId) {
 		return jobService.getJobByID(uniqueId);
+	}
+	
+	@GetMapping("/getJobsByFilter")
+	public List<Job> getjobBySearchKey(@RequestParam("searchKey") String searchKey, @RequestParam("location") String location ) {
+		return jobService.getJobsByFilter(searchKey, location);
 	}
 
 	@PostMapping("/createJob")

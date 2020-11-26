@@ -9,5 +9,10 @@ import com.backend.model.User;
 public interface UserDao extends JpaRepository<User, Integer>	{
 	
 	User findByusername(String username);
+	
+	User findById(String id);
+	
+	User findByEmailId(String emailId);
+	
 }
 	

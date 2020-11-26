@@ -12,6 +12,8 @@ public interface JobServiceInterface {
 	
 	public Job getJobByID(String uniqueId);
 
-	List<Job> getJobsByFilter(Job jobDetails);
+//	List<Job> getJobsByFilter(Job jobDetails);
+	
+	public List<Job> getJobsByFilter(String searchKey, String location);
 
 }

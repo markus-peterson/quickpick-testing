@@ -36,16 +36,18 @@ public class JobService implements JobServiceInterface {
 		return null;
 	}
 	
-	
-	@Override
-	public List<Job> getJobsByFilter(Job jobDetails) {
+	public List<Job> getJobsByFilter(String searchKey, String location) {
 		
-//		if(uniqueId != null) { 
-//			Job result = jobDao.findByUniqueId(uniqueId);
-//			if(result!= null) {
-//				return result;
-//			}
-//		}
-		return null;
+		List<Job> jobs;
+		if((null == searchKey || searchKey.equals("")) && (null == location || location.equals("") )) {
+			jobs= jobDao.findAll();
+		}else if((null == location || location.equals(""))) {
+			jobs= jobDao.findBySearchKeyword(searchKey);
+		}else if((null == searchKey || searchKey.equals("") )) {
+			jobs= jobDao.findBySearchLocation(location);
+		}else {
+			jobs = jobDao.findBySearchParams(searchKey, location);
+		}
+		return jobs;	
 	}
 }
