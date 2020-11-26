@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Paper, Button, Paper} from '@material-ui/core/';
+import { Button, Paper } from '@material-ui/core/';
 
 import ProgressBar from './ProgressBar';
 import output from '../api/connections';
