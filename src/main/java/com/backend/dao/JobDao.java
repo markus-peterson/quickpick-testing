@@ -1,6 +1,7 @@
 package com.backend.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +13,9 @@ import com.backend.model.Job;
 @Repository
 public interface JobDao extends JpaRepository<Job, String>{
 	
-	Job findByUniqueId(String uniqueId);
+	Optional<Job> findById(String id);
 	
-	void deleteByUniqueId(String uniqueId);
+	void deleteById(String id);
 
 	@Query(value = "select * FROM job j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%') AND j.location LIKE CONCAT('%',:location,'%')",
 			nativeQuery = true)

@@ -1,6 +1,7 @@
 package com.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,34 +111,64 @@ public class UserService implements UserServiceInterface {
 		return "Something went wrong";
 	}
 	
-	public User updateUser(String id, User user) {
-		User currentUser = userDao.findById(id);//userDao.findByusername(username);
-		if(user.getAddress() != null && !user.getAddress().isEmpty())
-			currentUser.setAddress(user.getAddress());
-		if(user.getEmailId() != null && !user.getEmailId().isEmpty())
-			currentUser.setEmailId(user.getEmailId());
-		if(user.getFirstName() != null && !user.getFirstName().isEmpty())
-			currentUser.setFirstName(user.getFirstName());
-		if(user.getLastName() != null && !user.getLastName().isEmpty())
-			currentUser.setLastName(user.getLastName());
-		if(user.getPassword() != null && !user.getPassword().isEmpty())
-			currentUser.setPassword(user.getPassword());
-		if(user.getProfileFileId() != null && !user.getProfileFileId().isEmpty())
-			currentUser.setProfileFileId(user.getProfileFileId());
-		if(user.getResumeFileId() != null && !user.getResumeFileId().isEmpty())
-			currentUser.setResumeFileId(user.getResumeFileId());
-		if(user.getBiography() != null)
-			currentUser.setBiography(user.getBiography());
-		if(user.getUsername() != null && !user.getUsername().isEmpty())
-			try {
-				List<Application> userApps = appDao.findAllByUsername(currentUser.getUsername());
-				currentUser.setUsername(user.getUsername());
-				for(Application app : userApps) {
-					app.setUsername(user.getUsername());
-					
-				}
-				appDao.saveAll(userApps);
-			} catch (Exception e) {}
-		return userDao.save(currentUser);
+	public User findUserByEmail(String userEmail) {		
+		return userDao.findByEmailId(userEmail);
+	}
+
+	public Optional<User> findUserByResetToken(String token) {
+		return userDao.findByResetToken(token);
+	}
+
+	public void save(User resetUser) {
+		userDao.save(resetUser);
+		
+	}
+	
+	public String updateUser(String id, User user) {
+		String out = "service failed";
+		try {
+			out = "start - " + id;
+			User currentUser = userDao.findById(id).orElse(null);//userDao.findByusername(username);
+			out = "user found";
+			if(user.getAddress() != null && !user.getAddress().isEmpty())
+				currentUser.setAddress(user.getAddress());
+			out = "address";
+			if(user.getEmailId() != null && !user.getEmailId().isEmpty())
+				currentUser.setEmailId(user.getEmailId());
+			out = "email";
+			if(user.getFirstName() != null && !user.getFirstName().isEmpty())
+				currentUser.setFirstName(user.getFirstName());
+			out = "fname";
+			if(user.getLastName() != null && !user.getLastName().isEmpty())
+				currentUser.setLastName(user.getLastName());
+			out = "lname";
+			if(user.getPassword() != null && !user.getPassword().isEmpty())
+				currentUser.setPassword(user.getPassword());
+			out = "pass";
+			if(user.getProfileFileId() != null && !user.getProfileFileId().isEmpty())
+				currentUser.setProfileFileId(user.getProfileFileId());
+			out = "profile";
+			if(user.getResumeFileId() != null && !user.getResumeFileId().isEmpty())
+				currentUser.setResumeFileId(user.getResumeFileId());
+			out = "resume";
+			if(user.getBiography() != null)
+				currentUser.setBiography(user.getBiography());
+			out = "biography";
+			if(user.getUsername() != null && !user.getUsername().isEmpty()) {
+				try {
+					List<Application> userApps = appDao.findAllByUsername(currentUser.getUsername());
+					currentUser.setUsername(user.getUsername());
+					for(Application app : userApps)
+						app.setUsername(user.getUsername());
+					appDao.saveAll(userApps);
+				} catch (Exception e) {}
+			}
+			out = "username";
+			userDao.save(currentUser);
+			out = "end";
+			return out;
+		} catch(Exception e) {
+			return out;
+		}
 	}
 }

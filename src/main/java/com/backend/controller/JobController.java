@@ -28,9 +28,9 @@ public class JobController {
 		return jobService.getJobs();
 	}
 	
-	@GetMapping("/getJob/{uniqueId}")
-	public Job getjob(@PathVariable String uniqueId) {
-		return jobService.getJobByID(uniqueId);
+	@GetMapping("/getJob/{id}")
+	public Job getjob(@PathVariable String id) {
+		return jobService.getJobByID(id);
 	}
 	
 	@GetMapping("/getJobsByFilter")

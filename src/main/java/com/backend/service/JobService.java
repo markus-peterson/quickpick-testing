@@ -15,7 +15,7 @@ public class JobService implements JobServiceInterface {
 	private JobDao jobDao;
 
 	@Override
-	public Job addNewJob(Job jobDetails ) {
+	public Job addNewJob(Job jobDetails) {
 		return jobDao.save(jobDetails);
 	}
 
@@ -25,10 +25,10 @@ public class JobService implements JobServiceInterface {
 	}
 
 	@Override
-	public Job getJobByID(String uniqueId) {
+	public Job getJobByID(String id) {
 		
-		if(uniqueId != null) { 
-			Job result = jobDao.findByUniqueId(uniqueId);
+		if(id != null) { 
+			Job result = jobDao.findById(id).orElse(null);
 			if(result!= null) {
 				return result;
 			}

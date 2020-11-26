@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String uniqueId;
+	private String id;
 	
 	private String country;
 	private String dateAdded;
@@ -110,8 +110,8 @@ public class Job {
 	public void setSector(String sector) {
 		this.sector = sector;
 	}
-	public String getUniqueId() {
-		return uniqueId;
+	public String getId() {
+		return id;
 	}
 	public String getAuthor() {
 		return author;
