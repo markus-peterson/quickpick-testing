@@ -9,6 +9,8 @@ import ProfileComponent from './ProfileComponent';
 import CreateJob from './CreateJob';
 import LandingComponent from './LandingComponent';
 import ManagementComponent from './ManagementComponent';
+import ForgotPasswordComponent from './ForgotPassword';
+import ResetPasswordComponent from './ResetPassword';
 
 class AppRouting extends Component {
     render() {
@@ -18,14 +20,16 @@ class AppRouting extends Component {
                     <>
                         <Navgiation/>
                         <Switch >
-                            <Route path="/"           exact component = {LandingComponent}/>
-                            <Route path="/dash"       exact component = {Dashboard}/>
-                            <Route path="/dash/?k=:keyword" component = {Dashboard}/>
-                            <Route path="/login"            component = {LoginComponent}/>
-                            <Route path="/register"         component = {RegisterComponent}/>
-                            <Route path="/postjob"          component = {CreateJob}/>
-                            <Route path="/manage"          component = {ManagementComponent}/>
-                            <Route path="/profile/:name"    component = {ProfileComponent}/>
+                            <Route path="/"               exact component = {LandingComponent}/>
+                            <Route path="/dash"           exact component = {Dashboard}/>
+                            <Route path="/dash/?k=:keyword"     component = {Dashboard}/>
+                            <Route path="/login"                component = {LoginComponent}/>
+                            <Route path="/register"             component = {RegisterComponent}/>
+                            <Route path="/postjob"              component = {CreateJob}/>
+                            <Route path="/manage"               component = {ManagementComponent}/>
+                            <Route path="/profile/:name"        component = {ProfileComponent}/>
+                            <Route path="/ForgotPassword"       component = {ForgotPasswordComponent}/>
+                            <Route path="/resetpassword/:token" component = {ResetPasswordComponent}/>
                             {/* <AuthenticatedRoute path="/dashboard" component= {Dashboard}/> */}
                             <Route component = {ErrorComponent}/>
                         </Switch>
