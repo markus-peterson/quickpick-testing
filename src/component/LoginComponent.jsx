@@ -4,21 +4,10 @@ import UserService from '../api/UserService';
 // import Facebook from './Facebook'
 import '../css/LoginComponent.css'
 
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import { Avatar, Button, CssBaseline, TextField, Checkbox, Link, Grid, Box, Typography, Container, FormControlLabel } from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import { GoogleLogin } from 'react-google-login';
-
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 const styles = theme => ({
     body: {
@@ -61,7 +50,8 @@ class LoginComponenet extends Component {
             showSuccessMessage:false,
             noUserFound:false,
             externalCond: false,
-            userObj: null
+            userObj: null,
+            incorrect: 0
         }
         this.handleChange = this.handleChange.bind(this)
         this.loginClicked = this.loginClicked.bind(this)
@@ -75,7 +65,8 @@ class LoginComponenet extends Component {
 
     handleChange(event){
         this.setState({     
-            [event.target.name] : event.target.value 
+            [event.target.name] : event.target.value,
+            incorrect: 0
         })
     }
 
@@ -90,13 +81,13 @@ class LoginComponenet extends Component {
             firstName: null,
             lastName: null,
             address: null,
-            emailId: null          
+            emailId: null
         }
         console.log('Inside the login function')
         //let loginSccess = false;
         UserService.registerLogin(user)
         .then( response => this.handleSuccessResponse(response))
-		.catch(function (error) {
+		.catch((error) => {
             console.log("ALLAL", error);
             console.log("data", { user });
         })
@@ -104,21 +95,24 @@ class LoginComponenet extends Component {
 
     handleSuccessResponse(response){
         if (response.status === 200) {
-            // if (response.data === "Login Successful"){
+            if (response.data.username === this.state.username || response.data.emailId === this.state.emailId){
                 console.log('Successful Login')
-                AutheticationService.registerSuccessfulLogin(response.data.username)
-				
-                console.log(response.data.username)
-				this.props.history.push(`/`)
-				window.location.reload() // temp solution to user API call bug
-                
-            // }else if (response.data === "Login Failed"){
-            //    this.setState({showSuccessMessage : false   })
-            //     this.setState({hasLoginFailed: true})
-            // }else if (response.data === "User Not Found"){
-            //    this.setState({showSuccessMessage : false   })
-            //     this.setState({noUserFound : true})
-            // }
+                AutheticationService.registerSuccessfulLogin(response.data)
+                this.props.history.push(`/`)
+                window.location.reload() // temp solution to user API call bug
+            }else if (response.data.username === "Incorrect Password"){
+                this.setState({
+                    showSuccessMessage : false,
+                    hasLoginFailed: true,
+                    incorrect: 2
+                })
+            }else if (response.data.username === "Not registered"){
+                this.setState({
+                    showSuccessMessage : false,
+                    noUserFound : true,
+                    incorrect: 1
+                })
+            }
         } else {
             window.alert(response)
         }
@@ -132,7 +126,6 @@ class LoginComponenet extends Component {
     handleGoogleLogin(response){
         UserService.executeCheckRegisteredExternal(response.profileObj.email)
         .then((res) => {
-            console.log(res)
             if(res.data === "registered"){
                 this.loginGoogle(response);
             }else{
@@ -145,7 +138,7 @@ class LoginComponenet extends Component {
     registerGoogle(){
         const response = this.state.userObj
         const user = {
-			password: 'google',
+			password: response.profileObj.googleId,
             emailId: response.profileObj.email,
             firstName: response.profileObj.givenName,
             address: null,
@@ -153,14 +146,13 @@ class LoginComponenet extends Component {
             username: this.state.username
         };
         this.setState({
-            password: 'google',
+            password: response.profileObj.googleId,
             emailId: response.profileObj.email,
             firstName: response.profileObj.givenName,
             address: null,
             lastName: response.profileObj.familyName,
             username: this.state.username,
         });
-		console.log(user);
 		UserService.executePostUserRegisterService(user)
         .then(res => {
             if(res.status === 200) {
@@ -173,11 +165,11 @@ class LoginComponenet extends Component {
 
     loginGoogle(response){
         this.setState({
-            password: 'google',
+            password: response.profileObj.googleId,
             emailId: response.profileObj.email,
         });
         const user = {
-            password: 'google',
+            password: response.profileObj.googleId,
             emailId: response.profileObj.email,
             firstName: null,
             lastName: null,
@@ -205,7 +197,7 @@ class LoginComponenet extends Component {
                         <Avatar className={classes.avatar}>
                             <LockOutlinedIcon />
                         </Avatar>
-                        <form className={classes.form} noValidate  onSubmit={this.onSubmit} >
+                        <form className={`${classes.form} login-paper`} noValidate  onSubmit={this.onSubmit}>
                             <Typography component="h1" variant="h5">Sign in</Typography>
                             <TextField
                                 variant="outlined"
@@ -244,22 +236,25 @@ class LoginComponenet extends Component {
                         <form className={classes.form} noValidate  onSubmit={this.onSubmit} >
                             <Typography component="h1" variant="h5">Sign in</Typography>
                             <TextField
+                                error={ this.state.incorrect === 1 }
                                 variant="outlined"
                                 margin="normal"
                                 required
                                 fullWidth
                                 id="username"
-                                label="Username"
+                                label="Username or Email"
                                 name="username"
                                 autoComplete="username"
+                                helperText={this.state.incorrect === 1 ? "Username or email not registered" : ""}
                                 value={this.state.username}
                                 autoFocus
                                 inputProps={{
-                                type: "text",
-                                onChange: this.handleChange,
-                                autoComplete: "off"
+                                    type: "text",
+                                    onChange: this.handleChange,
+                                    autoComplete: "hidden"
                                 }}/>
                             <TextField
+                                error={ this.state.incorrect > 0 }
                                 variant="outlined"
                                 margin="normal"
                                 required
@@ -270,10 +265,11 @@ class LoginComponenet extends Component {
                                 id="password"
                                 value={this.state.password}
                                 autoComplete="current-password"
+                                helperText={this.state.incorrect === 2 ? "Incorrect password" : ""}
                                 inputProps={{
                                     type: "password",
                                     onChange: this.handleChange,
-                                    autoComplete: "off"
+                                    autoComplete: "hidden"
                                 }}/>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}

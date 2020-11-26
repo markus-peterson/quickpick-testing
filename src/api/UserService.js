@@ -21,14 +21,14 @@ class getUsersListService{
 			}
 		)
 	}
-	executeCheckRegisteredExternal(username) {
+	executeCheckRegisteredExternal(emailId) {
 		const {userTag} = this.state;
 
 		let usernameAuth = 'user'
 		let passwordAuth =  'password'
 		let basicAuthHeader = 'Basic '+window.btoa(usernameAuth+':'+passwordAuth)
 
-		return axios.get(userTag+'checkUsername/'+username,
+		return axios.get(userTag+'checkEmail/'+emailId,
 			{
 				headers:{
 					authorization: basicAuthHeader
@@ -82,14 +82,14 @@ class getUsersListService{
         )
     }
 	
-	updateUser(user) {
+	updateUser(id, user) {
 		const {userTag} = this.state;
         let username = 'user'
 		let password = 'password'
 		let currentUsername = sessionStorage.getItem('authenticatedUser');
         console.log("UPDATING INFO : " + currentUsername)
         let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-        return axios.post(userTag+'updateUser/'+currentUsername, user , {
+        return axios.post(userTag+'updateUser/'+ id, user, {
 				headers:{
 					authorization: basicAuthHeader
 				}

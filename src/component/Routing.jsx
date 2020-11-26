@@ -8,6 +8,7 @@ import ErrorComponent from './ErrorComponent';
 import ProfileComponent from './ProfileComponent';
 import CreateJob from './CreateJob';
 import LandingComponent from './LandingComponent';
+import ManagementComponent from './ManagementComponent';
 
 class AppRouting extends Component {
     render() {
@@ -23,6 +24,7 @@ class AppRouting extends Component {
                             <Route path="/login"            component = {LoginComponent}/>
                             <Route path="/register"         component = {RegisterComponent}/>
                             <Route path="/postjob"          component = {CreateJob}/>
+                            <Route path="/manage"          component = {ManagementComponent}/>
                             <Route path="/profile/:name"    component = {ProfileComponent}/>
                             {/* <AuthenticatedRoute path="/dashboard" component= {Dashboard}/> */}
                             <Route component = {ErrorComponent}/>

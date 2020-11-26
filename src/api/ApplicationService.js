@@ -1,7 +1,7 @@
 import axios from 'axios'
 import output from './connections';
 
-class getAppssListService{
+class ApplicationService{
 	state = {  
 		appsTag : output + '/apps/'
     }
@@ -25,7 +25,7 @@ class getAppssListService{
 		let currentUsername = sessionStorage.getItem('authenticatedUser');
         console.log("UPDATING INFO : " + currentUsername)
         let basicAuthHeader = 'Basic '+ window.btoa(username+':'+password)
-		return axios.post(appsTag+'getApps/'+ currentUsername, {
+		return axios.get(appsTag+'userApplications/'+ currentUsername, {
 				headers:{
 					authorization: basicAuthHeader
 				}
@@ -47,4 +47,4 @@ class getAppssListService{
     }
 }
 
-export default new getAppssListService();
+export default new ApplicationService();

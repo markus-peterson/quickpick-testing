@@ -7,7 +7,8 @@ class getJobListService{
 	}
 // UNIQUE_ID  	COUNTRY  	DATE_ADDED  	HAS_EXPIRED  	JOB_BOARD  	JOB_DESCRIPTION  	JOB_SALARY  	JOB_TITLE  	JOB_TYPE  	LOCATION  	ORGANIZATION  	PAGE_URL  	SECTOR
     executeGetJob(jobID){
-        const {jobTag} = this.state;
+		const {jobTag} = this.state;
+		
         let usernameAuth = 'user'
 		let passwordAuth =  'password'
 		let basicAuthHeader = 'Basic '+window.btoa(usernameAuth+':'+passwordAuth)
@@ -37,10 +38,11 @@ class getJobListService{
 
 	executePostJobService(job){
 		const {jobTag} = this.state;
+
         let username = 'user'
 		let password =  'password'
-		
         let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		
         return axios.post(jobTag+'createJob', job,
         {
             headers:{

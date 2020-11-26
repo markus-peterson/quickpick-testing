@@ -172,10 +172,10 @@ class ProfileComponent extends Component {
 										:
 										<>
 											<Grid container direction="row" spacing={6}>
-												<Grid item sm={3}>
+												<Grid item sm={4}>
 													<ProfileUploader/>
 												</Grid>
-												<Grid item sm={8}>
+												<Grid item sm={7}>
 													<Grid container direction="column" alignItems="flex-start" spacing={2}>
 														<Grid item>
 															{!this.state.edit_mode ?

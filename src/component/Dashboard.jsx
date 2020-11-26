@@ -18,6 +18,9 @@ class Dashboard extends Component {
         this.changeJob = this.changeJob.bind(this);
     }
     
+    async componentWillReceiveProps(newProps){
+        console.log(newProps)
+    }
     
     changeJob(id){
         this.setState({job : id});

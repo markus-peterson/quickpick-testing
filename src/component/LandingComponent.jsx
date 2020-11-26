@@ -190,7 +190,6 @@ class LandingComponent extends Component {
                                     type="button"
                                     fullWidth
                                     fullHeight
-                                    className={classes.textField}
                                     variant="contained"
                                     color="primary"
                                     className={classes.submit}

@@ -1,9 +1,14 @@
 import axios from 'axios'
 
 class AutheticationService{
-    registerSuccessfulLogin(username,password){
-        sessionStorage.setItem('authenticatedUser',username);
+    registerSuccessfulLogin(user){
+        sessionStorage.setItem('authenticatedUser',user.username);
+        sessionStorage.setItem('authenticatedUserID',user.id);
         this.setupAxiosInterceptors()
+    }
+
+    updateUsername(username){
+        sessionStorage.setItem('authenticatedUser',username);
     }
 
     logout(){

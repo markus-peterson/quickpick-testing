@@ -48,7 +48,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="jobTitle"
                         label="Job Title"
@@ -65,7 +64,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="organization"
                         label="Company Name"
@@ -82,7 +80,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="country"
                         label="Country"
@@ -98,7 +95,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="location"
                         label="Job Location"
@@ -114,7 +110,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="jobSalary"
                         label="Job Salary"
@@ -130,7 +125,6 @@ class StartCreate extends Component {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        size="normal"
                         className={classes.textField}
                         id="pageUrl"
                         label="Company URL"

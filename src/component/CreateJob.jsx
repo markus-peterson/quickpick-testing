@@ -106,7 +106,7 @@ class CreateJob extends Component {
                 pageUrl : this.state.pageUrl,
                 jobSalary : this.state.jobSalary,
                 sector : this.state.sector,
-                author : sessionStorage.getItem('authenticatedUser')
+                author : sessionStorage.getItem('authenticatedUserID')
             }
             JobService.executePostJobService(job);
             this.setState({isSubmitted: true});
@@ -114,11 +114,6 @@ class CreateJob extends Component {
     }
 
     render(){
-        const classes = {
-            root: {
-                width: '80%',
-            },
-        };
 		const style = {
             container:{
                 backgroundColor: 'white',
@@ -153,7 +148,7 @@ class CreateJob extends Component {
                                     <Alert severity="success" variant="filled" >Job successfully posted</Alert>
                                 </Grid>
                                 <Grid item sm style={{margin: 'auto'}}>
-                                    <Link to="/" style={{textDecoration: 'none'}}><Button variant="contained" size="large">Okay</Button></Link>
+                                    <Link to="/dash" style={{textDecoration: 'none'}}><Button variant="contained" size="large">Okay</Button></Link>
                                 </Grid>
                                 <Grid item></Grid>
                             </Grid>

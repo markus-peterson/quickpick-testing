@@ -39,7 +39,7 @@ export default class CreatedJobList extends Component{
         let jobData = await JobService.executeGetJobListService().then(result => result.data);
 		let added = [];
 		for(var i = 0; i < jobData.length; i++)
-			if(jobData[i].author === this.state.userObj.username)
+			if(jobData[i].author === this.state.userObj.id)
 				added.push(<JobElement jobData={jobData[i]}/>)
 		this.setState({jobs: added});
 		if(this.state.userObj && this.state.jobs)

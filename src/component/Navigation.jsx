@@ -46,6 +46,7 @@ class Navgiation extends Component {
             </div>
             <div className="leftNav">
                 <nav className="navControls">
+                    <Link className="navButton" to="/manage" style={noLoggedStyles} >Manage Posts</Link>
                     <Link className="navButton" to="/postjob" style={noLoggedStyles} >Post Job</Link>
                     <Link className="navButton" to="/dash" >Dashboard</Link>
                     <Nav/>
@@ -57,7 +58,7 @@ class Navgiation extends Component {
 } 
 
 
-function Nav(props) {
+function Nav() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const menuId = "primary-search-account-menu";

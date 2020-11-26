@@ -27,3 +27,12 @@
     background-image: url(../img/Login3.png);
     background-size: cover;
 }
+
+form[class^="RegisterComponenet"] {
+    height: fit-content;
+    min-width: 350px;
+    background-color: #fff;
+    border-radius: 3px;
+    position: relative;
+    padding: 20px;
+}
