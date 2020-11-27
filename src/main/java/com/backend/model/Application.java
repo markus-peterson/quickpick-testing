@@ -19,34 +19,37 @@ public class Application {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	
-	private String jobID;
+	private String jobId;
 	
-	private String username;	
+	private String userId;	
 	
 	private String status;
-	
 	
 	public Application() {
 		super();
 	}
-
-	public Application(String jobID, String username) {
-		this.jobID = jobID;
-		this.username = username;
-		this.status = "Pending";
+	
+	public Application(String jobId, String userId) {
+		super();
+		this.jobId = jobId;
+		this.userId = userId;
 	}
 	
-	public String getJobID() {
-		return jobID;
+	public String getJobId() {
+		return jobId;
 	}
-	public void setJobID(String jobID) {
-		this.jobID = jobID;
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
 	}
-	public String getUsername() {
-		return username;
+	public String getId() {
+		return id;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getStatus() {
 		return status;

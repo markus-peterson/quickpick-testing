@@ -20,18 +20,18 @@ public class ApplicationService {
 		return appDao.save(newApp);
 	}
 	
-	public List<Application> getApplicants(String jobID) {
-		return appDao.findAllByJobID(jobID);
+	public List<Application> getApplicants(String jobId) {
+		return appDao.findAllByJobId(jobId);
 	}
 	
-	public List<Application> getUserApps(String username){
-		return appDao.findAllByUsername(username);
+	public List<Application> getUserApps(String userId){
+		return appDao.findAllByUserId(userId);
 	}
 	
-	public Application acceptApplicant(String jobID, String username) {
-		List<Application> appList = appDao.findAllByJobID(username);
+	public Application acceptApplicant(String jobId, String userId) {
+		List<Application> appList = appDao.findAllByJobId(jobId);
 		for(Application app : appList) {
-			if(app.getUsername().equals(username) && app.getStatus().equals("Pending")) {
+			if(app.getUserId().equals(userId) && app.getStatus().equals("Pending")) {
 				app.setStatus("Accepted");
 				return appDao.save(app);
 			}
@@ -39,10 +39,10 @@ public class ApplicationService {
 		return null;
 	}
 	
-	public Application denyApplicant(String jobID, String username) {
-		List<Application> appList = appDao.findAllByJobID(jobID);
+	public Application denyApplicant(String jobId, String userId) {
+		List<Application> appList = appDao.findAllByJobId(jobId);
 		for(Application app : appList) {
-			if(app.getUsername().equals(username) && app.getStatus().equals("Pending")) {
+			if(app.getUserId().equals(userId) && app.getStatus().equals("Pending")) {
 				app.setStatus("Denied");
 				return appDao.save(app);
 			}
@@ -52,9 +52,9 @@ public class ApplicationService {
 	
 	public String checkIfApplied(Application app) {
 		if(app != null) {
-			List<Application> appList = appDao.findAllByJobID(app.getJobID());
+			List<Application> appList = appDao.findAllByJobId(app.getJobId());
 			for(Application apps : appList) {
-				if(apps.getUsername().equals(app.getUsername())) {
+				if(apps.getUserId().equals(app.getUserId())) {
 					return apps.getStatus();
 				}
 			}

@@ -10,8 +10,8 @@ import com.backend.model.Application;
 @Repository
 public interface ApplicationDao extends JpaRepository<Application, String> {
 
-	List<Application> findAllByJobID(String jobID);
+	List<Application> findAllByJobId(String jobId);
 	
-	List<Application> findAllByUsername(String username);
+	List<Application> findAllByUserId(String userId);
 	
 }
