@@ -12,6 +12,15 @@ form[class^="LoginComponenet"] {
     padding: 30px;
 }
 
+form[class^="ForgotPasswordComponent"] {
+    height: fit-content;
+    min-width: 350px;
+    background-color: #fff;
+    border-radius: 3px;
+    position: relative;
+    padding: 30px;
+}
+
 form[class^="jss"] {
     height: fit-content;
     min-width: 350px;
