@@ -22,9 +22,9 @@ class ApplicationService{
 		const {appsTag} = this.state;
         let username = 'user'
 		let password = 'password'
-		let currentUsername = sessionStorage.getItem('authenticatedUser');
+		let currentUserId = sessionStorage.getItem('authenticatedUserId');
         let basicAuthHeader = 'Basic '+ window.btoa(username+':'+password)
-		return axios.get(appsTag+'userApplications/'+ currentUsername, {
+		return axios.get(appsTag+'userApplications/'+ currentUserId, {
 				headers:{
 					authorization: basicAuthHeader
 				}
