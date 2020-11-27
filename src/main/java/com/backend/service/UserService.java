@@ -6,9 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.backend.dao.ApplicationDao;
 import com.backend.dao.UserDao;
-import com.backend.model.Application;
 import com.backend.model.User;
 
 @Service
@@ -16,9 +14,6 @@ public class UserService implements UserServiceInterface {
 
 	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
-	private ApplicationDao appDao;
 	
 	@Override
 	public String registerUser(User user) {
@@ -156,11 +151,7 @@ public class UserService implements UserServiceInterface {
 			out = "biography";
 			if(user.getUsername() != null && !user.getUsername().isEmpty()) {
 				try {
-					List<Application> userApps = appDao.findAllByUsername(currentUser.getUsername());
 					currentUser.setUsername(user.getUsername());
-					for(Application app : userApps)
-						app.setUsername(user.getUsername());
-					appDao.saveAll(userApps);
 				} catch (Exception e) {}
 			}
 			out = "username";
