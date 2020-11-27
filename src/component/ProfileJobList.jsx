@@ -49,7 +49,7 @@ export default class ProfileJobList extends Component{
 			let appData = await ApplicationService.getAllApplied().then(result => result.data);
 			for(let i = 0; i < appData.length; i++)
 				for(let j = 0; j < jobData.length; j++)
-					if(appData[i].username === this.state.userObj.username && appData[i].jobId === jobData[j].id)
+					if(appData[i].userId === this.state.userObj.id && appData[i].jobId === jobData[j].id)
 						added.push(<JobElement jobStatus={appData[i].status} jobType={this.state.jobType} jobData={jobData[j]}/>);
 		} else {
 			// Push created jobs

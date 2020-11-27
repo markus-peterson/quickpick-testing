@@ -26,8 +26,8 @@ class Dashboard extends Component {
         this.setState({job : job});
         if(job !== undefined){
         const application = {
-            jobID : job.id,
-            username : sessionStorage.getItem('authenticatedUser')
+            jobId : job.id,
+            userId : sessionStorage.getItem('authenticatedUserId')
         }
         ApplicationService.checkApplied(application)
             .then((response) => {
@@ -214,17 +214,17 @@ class SelectedJob extends Component {
         this.apply = this.apply.bind(this);
     }
 
-    // async componentDidUpdate(){
-    //     this.setState({
-    //         appResponse: '',
-    //         appStatus: false
-    //     })
-    // }
+    async componentWillReceiveProps(newProps){
+        this.setState({
+            appiedResponse: newProps.appResponse,
+            appiedStatus: newProps.appStatus
+        });
+    }
 
     async apply(){
         const application = {
-            jobID : this.props.job.id,
-            username : sessionStorage.getItem('authenticatedUser')
+            jobId : this.props.job.id,
+            userId : sessionStorage.getItem('authenticatedUserId')
         }
         await ApplicationService.executeApplication(application)
         .then((response) => {
@@ -259,9 +259,8 @@ class SelectedJob extends Component {
                         <div className="description" dangerouslySetInnerHTML={{__html: this.props.job.jobDescription}} />
                         <p>{this.props.job.jobSalary}</p>
                         <p>{this.props.job.pageUrl}</p>
-                        {!this.props.appStatus && !this.state.appiedStatus && isUserLoggedIn && <Button variant="contained" size="small" onClick={this.apply}>Apply</Button>}
-                        {this.state.appiedStatus && this.props.appResponse === '' && isUserLoggedIn && <div>{this.state.appiedResponse}</div>}
-                        {this.props.appStatus && isUserLoggedIn && <div>{this.props.appResponse}</div>}
+                        {!this.state.appiedStatus && isUserLoggedIn && <Button variant="contained" size="small" onClick={this.apply}>Apply</Button>}
+                        {this.state.appiedStatus && isUserLoggedIn && <div>{this.state.appiedResponse}</div>}
                     </div>
                 )
             }
