@@ -135,7 +135,8 @@ class LoginComponenet extends Component {
 		.catch(error => this.handleError(error));
     }
     
-    registerGoogle(){
+    registerGoogle(event){
+        event.preventDefault()
         const response = this.state.userObj
         const user = {
 			password: response.profileObj.googleId,
@@ -197,7 +198,7 @@ class LoginComponenet extends Component {
                         <Avatar className={classes.avatar}>
                             <LockOutlinedIcon />
                         </Avatar>
-                        <form className={`${classes.form} login-paper`} noValidate  onSubmit={this.onSubmit}>
+                        <form className={`${classes.form} login-paper`} noValidate  onSubmit={this.registerGoogle}>
                             <Typography component="h1" variant="h5">Sign in</Typography>
                             <TextField
                                 variant="outlined"
