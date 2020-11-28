@@ -49,7 +49,7 @@ form[class^="jss"] {
     margin-bottom: 10px;
 }
 
-button span {
+.google-button button span {
     color: black;
 }
 
