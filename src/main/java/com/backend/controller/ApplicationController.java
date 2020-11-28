@@ -22,14 +22,9 @@ public class ApplicationController {
 	@Autowired
 	ApplicationService appService;
 	
-	@PostMapping("/acceptApp/{userId}")
-	public String acceptJob(@PathVariable String userId, @RequestBody String jobId) {
-		try {
-			appService.acceptApplicant(jobId, userId);
-			return "Job Accepted Successfully";
-		} catch (Exception e) {
-			return "Could Not Accept Job";
-		}
+	@PostMapping("/acceptApp")
+	public Application acceptJob(@RequestBody List<String> ids) {
+		return appService.acceptApplicant(ids.get(0), ids.get(1));
 	}
 	
 	@PostMapping("/apply")
@@ -45,6 +40,11 @@ public class ApplicationController {
 	@GetMapping("/userApplications/{userId}")
 	public List<Application> getApplied(@PathVariable String userId) {
 		return appService.getUserApps(userId);
+	}
+	
+	@GetMapping("/jobApplicants/{jobId}")
+	public List<Object> getApplicants(@PathVariable String jobId) {
+		return appService.getApplicants(jobId);
 	}
 	
 	@PostMapping("/checkIfApplied")
