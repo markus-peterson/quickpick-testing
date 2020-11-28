@@ -30,6 +30,19 @@ class ApplicationService{
 				}
 			}
         )
+    }
+    
+    getAllApplicants(jobId){
+		const {appsTag} = this.state;
+        let username = 'user'
+		let password = 'password'
+        let basicAuthHeader = 'Basic '+ window.btoa(username+':'+password)
+		return axios.get(appsTag+'jobApplicants/'+ jobId, {
+				headers:{
+					authorization: basicAuthHeader
+				}
+			}
+        )
 	}
     
     checkApplied(application){
@@ -44,6 +57,20 @@ class ApplicationService{
             }
         })
     }
+
+    acceptApplication(ids){
+        const {appsTag} = this.state;
+		let username = 'user'
+		let password =  'password'
+        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		return axios.post(appsTag +'acceptApp/', ids,
+        {
+            headers:{
+                authorization: basicAuthHeader
+            }
+        })
+    }
+
 }
 
 export default new ApplicationService();
