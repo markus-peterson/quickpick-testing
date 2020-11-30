@@ -42,7 +42,6 @@ public class User {
 	private String password;
 	
 	@Lob
-	//@Type(type = "org.hibernate.type.CharacterArrayType")
 	private String biography;
 	
 	public String profileFileId;
