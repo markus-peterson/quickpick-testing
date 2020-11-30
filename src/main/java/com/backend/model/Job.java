@@ -29,7 +29,6 @@ public class Job {
 	private String jobBoard;
 	
 	@Lob
-	@Type(type = "org.hibernate.type.CharacterArrayType")
 	private String jobDescription;
 	
 	private String jobTitle;
