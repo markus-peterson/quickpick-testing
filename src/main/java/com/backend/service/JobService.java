@@ -62,7 +62,7 @@ public class JobService implements JobServiceInterface {
 		return jobs;	
 	}
 	
-	@Transactional
+// 	@Transactional
 	public String updateJob(Job jobDetails) {
 		if (jobDetails != null) {
 			Job current = jobDao.findById(jobDetails.getId()).get();
