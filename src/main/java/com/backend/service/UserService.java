@@ -16,12 +16,14 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	private UserDao userDao;
 	
+	@Transactional
 	@Override
 	public String registerUser(User user) {
 		userDao.save(user);
 		return "Success";
 	}
 
+	@Transactional
 	@Override
 	public List<User> getUsers() {
 		return (List<User>) userDao.findAll();
@@ -38,6 +40,7 @@ public class UserService implements UserServiceInterface {
 		return target;
 	}
 
+	@Transactional
 	@Override
 	public User login(User user) {
 		User fail = new User();
