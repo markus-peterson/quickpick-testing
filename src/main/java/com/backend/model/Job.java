@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
@@ -20,8 +21,10 @@ import lombok.NoArgsConstructor;
 @Table(name="\"Job\"")
 public class Job {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
+	
 	
 	private String country;
 	private String dateAdded;
