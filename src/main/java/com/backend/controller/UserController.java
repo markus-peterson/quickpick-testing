@@ -32,9 +32,6 @@ public class UserController {
 	@Autowired
 	EmailService emailService;
 	
-//	@Autowired
-//	private UserDao userDao;
-	
 	@Value("${resetPassword.Url}")
 	private String url;
 	
