@@ -1,0 +1,107 @@
+.jobContainer {
+    width: 100%;
+    height: calc(100% - 90px);
+    z-index: -2;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+}
+.inner {
+    display: flex;
+    z-index: 0;
+    justify-content: center;
+    padding: 30px;
+}
+
+form {
+    height: fit-content;
+    min-width: 350px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 3px;
+    position: relative;
+}
+.successForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.alert-success {
+    color: rgb(0, 177, 0);
+
+    margin: auto;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+#buttons-set {
+    flex-direction: row;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px 20px;
+    height: 54px;
+}
+
+.field label {
+    font-size: 1.2rem;
+}
+
+/* #A85BFF */
+.field input[type=text], .field input[type=url] {
+    outline: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px grey solid;
+    border-radius: 2px;
+    width: 98%;
+}
+
+.field input[type=text]:hover, .field input[type=url]:hover {
+    transition-property: border-color;
+    transition: linear 400ms;
+    border-color: black;
+}
+
+.field input[type=text]:focus, .field input[type=url]:focus {
+    transition: 400ms linear;
+    transition-property: border-width, border-color, box-shadow;
+    border-width: 2px;
+    border-color: var(--light-blue);
+    box-shadow: 0px 0px 4px var(--light-blue);
+}
+
+.field button{
+    margin: auto;
+    margin-top: 20px;
+    appearance: none;
+    background-color: var(--light-blue);
+    width: 150px;
+    border: 1px grey solid;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--darkest-color);
+    padding: 8px;
+    border-radius: 2px;
+}
+
+.field button:hover {
+    cursor: pointer;
+}
+
+#description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px 20px;
+}
+
+#description label{
+    color: black;
+    font-size: 1.2rem;
+}
