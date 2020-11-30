@@ -71,8 +71,9 @@ public class JobService implements JobServiceInterface {
 				jobDao.save(current);
 				return "done";
 			}
+			return "not";
 		}
 		
-		return null;
+		return "last";
 	}
 }
