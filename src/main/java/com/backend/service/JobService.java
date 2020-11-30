@@ -63,7 +63,7 @@ public class JobService implements JobServiceInterface {
 	}
 	
 	@Transactional
-	public Job updateJob(Job jobDetails) {
+	public String updateJob(Job jobDetails) {
 		if (jobDetails != null) {
 			Job current = jobDao.findById(jobDetails.getId()).orElse(null);
 			if (current != null) {
@@ -89,7 +89,8 @@ public class JobService implements JobServiceInterface {
 				if(!current.getPageUrl().equals(jobDetails.getPageUrl())) {
 					current.setPageUrl(jobDetails.getPageUrl());
 				}
-				return jobDao.save(current);
+				jobDao.save(current);
+				return "done";
 			}
 		}
 		
