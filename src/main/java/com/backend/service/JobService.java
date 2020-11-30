@@ -65,7 +65,7 @@ public class JobService implements JobServiceInterface {
 	@Transactional
 	public String updateJob(Job jobDetails) {
 		if (jobDetails != null) {
-			Job current = jobDao.findById(jobDetails.getId()).orElse(null);
+			Job current = jobDao.findById(jobDetails.getId()).get();
 			if (current != null) {
 				current = jobDetails;
 				jobDao.save(current);
