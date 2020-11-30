@@ -17,19 +17,21 @@ public interface JobDao extends JpaRepository<Job, String>{
 	
 	void deleteById(String id);
 	
+	Boolean existsByAuthor(String author);
+	
 	List<Job> findAllByAuthor(String author);
 
-	@Query(value = "select * FROM job j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%') AND j.location LIKE CONCAT('%',:location,'%')",
+	@Query(value = "select * FROM \"job\" j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%') AND j.location LIKE CONCAT('%',:location,'%')",
 			nativeQuery = true)
 	List<Job> findBySearchParams(
 	  @Param("searchKey") String searchKey, 
 	  @Param("location") String location);
 	
-	@Query(value = "select * FROM job j WHERE j.location LIKE CONCAT('%',:location,'%')",
+	@Query(value = "select * FROM \"job\" j WHERE j.location LIKE CONCAT('%',:location,'%')",
 			nativeQuery = true)
 	List<Job> findBySearchLocation(@Param("location") String location);
 	
-	@Query(value = "select * FROM job j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%')",
+	@Query(value = "select * FROM \"job\" j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%')",
 			nativeQuery = true)
 	List<Job> findBySearchKeyword(@Param("searchKey") String searchKey);
 	
