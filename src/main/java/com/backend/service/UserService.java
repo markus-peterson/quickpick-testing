@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.UserDao;
 import com.backend.model.User;
@@ -119,6 +120,7 @@ public class UserService implements UserServiceInterface {
 		
 	}
 	
+	@Transactional
 	public String updateUser(String id, User user) {
 		String out = "service failed";
 		try {
