@@ -21,8 +21,8 @@ class AppRouting extends Component {
                         <Navgiation/>
                         <Switch >
                             <Route path="/"               exact component = {LandingComponent}/>
-                            <Route path="/dash"           exact component = {Dashboard}/>
-                            <Route path="/dash/?k=:keyword"     component = {Dashboard}/>
+                            <Route path="/dash"                 component = {Dashboard}/>
+                            <Route path="/dash/:search"         component = {Dashboard}/>
                             <Route path="/login"                component = {LoginComponent}/>
                             <Route path="/register"             component = {RegisterComponent}/>
                             <Route path="/postjob"              component = {CreateJob}/>

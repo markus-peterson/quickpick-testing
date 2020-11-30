@@ -13,13 +13,66 @@ class Dashboard extends Component {
         this.state = {
             job : null,
             appResponse: '',
-            appStatus: false
+            appStatus: false,
+            keyword: '',
+            location: ''
         }
         this.changeJob = this.changeJob.bind(this);
     }
     
-    async componentWillReceiveProps(newProps){
-        // console.log(newProps)
+    async componentDidMount(){
+        let paramArray = []
+        let stringParams = this.props.location.search
+        if(this.props.location.search.startsWith('?k=')){
+            stringParams = stringParams.split('?k=')[1]
+            if(stringParams.includes('?l=')){
+                paramArray = stringParams.split('?l=')
+                console.log(paramArray)
+                this.setState({
+                    keyword: paramArray[0],
+                    location: paramArray[1]
+                })
+            }else{
+                console.log(stringParams)
+                this.setState({
+                    keyword: stringParams
+                })
+            }
+        }else if(this.props.location.search.startsWith('?l=')){
+            stringParams = stringParams.split('?l=')[1]
+            this.setState({
+                location: stringParams
+            })
+        }
+        
+    }
+
+    async componentDidUpdate(prevProps){
+        if(prevProps !== this.props){
+            let paramArray = []
+            let stringParams = this.props.location.search
+            if(this.props.location.search.startsWith('?k=')){
+                stringParams = stringParams.split('?k=')[1]
+                if(stringParams.includes('?l=')){
+                    paramArray = stringParams.split('?l=')
+                    console.log(paramArray)
+                    this.setState({
+                        keyword: paramArray[0],
+                        location: paramArray[1]
+                    })
+                }else{
+                    console.log(stringParams)
+                    this.setState({
+                        keyword: stringParams
+                    })
+                }
+            }else if(this.props.location.search.startsWith('?l=')){
+                stringParams = stringParams.split('?l=')[1]
+                this.setState({
+                    location: stringParams
+                })
+            }
+        }
     }
     
     changeJob(job){
@@ -52,7 +105,7 @@ class Dashboard extends Component {
                 <div className="background-container"/>
                 <div className="dash-inner">
                     <div className="content-sections">
-                        <JobListItems jobSelect={this.changeJob}/>
+                        <JobListItems jobSelect={this.changeJob} keyword={this.state.keyword} location={this.state.location}/>
                     </div>
                     <div className="content-container">
                         <SelectedJob job={this.state.job} appResponse={this.state.appResponse} appStatus={this.state.appStatus}/>
@@ -89,33 +142,73 @@ class JobListItems extends Component {
         };
     }
 
+    async componentDidUpdate(oldProps){
+        if(oldProps.keyword !== this.props.keyword || oldProps.location !== this.props.location){
+            this.componentDidMount()
+        }
+    }
+
     async componentDidMount(){
-        await JobService.executeGetJobListService()
-        .then(result => {
-            const data = result.data
-            this.allJobs = data;
-            var tempJob = null;
-            const added = [];
-            const indexes = [];
-            if(this.allJobs.length >= 10){
-                this.leftToLoad = 10;
-            }else{
-                this.leftToLoad = this.allJobs.length;
+        console.log(this.props)
+        if(this.props.keyword === '' && this.props.location === ''){
+            await JobService.executeGetJobListService()
+            .then(result => {
+                const data = result.data
+                this.allJobs = data;
+                var tempJob = null;
+                const added = [];
+                const indexes = [];
+                if(this.allJobs.length >= 10){
+                    this.leftToLoad = 10;
+                }else{
+                    this.leftToLoad = this.allJobs.length;
+                }
+                this.total = this.leftToLoad;
+                while(this.leftToLoad > 0){
+                    tempJob = this.allJobs[this.total - this.leftToLoad];
+                    added.push(<BuildJobItem jobInfo={tempJob}/>);
+                    indexes.push(tempJob);
+                    this.leftToLoad = this.leftToLoad - 1;
+                }
+                if(this.allJobs.length - this.total === 0){
+                    this.setState({moreToLoad: false});
+                    
+                }
+                this.setState({jobs: added, isLoading: false, jobsIndex: indexes});
+                this.props.jobSelect(this.state.jobsIndex[0]);
+            });
+        }else{
+            const params = {
+                searchKey: this.props.keyword,
+                location: this.props.location
             }
-            this.total = this.leftToLoad;
-            while(this.leftToLoad > 0){
-                tempJob = this.allJobs[this.total - this.leftToLoad];
-                added.push(<BuildJobItem jobInfo={tempJob}/>);
-                indexes.push(tempJob);
-                this.leftToLoad = this.leftToLoad - 1;
-            }
-            if(this.allJobs.length - this.total === 0){
-                this.setState({moreToLoad: false});
-                
-            }
-            this.setState({jobs: added, isLoading: false, jobsIndex: indexes});
-            this.props.jobSelect(this.state.jobsIndex[0]);
-        });
+            await JobService.executeGetSearch(params)
+            .then(result => {
+                const data = result.data
+                this.allJobs = data;
+                var tempJob = null;
+                const added = [];
+                const indexes = [];
+                if(this.allJobs.length >= 10){
+                    this.leftToLoad = 10;
+                }else{
+                    this.leftToLoad = this.allJobs.length;
+                }
+                this.total = this.leftToLoad;
+                while(this.leftToLoad > 0){
+                    tempJob = this.allJobs[this.total - this.leftToLoad];
+                    added.push(<BuildJobItem jobInfo={tempJob}/>);
+                    indexes.push(tempJob);
+                    this.leftToLoad = this.leftToLoad - 1;
+                }
+                if(this.allJobs.length - this.total === 0){
+                    this.setState({moreToLoad: false});
+                    
+                }
+                this.setState({jobs: added, isLoading: false, jobsIndex: indexes});
+                this.props.jobSelect(this.state.jobsIndex[0]);
+            });
+        }
     }
 
     handleSelect(id) {

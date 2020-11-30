@@ -26,19 +26,32 @@ class SearchBar extends Component{
     constructor() {
         super();
         this.state = {
-            value: ''
-        }
+            keyword: '',
+            location: ''
+        };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     
-    handleChange(event) {
-        this.setState({value: event.target.value});
+    handleChange(e) {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({
+            [name]: value
+        });
     }
     
     handleSubmit(event) {
         event.preventDefault();
-        this.props.search(this.state.value);
+        let paramString = ''
+        if(this.state.keyword !== '' && this.state.location !== ''){
+            paramString = '?k='+ this.state.keyword +'?l=' + this.state.location
+        }else if(this.state.keyword !== ''){
+            paramString = '?k='+ this.state.keyword
+        }else if(this.state.location !== ''){
+            paramString = '?l=' + this.state.location
+        }
+        this.props.submit(paramString)
     }
 
     render(){
@@ -56,30 +69,31 @@ class SearchBar extends Component{
             }
         };
         return (
-            <GridContainer container justify="center" alignItems="center">
-                <GridItem item xs={12} sm={5}>
-                <TextField
-                        variant="filled"
-                        margin="normal"
-                        fullWidth
-                        fullHeight
-                        size="small"
-                        style={style.search}
-                        className={classes.textField}
-                        id="searchKey"
-                        label="KeyWord"
-                        name="Keyword"
-                        autoComplete="Keyword"
-                        value={this.state.Keyword}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
-                </GridItem>
-                <GridItem item xs={12} sm={5}>
-                    <TextField
+            <form onSubmit={this.handleSubmit}>
+                <GridContainer container justify="center" alignItems="center">
+                    <GridItem item xs={12} sm={5}>
+                        <TextField
+                            variant="filled"
+                            margin="normal"
+                            fullWidth
+                            fullHeight
+                            size="small"
+                            style={style.search}
+                            className={classes.textField}
+                            id="keyword"
+                            label="Keyword"
+                            name="keyword"
+                            autoComplete="keyword"
+                            value={this.state.keyword}
+                            inputProps={{
+                                type: "text",
+                                onChange: this.handleChange,
+                                autoComplete: "off"
+                            }}
+                            />
+                    </GridItem>
+                    <GridItem item xs={12} sm={5}>
+                        <TextField
                             variant="filled"
                             margin="normal"
                             fullWidth
@@ -97,23 +111,22 @@ class SearchBar extends Component{
                                 onChange: this.handleChange,
                                 autoComplete: "off"
                             }}
-                        />
-                </GridItem>
-                <GridItem item xs={12} sm={2}>
-                    <Button
+                            />
+                    </GridItem>
+                    <GridItem item xs={12} sm={2}>
+                        <Button
                             type="button"
-                            // fullWidth
-                            // fullHeight
                             variant="contained"
                             color="primary"
                             style={style.button}
                             className={classes.submit}
                             onClick={this.handleSubmit}
-                        >
-                        Search 
+                            >
+                            Search
                         </Button>
-                </GridItem>
-            </GridContainer>
+                    </GridItem>
+                </GridContainer>
+            </form>
         );
     }
 }

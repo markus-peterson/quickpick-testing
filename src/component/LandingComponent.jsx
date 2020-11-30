@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
-// import UserService from '../../api/UserService';
+import JobService from '../api/JobService';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from "@material-ui/core/styles";
@@ -67,16 +67,14 @@ const styles = theme => ({
 
 class LandingComponent extends Component {
     constructor(props) {
-        super(props)
-
+        super()
         this.state = {
-            Keyword: '',
+            keyword: '',
             location: '',
             errorMessage: ''
         };
-
         this.update = this.update.bind(this);
-
+        this.searchClicked = this.searchClicked.bind(this);
     }
 
     update(e) {
@@ -85,6 +83,18 @@ class LandingComponent extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    searchClicked(){
+        let paramString = ''
+        if(this.state.keyword !== '' && this.state.location !== ''){
+            paramString = '?k='+ this.state.keyword +'?l=' + this.state.location
+        }else if(this.state.keyword !== ''){
+            paramString = '?k='+ this.state.keyword
+        }else if(this.state.location !== ''){
+            paramString = '?l=' + this.state.location
+        }
+        this.props.history.push('/dash/' + paramString)
     }
 
     render() {
@@ -142,63 +152,64 @@ class LandingComponent extends Component {
 			{/* <Container component="main" style={{"z-index":-1}}> */}
 				<CssBaseline /> 
 				<div style={{'marginBottom': '100px'}}>
-                    <GridContainer container  justify="center" style={style.searchSection}>
-                        <GridItem item xs={12} sm={12} md={3} >
-                        <TextField
-                                variant="filled"
-                                margin="normal"
-                                fullWidth
-                                style={style.search}
-                                className={classes.textField}
-                                id="searchKey"
-                                label="KeyWord"
-                                name="Keyword"
-                                autoComplete="Keyword"
-                                value={this.state.Keyword}
-                                // autoFocus
-                                inputProps={{
-                                    type: "text",
-                                    onChange: this.update,
-                                    autoComplete: "off"
-                                }}
-                            />
-                        </GridItem>
-                        <GridItem item xs={12} sm={12} md={3} style={{position: 'relative', display: 'inline-block'}}>
-                            {/* <LocationOnIcon></LocationOnIcon> */}
-                            <TextField
-                                    variant="filled"
-                                    margin="normal"
-                                    leftIcon= {LocationOnIcon}
-                                    fullWidth
-                                    style={style.search}
-                                    className={classes.textField}
-                                    id="location"
-                                    label="Location"
-                                    name="location"
-                                    autoComplete="location"
-                                    value={this.state.location}
-                                    // autoFocus
-                                    inputProps={{
-                                        type: "text",
-                                        onChange: this.update,
-                                        autoComplete: "off"
-                                    }}
-                                />
-                        </GridItem>
-                        <GridItem item xs={12} sm={12} md={2} className={classes.inputButton} >
-                            <Button
-                                    type="button"
-                                    fullWidth
-                                    fullHeight
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                    onClick={this.registerClicked}
-                                >
-                                Search 
-                                </Button>
-                        </GridItem>
-                    </GridContainer>
+                    <form onSubmit={this.searchClicked}>
+                        <GridContainer container  justify="center" style={style.searchSection}>
+                            <GridItem item xs={12} sm={12} md={3} >
+                                <TextField
+                                        variant="filled"
+                                        margin="normal"
+                                        fullWidth
+                                        style={style.search}
+                                        className={classes.textField}
+                                        id="keyword"
+                                        label="Keyword"
+                                        name="keyword"
+                                        autoComplete="keyword"
+                                        value={this.state.keyword}
+                                        // autoFocus
+                                        inputProps={{
+                                            type: "text",
+                                            onChange: this.update,
+                                            autoComplete: "off"
+                                        }}
+                                    />
+                            </GridItem>
+                            <GridItem item xs={12} sm={12} md={3} style={{position: 'relative', display: 'inline-block'}}>
+                                {/* <LocationOnIcon></LocationOnIcon> */}
+                                <TextField
+                                        variant="filled"
+                                        margin="normal"
+                                        fullWidth
+                                        style={style.search}
+                                        className={classes.textField}
+                                        id="location"
+                                        label="Location"
+                                        name="location"
+                                        autoComplete="location"
+                                        value={this.state.location}
+                                        // autoFocus
+                                        inputProps={{
+                                            type: "text",
+                                            onChange: this.update,
+                                            autoComplete: "off"
+                                        }}
+                                    />
+                            </GridItem>
+                            <GridItem item xs={12} sm={12} md={2} className={classes.inputButton} >
+                                <Button
+                                        type="button"
+                                        fullWidth
+                                        fullHeight
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                        onClick={this.searchClicked}
+                                    >
+                                    Search 
+                                    </Button>
+                            </GridItem>
+                        </GridContainer>
+                    </form>
 				</div>
 		        {/* <div className={classes.spacing}></div> */}
                 <div style={{'marginTop': '110px'}}>

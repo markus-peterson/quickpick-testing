@@ -36,8 +36,8 @@ class StartCreate extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(event) {
+        this.props.updateParent(event);
         this.setState({[event.target.id]: event.target.value});
-        this.props.updateParent(this.state);
     }
 
     render(){

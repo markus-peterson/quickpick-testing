@@ -69,16 +69,8 @@ class CreateJob extends Component {
         });
     }
 
-    handleFirst(initial) {
-        this.setState({
-            jobTitle: initial.jobTitle,
-            organization: initial.organization,
-            country: initial.country,
-            dateAdded: '', //current date
-            location: initial.location,
-            pageUrl: initial.pageUrl,
-            jobSalary: initial.jobSalary
-        });
+    handleFirst(event) {
+        this.setState({[event.target.id]: event.target.value});
     }
     
     handleSecond(initial) {
