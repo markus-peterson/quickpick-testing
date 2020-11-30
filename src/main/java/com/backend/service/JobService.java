@@ -36,15 +36,18 @@ public class JobService implements JobServiceInterface {
 		}
 		return null;
 	}
+	
 	@Transactional
 	public Boolean checkCreated(String author) {
 		 return jobDao.existsByAuthor(author);
 	}
+	
 	@Transactional
 	public List<Job> getJobsByAuthor(String author){
 		return jobDao.findAllByAuthor(author);
 	}
 	
+	@Transactional
 	public List<Job> getJobsByFilter(String searchKey, String location) {
 		List<Job> jobs;
 		if((null == searchKey || searchKey.equals("")) && (null == location || location.equals("") )) {
