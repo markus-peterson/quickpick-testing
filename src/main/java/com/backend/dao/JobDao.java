@@ -13,7 +13,7 @@ import com.backend.model.Job;
 @Repository
 public interface JobDao extends JpaRepository<Job, String>{
 	
-// 	Optional<Job> findById(String id);
+	Optional<Job> findById(String id);
 	
 	void deleteById(String id);
 	
