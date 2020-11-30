@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.JobDao;
 import com.backend.model.Job;
@@ -35,17 +36,16 @@ public class JobService implements JobServiceInterface {
 		}
 		return null;
 	}
-	
+	@Transactional
 	public Boolean checkCreated(String author) {
 		 return jobDao.existsByAuthor(author);
 	}
-	
+	@Transactional
 	public List<Job> getJobsByAuthor(String author){
 		return jobDao.findAllByAuthor(author);
 	}
 	
 	public List<Job> getJobsByFilter(String searchKey, String location) {
-		
 		List<Job> jobs;
 		if((null == searchKey || searchKey.equals("")) && (null == location || location.equals("") )) {
 			jobs= jobDao.findAll();
