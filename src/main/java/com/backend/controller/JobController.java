@@ -33,6 +33,16 @@ public class JobController {
 		return jobService.getJobByID(id);
 	}
 	
+	@GetMapping("/checkByAuthor/{author}")
+	public Boolean checkByAuthor(@PathVariable String author) {
+		return jobService.checkCreated(author);
+	}
+	
+	@GetMapping("/getByAuthor/{author}")
+	public List<Job> getByAuthor(@PathVariable String author) {
+		return jobService.getJobsByAuthor(author);
+	}
+	
 	@GetMapping("/getJobsByFilter")
 	public List<Job> getjobBySearchKey(@RequestParam("searchKey") String searchKey, @RequestParam("location") String location ) {
 		return jobService.getJobsByFilter(searchKey, location);

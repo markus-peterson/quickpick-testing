@@ -23,8 +23,13 @@ public class ApplicationController {
 	ApplicationService appService;
 	
 	@PostMapping("/acceptApp")
-	public Application acceptJob(@RequestBody List<String> ids) {
+	public Application acceptApp(@RequestBody List<String> ids) {
 		return appService.acceptApplicant(ids.get(0), ids.get(1));
+	}
+	
+	@PostMapping("/denyApp")
+	public Application denyApp(@RequestBody List<String> ids) {
+		return appService.denyApplicant(ids.get(0), ids.get(1));
 	}
 	
 	@PostMapping("/apply")

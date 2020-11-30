@@ -50,7 +50,7 @@ public class UserService implements UserServiceInterface {
 						return fail;
 					}
 				}else {
-					result = userDao.findByEmailId(user.getEmailId());
+					result = userDao.findByEmailId(user.getUsername());
 					if(result!= null) {
 						if(result.getPassword() != null && result.getPassword().equals(user.getPassword())  ) {
 							return result;

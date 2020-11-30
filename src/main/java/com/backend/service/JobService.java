@@ -36,6 +36,23 @@ public class JobService implements JobServiceInterface {
 		return null;
 	}
 	
+	public Boolean checkCreated(String author) {
+		List<Job> jobs = jobDao.findAllByAuthor(author);
+		if(jobs != null) {
+			if(jobs.size() > 0) {
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
+	
+	public List<Job> getJobsByAuthor(String author){
+		return jobDao.findAllByAuthor(author);
+	}
+	
 	public List<Job> getJobsByFilter(String searchKey, String location) {
 		
 		List<Job> jobs;

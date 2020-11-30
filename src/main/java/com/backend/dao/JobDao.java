@@ -16,6 +16,8 @@ public interface JobDao extends JpaRepository<Job, String>{
 	Optional<Job> findById(String id);
 	
 	void deleteById(String id);
+	
+	List<Job> findAllByAuthor(String author);
 
 	@Query(value = "select * FROM job j WHERE j.job_title LIKE CONCAT('%',:searchKey,'%') AND j.location LIKE CONCAT('%',:location,'%')",
 			nativeQuery = true)

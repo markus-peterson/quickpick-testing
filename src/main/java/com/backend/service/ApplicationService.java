@@ -61,7 +61,7 @@ public class ApplicationService {
 	public Application denyApplicant(String jobId, String userId) {
 		List<Application> appList = appDao.findAllByJobId(jobId);
 		for(Application app : appList) {
-			if(app.getUserId().equals(userId) && app.getStatus().equals("Pending")) {
+			if(app.getUserId().equals(userId)) {
 				app.setStatus("Denied");
 				return appDao.save(app);
 			}
