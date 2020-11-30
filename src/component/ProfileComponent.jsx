@@ -95,7 +95,8 @@ class ProfileComponent extends Component {
 		this.setState({editBiography : false});
 		await UserService.updateUser(this.state.userObj.id, user);
 		await this.componentDidMount();
-		window.location.replace(this.state.userTag + sessionStorage.getItem('authenticatedUser'));
+		// window.location.replace(this.state.userTag + sessionStorage.getItem('authenticatedUser'));
+		this.props.history.push('/profile/' + sessionStorage.getItem('authenticatedUser'))
 		this.setState({edit_mode: false});
 	}
 

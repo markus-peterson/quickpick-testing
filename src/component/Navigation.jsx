@@ -25,7 +25,10 @@ class Navgiation extends Component {
 
     async componentWillReceiveProps(newProps){
         let logged = AuthenticationService.isUserLoggedIn();
-        let check = await JobService.executeCheckByAuthor().then(result => result.data);
+        let check = false
+        if(logged){
+            check = await JobService.executeCheckByAuthor().then(result => result.data);
+        }
         this.setState({
             path: newProps.location.pathname.includes('dash'),
             isUserLoggedIn: logged,
@@ -35,7 +38,10 @@ class Navgiation extends Component {
 
     async componentDidMount() {
         let logged = AuthenticationService.isUserLoggedIn();
-        let check = await JobService.executeCheckByAuthor().then(result => result.data);
+        let check = false
+        if(logged){
+            check = await JobService.executeCheckByAuthor().then(result => result.data);
+        }
         this.setState({
             path: this.props.location.pathname.includes('dash'),
             isUserLoggedIn: logged,
