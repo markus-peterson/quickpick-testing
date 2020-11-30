@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class Job {
 	private String jobBoard;
 	
 	@Lob
+	@Type(type = "org.hibernate.type.CharacterArrayType")
 	private String jobDescription;
 	
 	private String jobTitle;
