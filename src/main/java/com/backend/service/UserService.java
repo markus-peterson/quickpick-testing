@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.UserDao;
 import com.backend.model.User;
@@ -15,17 +16,20 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	private UserDao userDao;
 	
+	@Transactional
 	@Override
 	public String registerUser(User user) {
 		userDao.save(user);
 		return "Success";
 	}
 
+	@Transactional
 	@Override
 	public List<User> getUsers() {
 		return (List<User>) userDao.findAll();
 	}
 	
+	@Transactional
 	public User getUser(String username) {
 		User target = null;
 		for(User current : userDao.findAll()) {
@@ -36,6 +40,7 @@ public class UserService implements UserServiceInterface {
 		return target;
 	}
 
+	@Transactional
 	@Override
 	public User login(User user) {
 		User fail = new User();
@@ -82,6 +87,7 @@ public class UserService implements UserServiceInterface {
 		return fail;
 	}
 	
+	@Transactional
 	public String checkIfUsernameExists(String username) {
 		if(username != null) {
 			User result = userDao.findByusername(username);
@@ -94,6 +100,7 @@ public class UserService implements UserServiceInterface {
 		return "Something went wrong";
 	}
 	
+	@Transactional
 	public String checkIfEmailExists(String emailId) {
 		if(emailId != null) {
 			User result = userDao.findByEmailId(emailId);
@@ -106,19 +113,23 @@ public class UserService implements UserServiceInterface {
 		return "Something went wrong";
 	}
 	
+	@Transactional
 	public User findUserByEmail(String userEmail) {		
 		return userDao.findByEmailId(userEmail);
 	}
 
+	@Transactional
 	public Optional<User> findUserByResetToken(String token) {
 		return userDao.findByResetToken(token);
 	}
 
+	@Transactional
 	public void save(User resetUser) {
 		userDao.save(resetUser);
 		
 	}
 	
+	@Transactional
 	public String updateUser(String id, User user) {
 		String out = "service failed";
 		try {
