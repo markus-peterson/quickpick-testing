@@ -1,43 +1,52 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import AuthenticationService from '../api/AuthenticationService';
-import SearchBar from './SearchBar';
-import '../css/Navigation.css';
-import logo from '../img/quickpick-logo2-transparent-small.png';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from "@material-ui/core/IconButton";
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { withRouter } from "react-router";
 
+import JobService from '../api/JobService';
+import logo from '../img/quickpick-logo2-transparent-small.png';
+import AuthenticationService from '../api/AuthenticationService';
+import SearchBar from './SearchBar';
+import '../css/Navigation.css';
+
 class Navgiation extends Component {
     constructor(){
         super();
         this.state = {
-            path: false
+            path: false,
+            isUserLoggedIn: false,
+            checkByAuthor: false
         }
-        this.isUserLoggedIn = AuthenticationService.isUserLoggedIn();
     }
 
-    componentWillReceiveProps(newProps){
+    async componentWillReceiveProps(newProps){
+        let logged = AuthenticationService.isUserLoggedIn();
+        console.log(logged)
+        let check = await JobService.exectureCheckByAuthor().then(result => result.data);
+        console.log(check)
         this.setState({
-            path: window.location.href.includes('dash')
+            path: newProps.location.pathname.includes('dash'),
+            isUserLoggedIn: logged,
+            checkByAuthor: check
         });
     }
 
     async componentDidMount() {
+        let logged = AuthenticationService.isUserLoggedIn();
+        console.log(logged)
+        let check = await JobService.exectureCheckByAuthor().then(result => result.data);
+        console.log(check)
         this.setState({
-            path: window.location.href.includes('dash')
+            path: this.props.location.pathname.includes('dash'),
+            isUserLoggedIn: logged,
+            checkByAuthor: check
         });
     }
 
     render(){
-        var noLoggedStyles = {visibility: "hidden"};
-        if (this.isUserLoggedIn === true){
-            noLoggedStyles = {
-                visibility: "visible"
-            };
-        }
         return(
             <div className="navBar">
             <div className="nav-search-logo">
@@ -46,8 +55,8 @@ class Navgiation extends Component {
             </div>
             <div className="leftNav">
                 <nav className="navControls">
-                    <Link className="navButton" to="/manage" style={noLoggedStyles} >Manage Posts</Link>
-                    <Link className="navButton" to="/postjob" style={noLoggedStyles} >Post Job</Link>
+                    { this.state.isUserLoggedIn && this.state.checkByAuthor && <Link className="navButton" to="/manage">Manage Posts</Link>}
+                    { this.state.isUserLoggedIn && <Link className="navButton" to="/postjob">Post Job</Link>}
                     <Link className="navButton" to="/dash" >Dashboard</Link>
                     <Nav/>
                 </nav>

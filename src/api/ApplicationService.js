@@ -71,6 +71,18 @@ class ApplicationService{
         })
     }
 
+    denyApplication(ids){
+        const {appsTag} = this.state;
+		let username = 'user'
+		let password =  'password'
+        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		return axios.post(appsTag +'denyApp/', ids,
+        {
+            headers:{
+                authorization: basicAuthHeader
+            }
+        })
+    }
 }
 
 export default new ApplicationService();

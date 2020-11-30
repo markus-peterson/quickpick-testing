@@ -38,7 +38,7 @@ class ManagementComponent extends Component {
         const data = await	UserService
 							.executeGetUserService(sessionStorage.getItem('authenticatedUser'))
                             .then(result => result.data);
-        const jobData = await JobService.executeGetJobListService().then(result => result.data);
+        const jobData = await JobService.exectureCheckByAuthor().then(result => result.data);
         this.setState({userObj: data, exists: jobData})
     }
 
@@ -76,7 +76,7 @@ class ManagementComponent extends Component {
                 backgroundColor: "#eeeeee"
             }
         };
-        if(isUserLoggedIn && this.state.exists.length > 0){
+        if(isUserLoggedIn && this.state.exists){
             return(
                 <div className="container">
                     <Grid container direction="row" spacing={3} style={{width: "100%", margin: 0}} justify="center">
@@ -95,7 +95,7 @@ class ManagementComponent extends Component {
                     </Grid>
                 </div>
             )
-        }else if(this.state.exists.length === 0){
+        }else if(!this.state.exists){
             return (
 				<Grid container direction="row">
 					<Grid container justify="center">
@@ -324,12 +324,15 @@ class AppList extends Component {
             return(
                 <Paper style={style.paper}>
                     <List>
-                        {
+                        {this.state.applicants.length > 0 ?
                         this.state.applicants.map( function(app, index) {
                             return (
                                 <Application application={app} key={index}/>
                             );
-                        }, this)
+                        }, this):
+                        <ListItem>
+                            <ListItemText primary="No applicants yet" style={{textAlign: "center"}}/>
+                        </ListItem>
                         }
                     </List>
                 </Paper>
@@ -366,6 +369,7 @@ class Application extends Component {
     }
 
     async decide(event){
+        console.log(event)
         if(event === 'accept'){
             const ids = [this.state.application.jobId, this.state.application.userId]
             const res = await ApplicationService.acceptApplication(ids)
@@ -375,7 +379,14 @@ class Application extends Component {
                 application: temp
             })
         }else if(event === 'deny'){
-
+            const ids = [this.state.application.jobId, this.state.application.userId]
+            const res = await ApplicationService.denyApplication(ids)
+            console.log(res)
+            let temp = this.state.application
+            temp.status = res.data.status
+            this.setState({
+                application: temp
+            })
         }
     }
     
@@ -404,12 +415,13 @@ class Application extends Component {
                             <ListItemText primary="Profile Page" />
                         </ListItem>
                     </Link>
-                    {resumeExists &&
-                        <ListItem>
-                            <ListItemIcon title="resume"><NoteIcon /></ListItemIcon>
-                            <a href={output + '/load/' + this.state.link}><ListItemText primary="Download Resume" /></a>
-                        </ListItem>
-                    }
+                    <ListItem>
+                        <ListItemIcon title="resume"><NoteIcon /></ListItemIcon>
+                        {resumeExists? 
+                        <a href={output + '/load/' + this.state.link}><ListItemText primary="Download Resume" /></a>:
+                        <ListItemText primary={this.state.application.firstName + ' has not uploaded a resume.'} />
+                        }
+                    </ListItem>
                     <ListItem style={{justifyContent: "center"}}>
                         {this.state.application.status === "Pending" &&
                         <ButtonGroup aria-label="manage secion">

@@ -50,6 +50,21 @@ class getJobListService{
             }
         })
 	}
+
+	exectureCheckByAuthor(){
+		const {jobTag} = this.state;
+        let username = 'user'
+		let password =  'password'
+        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		let currentUserId = sessionStorage.getItem('authenticatedUserId');
+
+        return axios.get(jobTag+'checkByAuthor/' + currentUserId,
+        {
+            headers:{
+                authorization: basicAuthHeader
+            }
+        })
+	}
 }
 
 

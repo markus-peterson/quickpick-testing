@@ -113,5 +113,35 @@ class getUsersListService{
 		console.log("EXISTS? " + result);
 		return result === 'registered';
 	}
+
+	ForgetPassword(param) {
+		const {userTag} = this.state;
+        let username = 'user'
+        let password = 'password'
+		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		return axios.get(userTag+'forgotpassword', 
+		{	
+			params : param,
+			headers:{
+				authorization: basicAuthHeader
+			}
+		}
+		)
+	}
+	
+	ResetPassword(param) {
+		const {userTag} = this.state;
+        let username = 'user'
+        let password = 'password'
+		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		return axios.get(userTag+'reset', 
+		{	
+			params : param,
+			headers:{
+				authorization: basicAuthHeader
+			}
+		}
+		)
+    }
 }
 export default new getUsersListService();
