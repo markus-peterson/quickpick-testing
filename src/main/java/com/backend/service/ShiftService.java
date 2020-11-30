@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.ApplicationDao;
 import com.backend.dao.ShiftDao;
@@ -18,6 +19,7 @@ public class ShiftService {
 	@Autowired
 	private ApplicationDao applicationDao;
 
+	@Transactional
 	public String postShift(String username, String applicationId, Shift shift) {
 		if(shift != null && shift.isValid() && applicationDao.existsById(applicationId)) {
 			shiftDao.save(shift);
@@ -27,10 +29,12 @@ public class ShiftService {
 		return "Post Shift " + shift.toString() + " Failed";
 	}
 
+	@Transactional
 	public List<Shift> getShift(String applicationId) {
 		return shiftDao.findByApplicationId(applicationId);
 	}
 
+	@Transactional
 	public String updateShift(String id, Shift shift) {
 		try {
 			Shift currentShift = shiftDao.findById(id).orElse(null);

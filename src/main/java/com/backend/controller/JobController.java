@@ -60,12 +60,12 @@ public class JobController {
 	
 	@PostMapping("/updateJob")
 	public String updateJob(@RequestBody Job jobDetails) {
-// 		try {
-			return jobService.updateJob(jobDetails);
-// 			return "Job Updated Successfully";
-// 		} catch (Exception e) {
-// 			return "Could Not Update Job";
-// 		}
+		try {
+			jobService.updateJob(jobDetails);
+			return "Job Updated Successfully";
+		} catch (Exception e) {
+			return "Could Not Create Job";
+		}
 	}
 	
 }
