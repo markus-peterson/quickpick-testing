@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import { stateToHTML } from 'draft-js-export-html';
-import Draft from 'draft-js';
+import Draft, {convertFromHTML, ContentState} from 'draft-js';
 import '../css/RichEditor.css';
 import '../css/RichText.css';
 import '../css/Draft.css';
@@ -11,9 +11,8 @@ const { Editor, EditorState, RichUtils, getDefaultKeyBinding } = Draft;
 
 export default class RichTextInput extends Component {
     constructor(props) {
-        super(props);
-        this.state = { editorState: EditorState.createEmpty() };
-
+        super();
+        this.state = { editorState: EditorState.createEmpty(), set: false };
         this.focus = () => this.refs.editor.focus();
         this.onChange = (editorState) => {
             this.setState({ editorState })
@@ -26,6 +25,40 @@ export default class RichTextInput extends Component {
         this.toggleBlockType = this._toggleBlockType.bind(this);
         this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
         this.handleFinish = this.handleFinish.bind(this);
+    }
+    // async componentDidUpdate(props){
+    //     console.log(props)
+    // }
+    async componentDidUpdate(prevProps){
+        if(prevProps !== this.props){
+            if(this.props.starter !== '' && !this.state.set){
+                // console.log(this.props.starter)
+                const blocksFromHTML = convertFromHTML(this.props.starter);
+                const state = ContentState.createFromBlockArray(
+                    blocksFromHTML.contentBlocks,
+                    blocksFromHTML.entityMap,
+                );
+                this.setState({
+                    editorState: EditorState.createWithContent(state),
+                    set: true
+                })
+            }
+        }
+    }
+
+    async componentDidMount(){
+        if(this.props.starter !== '' && this.props.starter != null){
+            // console.log(this.props.starter)
+            const blocksFromHTML = convertFromHTML(this.props.starter);
+            const state = ContentState.createFromBlockArray(
+                blocksFromHTML.contentBlocks,
+                blocksFromHTML.entityMap,
+            );
+            this.setState({
+                editorState: EditorState.createWithContent(state),
+                set: true
+            })
+        }
     }
 
     _handleKeyCommand(command, editorState) {

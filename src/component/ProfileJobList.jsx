@@ -41,7 +41,7 @@ export default class ProfileJobList extends Component{
 							.then(result => result.data);
 							console.log('loading data ...');
 		this.setState({userObj : data});
-		let jobData = await JobService.executeGetJobListService().then(result => result.data);
+		let jobData = await JobService.executeGetByAuthor().then(result => result.data);
 		let added = [];
 		if(this.props.jobType != null && this.props.jobType.toLowerCase() === 'applied') {
 			// Push applied jobs
@@ -55,8 +55,7 @@ export default class ProfileJobList extends Component{
 			// Push created jobs
 			this.setState({jobType : "created"});
 			for(let i = 0; i < jobData.length; i++)
-				if(jobData[i].author === this.state.userObj.id)
-					added.push(<JobElement jobType={this.state.jobType} jobData={jobData[i]}/>)
+				added.push(<JobElement jobType={this.state.jobType} jobData={jobData[i]}/>)
 		}
 		this.setState({jobs: added});
 		if(this.state.userObj && this.state.jobs)

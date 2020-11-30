@@ -25,7 +25,7 @@ class Navgiation extends Component {
     async componentWillReceiveProps(newProps){
         let logged = AuthenticationService.isUserLoggedIn();
         console.log(logged)
-        let check = await JobService.exectureCheckByAuthor().then(result => result.data);
+        let check = await JobService.executeCheckByAuthor().then(result => result.data);
         console.log(check)
         this.setState({
             path: newProps.location.pathname.includes('dash'),
@@ -37,7 +37,7 @@ class Navgiation extends Component {
     async componentDidMount() {
         let logged = AuthenticationService.isUserLoggedIn();
         console.log(logged)
-        let check = await JobService.exectureCheckByAuthor().then(result => result.data);
+        let check = await JobService.executeCheckByAuthor().then(result => result.data);
         console.log(check)
         this.setState({
             path: this.props.location.pathname.includes('dash'),

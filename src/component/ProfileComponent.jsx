@@ -179,7 +179,7 @@ class ProfileComponent extends Component {
 							<Paper style={style.Paper}>
 								<Grid container>
 									<>
-										<Grid container direction="row" spacing={6}>
+										<Grid container direction="row" spacing={3}>
 											<Grid item sm={3}>
 												<ProfileUploader key={this.state.userObj.username} username={this.state.userObj.username}/>
 											</Grid>

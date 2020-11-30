@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { Paper, Grid, List, ListItem, ListItemText, /*ListItemAvatar,*/ Divider, ButtonGroup, Button, ListItemIcon, Collapse/*, TextField, TextareaAutosize */} from '@material-ui/core/';
+import { Paper, Grid, List, ListItem, ListItemText, ListItemAvatar, Divider, ButtonGroup, Button, ListItemIcon, Collapse, TextField, TextareaAutosize } from '@material-ui/core/';
 import { LocationOn as LocationOnIcon, 
-    Business as BusinessIcon,
-    Link as LinkIcon,
-    NotInterested as NotInterestedIcon,
-    CheckCircleOutline as CheckCircleOutlineIcon,
-    Email as EmailIcon,
-    Note as NoteIcon } from '@material-ui/icons';
-import { ExpandLess, ExpandMore, EditIcon, SaveIcon } from '@material-ui/icons';
+         Business as BusinessIcon,
+         Link as LinkIcon,
+         NotInterested as NotInterestedIcon,
+         CheckCircleOutline as CheckCircleOutlineIcon,
+         Email as EmailIcon,
+         Note as NoteIcon,
+         Edit as EditIcon,
+         Save as SaveIcon } from '@material-ui/icons';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { green, red } from '@material-ui/core/colors';
 // import { Alert } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
@@ -16,7 +18,7 @@ import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import AuthenticationService from '../api/AuthenticationService';
 import UserService from '../api/UserService';
 import JobService from '../api/JobService';
-// import FileService from '../api/FileService';
+import RichTextInput from './RichTextInput';
 import ApplicationService from '../api/ApplicationService';
 import output from '../api/connections';
 
@@ -24,28 +26,33 @@ class ManagementComponent extends Component {
     constructor(){
         super();
         this.state = {
-            selectedJob: null,
             manageState: 0,
-            userObj: null,
-            selectedJob: null,
-            exists: false
+            exists: false,
+            jobs: [],
+            indexList: [],
+            index: 0
         }
         this.updateSelectedJob = this.updateSelectedJob.bind(this)
         this.changeManage = this.changeManage.bind(this)
+        this.changesMade = this.changesMade.bind(this)
     }
 
     async componentDidMount(){
-        const data = await	UserService
-							.executeGetUserService(sessionStorage.getItem('authenticatedUser'))
-                            .then(result => result.data);
-        const jobData = await JobService.exectureCheckByAuthor().then(result => result.data);
-        this.setState({userObj: data, exists: jobData})
+        let added = []
+        let temp = []
+        const check = await JobService.executeCheckByAuthor().then(result => result.data);
+        let jobData = await JobService.executeGetByAuthor().then(result => result.data);
+        for(let i = 0; i < jobData.length; i++){
+            added.push(<JobItem jobData={jobData[i]}/>)
+            temp.push(jobData[i])
+        }
+        this.setState({jobs: added, indexList: temp, exists: check, index: 0});
     }
 
     updateSelectedJob(newJob){
         console.log(newJob)
         this.setState({
-            selectedJob: newJob
+            index: newJob
         })
     }
 
@@ -59,6 +66,17 @@ class ManagementComponent extends Component {
                 manageState: 1
             });
         }
+    }
+
+    async changesMade(){
+        let added = []
+        let temp = []
+        let jobData = await JobService.executeGetByAuthor().then(result => result.data);
+        for(let i = 0; i < jobData.length; i++){
+            added.push(<JobItem jobData={jobData[i]}/>)
+            temp.push(jobData[i])
+        }
+        this.setState({jobs: added, indexList: temp});
     }
 
     render(){
@@ -76,20 +94,25 @@ class ManagementComponent extends Component {
                 backgroundColor: "#eeeeee"
             }
         };
+
         if(isUserLoggedIn && this.state.exists){
             return(
                 <div className="container">
                     <Grid container direction="row" spacing={3} style={{width: "100%", margin: 0}} justify="center">
-                        <JobList userObj={this.state.userObj} update={this.updateSelectedJob}/>
-                        <Grid item xs={7} justify="flex-start" direction="column">
+                        <JobList update={this.updateSelectedJob} jobs={this.state.jobs}/>
+                        <Grid item xs={7} >
                             <Grid container item xs={12} alignItems="center" justify="center">
                                 <ButtonGroup aria-label="manage secion">
                                     <Button onClick={() => { this.changeManage("jobs") }} style={this.state.manageState === 0 ? style.active : style.inert}>Manage Job</Button>
                                     <Button onClick={() => { this.changeManage("apps") }} style={this.state.manageState === 1 ? style.active : style.inert}>Manage Applicants</Button>
                                 </ButtonGroup>
                             </Grid>
-                            <Grid item xs={12} alignItems="center" justify="center">
-                                {this.state.manageState === 0 ? <SelectedManage job={this.state.selectedJob} /> : <AppList job={this.state.selectedJob}/>}
+                            <Grid item xs={12}>
+                                {
+                                    this.state.manageState === 0 ? 
+                                    <SelectedManage job={this.state.indexList[this.state.index]} update={this.changesMade} /> : 
+                                    <AppList job={this.state.indexList[this.state.index]}/>
+                                }
                             </Grid>
                         </Grid>
                     </Grid>
@@ -129,89 +152,32 @@ class ManagementComponent extends Component {
     }
 }
 
-
-// Add editing to this component
-class SelectedManage extends Component {
-    constructor(){
-        super()
-        this.state = {
-            edit: false,
-            job: null
-        }
-    }
-
-    async componentWillReceiveProps(newProps){
-        this.setState({
-            job: newProps.job
-        })
-    }
-    async componentDidMount(){
-        this.setState({
-            job: this.props.job
-        })
-    }
-
-    render(){
-        const style = {
-            paper : {padding:40, margin:20, textAlign: "left", flexGrow: 1},
-            paper2 : {padding:40, margin:20, textAlign: "center", flexGrow: 1}
-        };
-        if(this.state.job === null){
-            return(
-                <Paper style={style.paper2}>
-                    <p>No job selected.</p>
-                </Paper>
-            )
-        }else {
-            return(
-                <Paper style={style.paper}>
-                    <h2>{this.state.job.jobTitle}</h2>
-                    <p>{this.state.job.organization}</p>
-                    <p>{this.state.job.location + " | " + this.state.job.country}</p>
-                    <div className="description" dangerouslySetInnerHTML={{__html: this.state.job.jobDescription}} />
-                    <p>{this.state.job.jobSalary}</p>
-                    <p>{this.state.job.pageUrl}</p>
-                </Paper>
-            )
-        }
-    }
-}
-
 class JobList extends Component {
     constructor(){
         super();
         this.state = {
             jobs: [],
-            indexList: [],
             index: 0
         }
-        // this.updateCurrent = this.updateCurrent.bind(this)
     }
 
-    async componentDidMount(){
-        let added = []
-        let temp = []
-        console.log(this.props.userObj)
-        const data = await UserService
-                            .executeGetUserService(sessionStorage.getItem('authenticatedUser'))
-                            .then(result => result.data);
-                            console.log('loading data ...');
-		this.setState({userObj : data});
-
-        let jobData = await JobService.executeGetJobListService().then(result => result.data);
-        for(let i = 0; i < jobData.length; i++){
-			if(jobData[i].author === data.id){
-                added.push(<JobItem jobData={jobData[i]}/>)
-                temp.push(jobData[i])
-            }
+    componentDidUpdate(prevProps){
+        if (this.props !== prevProps) {
+            this.setState({
+                jobs: this.props.jobs
+            })
+            // console.log(this.state)
         }
-        this.props.update(temp[0]);
-        this.setState({jobs: added, indexList: temp});
+    }
+    
+    componentDidMount(){
+        this.setState({
+            jobs: this.props.jobs
+        })
     }
 
     updateCurrent(index){
-        this.props.update(this.state.indexList[index]);
-        this.setState({index: index});
+        this.props.update(index);
     }
 
     render(){
@@ -239,25 +205,239 @@ class JobList extends Component {
 
 class JobItem extends Component{
     render(){
-        const style = {
-			nested : {
-                
-            }
-		}
         return(
             <>
                 <List component="div">
-                    <ListItem style={style.nested}>
+                    <ListItem>
                         <ListItemIcon title="jobTitle"><BusinessIcon /></ListItemIcon>
                         <ListItemText primary={this.props.jobData.jobTitle} />
                     </ListItem>
-                    <ListItem style={style.nested}>
+                    <ListItem>
                         <ListItemIcon title="country"><LocationOnIcon /></ListItemIcon>
                         <ListItemText primary={this.props.jobData.location + " | " + this.props.jobData.country} />
                     </ListItem>
                 </List>
             </>
         )
+    }
+}
+
+// Add editing to this component
+class SelectedManage extends Component {
+    constructor(){
+        super()
+        this.state = {
+            id: '',
+            country: '',
+            dateAdded: '',
+            hasExpired: '',
+            jobBoard: '',
+            jobDescription: '',
+            jobTitle: '',
+            jobType: '',
+            location: '',
+            organization: '',
+            pageUrl: '',
+            jobSalary: '',
+            sector: '',
+            author: '',
+            newJobDescription: '',
+            edit: false
+        }
+        this.editing = this.editing.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleDescription = this.handleDescription.bind(this)
+        this.updateJob = this.updateJob.bind(this)
+    }
+
+    async componentDidUpdate(prevProps){
+        if(prevProps !== this.props){
+            this.setState({
+                id: this.props.job.id,
+                country: this.props.job.country,
+                dateAdded: this.props.job.dateAdded,
+                hasExpired: this.props.job.hasExpired,
+                jobBoard: this.props.job.jobBoard,
+                jobDescription: this.props.job.jobDescription,
+                jobTitle: this.props.job.jobTitle,
+                jobType: this.props.job.jobType,
+                location: this.props.job.location,
+                organization: this.props.job.organization,
+                pageUrl: this.props.job.pageUrl,
+                jobSalary: this.props.job.jobSalary,
+                sector: this.props.job.sector,
+                author: this.props.job.author,
+                newJobDescription: this.props.job.jobDescription,
+                edit: false
+            })
+        }
+    }
+    async componentDidMount(){
+        if(this.props.job !== null){
+            this.setState({
+                id: this.props.job.id,
+                country: this.props.job.country,
+                dateAdded: this.props.job.dateAdded,
+                hasExpired: this.props.job.hasExpired,
+                jobBoard: this.props.job.jobBoard,
+                jobDescription: this.props.job.jobDescription,
+                jobTitle: this.props.job.jobTitle,
+                jobType: this.props.job.jobType,
+                location: this.props.job.location,
+                organization: this.props.job.organization,
+                pageUrl: this.props.job.pageUrl,
+                jobSalary: this.props.job.jobSalary,
+                sector: this.props.job.sector,
+                author: this.props.job.author,
+                newJobDescription: this.props.job.jobDescription,
+                edit: false
+            })
+        }
+    }
+
+    editing() {
+        if(this.state.edit) {
+            this.updateJob();
+            this.setState({edit: false});
+        }else{
+            this.setState({edit: true});
+        }
+    }
+
+    async updateJob(){
+        const job = {
+            id: this.state.id,
+            country: this.state.country,
+            dateAdded: this.props.job.dateAdded,
+            hasExpired: this.props.job.hasExpired,
+            jobBoard: this.props.job.jobBoard,
+            jobDescription: this.state.newJobDescription,
+            jobTitle: this.state.jobTitle,
+            jobType: this.props.job.jobType,
+            location: this.state.location,
+            organization: this.state.organization,
+            pageUrl: this.state.pageUrl,
+            jobSalary: this.state.jobSalary,
+            sector: this.props.job.sector,
+            author: this.props.job.author
+        }
+        console.log(job)
+        const data = await JobService.executeUpdateJobService(job);
+        console.log(data)
+        this.props.update()
+    }
+
+    handleChange(event) {
+		const value = event.target.value;
+		this.setState({
+			...this.state,
+			[event.target.name]: value
+		});
+    }
+    
+    handleDescription(event) {
+        this.setState({
+            newJobDescription : event
+        });
+    }
+    
+    render(){
+        const style = {
+            paper : {padding:40, margin:20, textAlign: "left", flexGrow: 1},
+            paper2 : {padding:40, margin:20, textAlign: "center", flexGrow: 1}
+        };
+        if(this.state.job === null){
+            return(
+                <Paper style={style.paper2}>
+                    <p>No job selected.</p>
+                </Paper>
+            )
+        }else {
+
+            return(
+                <Paper style={style.paper}>
+                    <Grid container>
+                        <Grid item xs={12} container justify="flex-end">
+                            {!this.state.edit ? <EditIcon style={{cursor: "pointer"}} onClick={this.editing}/> : <SaveIcon style={{cursor: "pointer"}} onClick={this.editing}/>}
+                        </Grid>
+                        {this.state.edit ?
+                        <Grid item container xs={12} spacing={2} justify="center">
+                            <Grid item container xs={10} spacing={2} justify="center">
+                                <Grid item xs={12} style={{textAlign: "center"}}>
+                                    <Divider style={{margin: "0 0 10px 0"}} />
+                                    <p style={{padding: 0, margin: 0}}>Job Information</p>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField  label={this.state.jobTitle}
+                                                defaultValue={this.state.jobTitle}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder={this.state.jobTitle} name="jobTitle"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField  label={this.state.jobSalary}
+                                                defaultValue={this.state.jobSalary}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="Salary" name="jobSalary"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField  label={this.state.location}
+                                                defaultValue={this.state.location}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="Job Location" name="location"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField  label={this.state.country}
+                                                defaultValue={this.state.country}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="Job Country" 
+                                                name="country"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                                <Grid item xs={12} style={{textAlign: "center"}}>
+                                    <Divider style={{margin: "10px 0"}} />
+                                    <p style={{padding: 0, margin: 0}}>Company Information</p>
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                    <TextField  label={this.state.organization}
+                                                defaultValue={this.state.organization}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="Company" name="organization"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                                <Grid item xs={12} sm={5}>
+                                    <TextField  label={this.state.pageUrl}
+                                                defaultValue={this.state.pageUrl}
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="Page URL" name="pageUrl"
+                                                onChange={this.handleChange}/>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} style={{border: "rgba(0, 0, 0, 0.42) 1px solid", marginTop: 15, borderRadius: 5, padding: 10}}>
+                                <RichTextInput updateParent={this.handleDescription} starter={this.state.jobDescription}/>
+                            </Grid>
+                        </Grid>:
+                        <Grid item>
+                            <h2>{this.state.jobTitle}</h2>
+                            <p>{this.state.organization}</p>
+                            <p>{this.state.location + " | " + this.state.country}</p>
+                            <div className="description" dangerouslySetInnerHTML={{__html: this.state.jobDescription}} />
+                            <p>{this.state.jobSalary}</p>
+                            <p>{this.state.pageUrl}</p>
+                        </Grid>
+                        }
+                    </Grid>
+                </Paper>
+            )
+        }
     }
 }
 

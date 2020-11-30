@@ -164,7 +164,7 @@ class CreateJob extends Component {
                         <Container component="main" maxWidth={this.state.page === 1 ? "md":"sm"} style={style.container}>
                             <Grid container justify="center" spacing={3} direction="column">
                                 {this.state.page === 0 && <StartCreate updateParent={this.handleFirst}/>}
-                                {this.state.page === 1 && <RichTextInput updateParent={this.handleSecond} />}
+                                {this.state.page === 1 && <RichTextInput updateParent={this.handleSecond} starter='' />}
                                 <Grid item></Grid>
                                 <Grid container spacing={3} justify="center" alignItems="center">
                                     <Grid item xs={2}>

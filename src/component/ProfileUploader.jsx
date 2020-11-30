@@ -91,7 +91,7 @@ export default class ProfileUploader extends Component {
 	render() {
 		const style = {
 			Paper : {padding:20, marginTop:10, marginBottom:10},
-			image : {'borderRadius':'50%', width:"200px", height:"200px", "objectFit":"cover"}
+			image : {borderRadius:'50%', maxWidth: '100%', maxHeight: '100%', objectFit:"cover"}//width:"200px", height:"200px", 
 		}
 		// Upload once selected file exists
 		if(this.state.selectedFiles !== undefined && !this.state.uploaded) {

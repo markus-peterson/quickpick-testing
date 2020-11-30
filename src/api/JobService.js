@@ -51,7 +51,7 @@ class getJobListService{
         })
 	}
 
-	exectureCheckByAuthor(){
+	executeCheckByAuthor(){
 		const {jobTag} = this.state;
         let username = 'user'
 		let password =  'password'
@@ -59,6 +59,36 @@ class getJobListService{
 		let currentUserId = sessionStorage.getItem('authenticatedUserId');
 
         return axios.get(jobTag+'checkByAuthor/' + currentUserId,
+        {
+            headers:{
+                authorization: basicAuthHeader
+            }
+        })
+	}
+
+	executeGetByAuthor(){
+		const {jobTag} = this.state;
+        let username = 'user'
+		let password =  'password'
+        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		let currentUserId = sessionStorage.getItem('authenticatedUserId');
+
+        return axios.get(jobTag+'getByAuthor/' + currentUserId,
+        {
+            headers:{
+                authorization: basicAuthHeader
+            }
+        })
+	}
+
+	executeUpdateJobService(job){
+		const {jobTag} = this.state;
+
+        let username = 'user'
+		let password =  'password'
+        let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		
+        return axios.post(jobTag+'updateJob', job,
         {
             headers:{
                 authorization: basicAuthHeader
