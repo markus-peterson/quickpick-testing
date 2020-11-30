@@ -67,7 +67,6 @@ public class JobService implements JobServiceInterface {
 		if (jobDetails != null) {
 			Job current = jobDao.findById(jobDetails.getId()).orElse(null);
 			if (current != null) {
-				current = jobDetails;
 				if(!current.getCountry().equals(jobDetails.getCountry())) {
 					current.setCountry(jobDetails.getCountry());
 				}
