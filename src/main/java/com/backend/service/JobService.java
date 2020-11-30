@@ -67,27 +67,7 @@ public class JobService implements JobServiceInterface {
 		if (jobDetails != null) {
 			Job current = jobDao.findById(jobDetails.getId()).orElse(null);
 			if (current != null) {
-				if(!current.getCountry().equals(jobDetails.getCountry())) {
-					current.setCountry(jobDetails.getCountry());
-				}
-				if(!current.getJobSalary().equals(jobDetails.getJobSalary())) {
-					current.setJobSalary(jobDetails.getJobSalary());
-				}
-				if(!current.getJobTitle().equals(jobDetails.getJobTitle())) {
-					current.setJobTitle(jobDetails.getJobTitle());
-				}
-				if(!current.getJobDescription().equals(jobDetails.getJobDescription())) {
-					current.setJobDescription(jobDetails.getJobDescription());
-				}
-				if(!current.getOrganization().equals(jobDetails.getOrganization())) {
-					current.setOrganization(jobDetails.getOrganization());
-				}
-				if(!current.getLocation().equals(jobDetails.getLocation())) {
-					current.setLocation(jobDetails.getLocation());
-				}
-				if(!current.getPageUrl().equals(jobDetails.getPageUrl())) {
-					current.setPageUrl(jobDetails.getPageUrl());
-				}
+				current = jobDetails;
 				jobDao.save(current);
 				return "done";
 			}
