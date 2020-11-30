@@ -64,7 +64,7 @@ public class JobController {
 			jobService.updateJob(jobDetails);
 			return "Job Updated Successfully";
 		} catch (Exception e) {
-			return "Could Not Create Job";
+			return "Could Not Update Job";
 		}
 	}
 	
