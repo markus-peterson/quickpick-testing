@@ -4,113 +4,117 @@ import '../css/Dashboard.css'
 import JobService from '../api/JobService';
 import ApplicationService from '../api/ApplicationService';
 import AuthenticationService from '../api/AuthenticationService';
-import { /*Paper, Grid, Container,*/ Button} from '@material-ui/core/';
+import { Paper, Grid, List, ListItem, Button } from '@material-ui/core/';
+import {HourglassEmpty as HourglassEmptyIcon,
+        CheckCircleOutline as CheckCircleOutlineIcon,
+        NotInterested as NotInterestedIcon } from '@material-ui/icons';
+import { green, red, orange } from '@material-ui/core/colors';
+import { Alert } from '@material-ui/lab';
 
 class Dashboard extends Component {
     constructor() {
         super();
 
         this.state = {
-            job : null,
+            jobs: [],
+            indexList: [],
+            index: 0,
             appResponse: '',
-            appStatus: false,
-            keyword: '',
-            location: ''
+            appStatus: false
         }
-        this.changeJob = this.changeJob.bind(this);
+        this.updateSelectedJob = this.updateSelectedJob.bind(this)
+        this.loadJobs = this.loadJobs.bind(this)
     }
     
     async componentDidMount(){
-        let paramArray = []
-        let stringParams = this.props.location.search
-        if(this.props.location.search.startsWith('?k=')){
-            stringParams = stringParams.split('?k=')[1]
-            if(stringParams.includes('?l=')){
-                paramArray = stringParams.split('?l=')
-                console.log(paramArray)
-                this.setState({
-                    keyword: paramArray[0],
-                    location: paramArray[1]
-                })
-            }else{
-                console.log(stringParams)
-                this.setState({
-                    keyword: stringParams
-                })
-            }
-        }else if(this.props.location.search.startsWith('?l=')){
-            stringParams = stringParams.split('?l=')[1]
-            this.setState({
-                location: stringParams
-            })
-        }
-        
-    }
-
-    async componentDidUpdate(prevProps){
-        if(prevProps !== this.props){
+        console.log(this.props)
+        let keyword = ''
+        let location = ''
+        if(this.props.location.search !== ""){
             let paramArray = []
             let stringParams = this.props.location.search
             if(this.props.location.search.startsWith('?k=')){
                 stringParams = stringParams.split('?k=')[1]
                 if(stringParams.includes('?l=')){
                     paramArray = stringParams.split('?l=')
-                    console.log(paramArray)
-                    this.setState({
-                        keyword: paramArray[0],
-                        location: paramArray[1]
-                    })
+                    keyword = paramArray[0]
+                    location = paramArray[1]
                 }else{
-                    console.log(stringParams)
-                    this.setState({
-                        keyword: stringParams
-                    })
+                    keyword = stringParams
                 }
             }else if(this.props.location.search.startsWith('?l=')){
                 stringParams = stringParams.split('?l=')[1]
-                this.setState({
-                    location: stringParams
-                })
+                location = stringParams
             }
         }
+        this.loadJobs(keyword, location)
     }
-    
-    changeJob(job){
-        this.setState({job : job});
-        if(job !== undefined){
-        const application = {
-            jobId : job.id,
-            userId : sessionStorage.getItem('authenticatedUserId')
-        }
-        ApplicationService.checkApplied(application)
-            .then((response) => {
-                if (response.data !== "") {
-                    this.setState({
-                        appResponse: 'Application ' + response.data,
-                        appStatus: true
-                    });
-                }else {
-                    this.setState({
-                        appResponse: '',
-                        appStatus: false
-                    });
-                }
-            })
+
+    async componentDidUpdate(prevProps){
+        if(prevProps !== this.props){
+            this.componentDidMount()
         }
     }
 
+    async loadJobs(keyword, location){
+        let jobData = []
+        let added = []
+        let temp = []
+        if(keyword === '' && location === ''){
+            jobData = await JobService.executeGetJobListService().then(result => result.data);
+        }else{
+            const params = {
+                searchKey: keyword,
+                location: location
+            }
+            console.log(params)
+            jobData = await JobService.executeGetSearch(params).then(result => result.data);
+        }
+        for(let i = 0; i < jobData.length; i++){
+            added.push(<BuildJobItem jobInfo={jobData[i]}/>)
+            temp.push(jobData[i])
+        }
+        console.log(temp.length)
+        this.setState({jobs: added, indexList: temp});
+    }
+    
+    updateSelectedJob(newIndex){
+        this.setState({
+            index: newIndex
+        })
+    }
+
     render(){
+        const style = {
+            Paper : {
+                padding:20, 
+                marginTop:10, 
+                marginBottom:10
+            },
+            active: {
+                backgroundColor: "#00a2ff"
+            },
+            inert: {
+                backgroundColor: "#eeeeee"
+            },
+            container: {
+                width: "100%",
+                height: "100%",
+                margin: 0,
+                position: "relative"
+            }
+        };
         return(
-            <div className="dash-contianer">
+            <div className="container">
                 <div className="background-container"/>
-                <div className="dash-inner">
-                    <div className="content-sections">
-                        <JobListItems jobSelect={this.changeJob} keyword={this.state.keyword} location={this.state.location}/>
-                    </div>
-                    <div className="content-container">
-                        <SelectedJob job={this.state.job} appResponse={this.state.appResponse} appStatus={this.state.appStatus}/>
-                    </div>
-                </div>
+                <Grid container direction="row" spacing={3} style={style.container} justify="center">
+                    <Grid item xs={3} className="content-sections">
+                        <JobListItems update={this.updateSelectedJob} jobs={this.state.jobs}/>
+                    </Grid>
+                    <Grid item xs={6} className="content-sections">
+                        <SelectedJob job={this.state.indexList[this.state.index]} appResponse={this.state.appResponse} appStatus={this.state.appStatus}/>
+                    </Grid>
+                </Grid>
             </div>
         )
     }
@@ -121,130 +125,73 @@ class JobListItems extends Component {
         super();
         this.state = {
             jobs: [],
-            jobsIndex: [],
             activeIndex: 0,
-            isLoading: true,
-            currentJob: null,
-            moreToLoad: true
+            isLoading: false,
+            moreToLoad: true,
+            total: 0,
+            loaded: 0
         }
-        this.total = 0;
         this.loadmore = this.loadmore.bind(this);
-        this.handleUpdateCurrent = this.handleUpdateCurrent.bind(this); 
-        this.leftToLoad = 0;
-        this.allJobs = null;
+        this.updateCurrent = this.updateCurrent.bind(this); 
         this.inactive = {
-            border: "gray solid 1px",
-            background: "var(--yellow-color-transparent)"
+            borderBottom: '1px #0000001a solid'
         };
         this.active = {
-            border: "var(--light-blue) solid 1px",
-            background: "var(--light-blue-transparent)"
+            backgroundColor: "var(--light-blue-transparent)",
+            backdropFilter: 'blur(2px)',
+            borderBottom: '1px #0000001a solid'
         };
     }
 
+    async componentDidMount(){
+        const initTotal = this.props.jobs.length
+        const initLoaded = initTotal > 10 ? 10 : this.props.jobs.length
+        const moreToLoad = initTotal > initLoaded
+        this.setState({
+            jobs: this.props.jobs,
+            total: initTotal,
+            loaded: initLoaded,
+            moreToLoad: moreToLoad
+        })
+        this.setState({activeIndex: 0});
+        this.props.update(0);
+    }
+
     async componentDidUpdate(oldProps){
-        if(oldProps.keyword !== this.props.keyword || oldProps.location !== this.props.location){
+        if(oldProps.jobs !== this.props.jobs){
             this.componentDidMount()
         }
     }
 
-    async componentDidMount(){
-        console.log(this.props)
-        if(this.props.keyword === '' && this.props.location === ''){
-            await JobService.executeGetJobListService()
-            .then(result => {
-                const data = result.data
-                this.allJobs = data;
-                var tempJob = null;
-                const added = [];
-                const indexes = [];
-                if(this.allJobs.length >= 10){
-                    this.leftToLoad = 10;
-                }else{
-                    this.leftToLoad = this.allJobs.length;
-                }
-                this.total = this.leftToLoad;
-                while(this.leftToLoad > 0){
-                    tempJob = this.allJobs[this.total - this.leftToLoad];
-                    added.push(<BuildJobItem jobInfo={tempJob}/>);
-                    indexes.push(tempJob);
-                    this.leftToLoad = this.leftToLoad - 1;
-                }
-                if(this.allJobs.length - this.total === 0){
-                    this.setState({moreToLoad: false});
-                    
-                }
-                this.setState({jobs: added, isLoading: false, jobsIndex: indexes});
-                this.props.jobSelect(this.state.jobsIndex[0]);
-            });
-        }else{
-            const params = {
-                searchKey: this.props.keyword,
-                location: this.props.location
-            }
-            await JobService.executeGetSearch(params)
-            .then(result => {
-                const data = result.data
-                this.allJobs = data;
-                var tempJob = null;
-                const added = [];
-                const indexes = [];
-                if(this.allJobs.length >= 10){
-                    this.leftToLoad = 10;
-                }else{
-                    this.leftToLoad = this.allJobs.length;
-                }
-                this.total = this.leftToLoad;
-                while(this.leftToLoad > 0){
-                    tempJob = this.allJobs[this.total - this.leftToLoad];
-                    added.push(<BuildJobItem jobInfo={tempJob}/>);
-                    indexes.push(tempJob);
-                    this.leftToLoad = this.leftToLoad - 1;
-                }
-                if(this.allJobs.length - this.total === 0){
-                    this.setState({moreToLoad: false});
-                    
-                }
-                this.setState({jobs: added, isLoading: false, jobsIndex: indexes});
-                this.props.jobSelect(this.state.jobsIndex[0]);
-            });
-        }
-    }
-
-    handleSelect(id) {
-        this.props.jobSelect(id);
-    }
-
-    handleUpdateCurrent(index){
-        this.props.jobSelect(this.state.jobsIndex[index]);
+    updateCurrent(index){
+        this.props.update(index);
         this.setState({activeIndex: index});
     }
     
     loadmore() {
-        this.setState({isLoading: true});
-        if((this.allJobs.length - this.total) >= 10){
-            this.leftToLoad = 10;
-        }else{
-            this.leftToLoad = this.allJobs.length - this.total;
-        }
-        this.total = this.total + this.leftToLoad;
-        var tempJob = null;
-        const added = this.state.jobs.slice();
-        const indexes = this.state.jobsIndex.slice();
-        while(this.leftToLoad > 0){
-            tempJob = this.allJobs[this.total - this.leftToLoad];
-            added.push(<BuildJobItem jobInfo={tempJob}/>);
-            indexes.push(tempJob);
-            this.leftToLoad= this.leftToLoad - 1;
-        }
-        if(this.allJobs.length - this.total === 0){
-            this.setState({moreToLoad: false});
-        }
-        this.setState({isLoading: false, jobs: added, jobsIndex: indexes});
-        console.log(this.state.jobs.length);
+        const leftToLoad = this.state.total - this.state.loaded
+        const initLoaded = leftToLoad > 10 ? (this.state.loaded + 10) : this.state.total
+        const moreToLoad = this.state.total > initLoaded
+        this.setState({
+            loaded: initLoaded,
+            moreToLoad: moreToLoad
+        })
     }
     
     render(){
+        const style = {
+            paper: {
+                padding: 0,
+                marginTop:0,
+                marginBottom:20,
+                height: "fit-content",
+                backgroundColor: 'var(--white-transparent)',
+                backdropFilter: 'blur(10px)'
+            },
+            list: {
+                padding: 0
+            }
+        };
         console.log();
         if(this.state.isLoading){
             return(
@@ -263,21 +210,23 @@ class JobListItems extends Component {
                 )
             }
             return(
-                <div className="search-list-container">
-                    <div className="job-list">
+                <Paper style={style.paper}>
+                    <List component="div" direction="column" style={style.list}>
                         {
-                            this.state.jobs.map(function(JobItem, index) {
-                                const style = this.state.activeIndex === index ? this.active : this.inactive;
+                            this.state.jobs && this.state.jobs.slice(0,this.state.loaded).map( function(job, index) {
+                                const active = this.state.activeIndex === index ? this.active : this.inactive;
                                 return(
-                                <div className="leftItem" onClick={this.handleUpdateCurrent.bind(this, index)} style={style} key={index}>
-                                    {JobItem}
-                                </div>
+                                <ListItem button style={active} onClick={this.updateCurrent.bind(this, index)} key={index}>
+                                    {job}
+                                </ListItem>
                                 );
                             }, this)
                         }
-                        {this.state.moreToLoad && <Button variant="contained" size="small" onClick={this.loadmore}>Load more</Button>}
-                    </div>
-                </div>
+                        <ListItem style={{justifyContent: 'center'}}>
+                            {this.state.moreToLoad && <Button variant="contained" size="small" onClick={this.loadmore}>Load more</Button>}
+                        </ListItem>
+                    </List>
+                </Paper>
             )
         }
     }
@@ -301,17 +250,67 @@ class SelectedJob extends Component {
     constructor(props){
         super(props);
         this.state = {
+            country: '',
+            dateAdded: '',
+            hasExpired: '',
+            jobBoard: '',
+            jobDescription: '',
+            jobTitle: '',
+            jobType: '',
+            location: '',
+            organization: '',
+            pageUrl: '',
+            jobSalary: '',
+            sector: '',
+            author: '',
             appiedResponse: '',
             appiedStatus: false
         }
         this.apply = this.apply.bind(this);
     }
 
-    async componentWillReceiveProps(newProps){
-        this.setState({
-            appiedResponse: newProps.appResponse,
-            appiedStatus: newProps.appStatus
-        });
+    async componentDidMount(){
+        let appliedResponse = ''
+        let appliedStatus = false
+        if(this.props.job !== undefined){
+            const application = {
+                jobId : this.props.job.id,
+                userId : sessionStorage.getItem('authenticatedUserId')
+            }
+            await ApplicationService.checkApplied(application)
+                .then((response) => {
+                    if (response.data !== "") {
+                        appliedResponse = 'Application ' + response.data
+                        appliedStatus = true
+                    }else {
+                        appliedResponse = ''
+                        appliedStatus = false
+                    }
+                })
+            this.setState({
+                country: this.props.job.country,
+                dateAdded: this.props.job.dateAdded,
+                hasExpired: this.props.job.hasExpired,
+                jobBoard: this.props.job.jobBoard,
+                jobDescription: this.props.job.jobDescription,
+                jobTitle: this.props.job.jobTitle,
+                jobType: this.props.job.jobType,
+                location: this.props.job.location,
+                organization: this.props.job.organization,
+                pageUrl: this.props.job.pageUrl,
+                jobSalary: this.props.job.jobSalary,
+                sector: this.props.job.sector,
+                author: this.props.job.author,
+                appiedResponse: appliedResponse,
+                appiedStatus: appliedStatus
+            })
+        }
+    }
+
+    async componentDidUpdate(oldProps){
+        if(oldProps.appStatus !== this.props.appStatus || oldProps.appResponse !== this.props.appResponse || oldProps.job !== this.props.job){
+            this.componentDidMount()
+        }
     }
 
     async apply(){
@@ -331,10 +330,39 @@ class SelectedJob extends Component {
 
     render(){
         const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
+        const style = {
+            paper : {
+                padding: 40,
+                textAlign: "left",
+                flexGrow: 1,
+                backgroundColor: 'var(--white-transparent)',
+                backdropFilter: 'blur(10px)'
+            }
+        };
+        let alert = {
+            border: '1px solid',
+            borderRadius: 4,
+            borderColor: '#ff990066'
+        }
+        let responseDisplay = (<HourglassEmptyIcon style={{color: orange[500]}} />);
+        let severity = 'info'
+        if(this.state.appiedStatus) {
+            if(this.state.appiedResponse.toLowerCase().includes('denied')) {
+                responseDisplay = (<NotInterestedIcon style={{color: red[500]}} />);
+                severity = 'error'
+            }else if(this.state.appiedResponse.toLowerCase().includes('accepted')){
+                responseDisplay = (<CheckCircleOutlineIcon style={{color: green[500]}} />);
+                severity = 'success'
+            }else{
+                responseDisplay = (<HourglassEmptyIcon style={{color: orange[500]}} />);
+                severity = 'warning'
+            }
+		}
+
         if (this.props.job == null){
             return(
                 <div className="content" id="selectJob">
-                    <p style={{'margin': '20px auto', 'width' : 'fit-content'}}>No jobs available</p>
+                    <p style={{margin: '20px auto', width: 'fit-content'}}>No jobs available</p>
                 </div>
             )
         } else {
@@ -345,24 +373,31 @@ class SelectedJob extends Component {
             }else{
                 // console.log(this.state.appStatus)
                 return(
-                    <div className="content" id="job">
-                        <h2>{this.props.job.jobTitle}</h2>
-                        <p>{this.props.job.organization}</p>
-                        <p>{this.props.job.location} {this.props.job.country}</p>
-                        <div className="description" dangerouslySetInnerHTML={{__html: this.props.job.jobDescription}} />
-                        <p>{this.props.job.jobSalary}</p>
-                        <p>{this.props.job.pageUrl}</p>
-                        {!this.state.appiedStatus && isUserLoggedIn && <Button variant="contained" size="small" onClick={this.apply}>Apply</Button>}
-                        {this.state.appiedStatus && isUserLoggedIn && <div>{this.state.appiedResponse}</div>}
-                    </div>
+                    <Paper style={style.paper}>
+                        <Grid container>
+                                {!this.state.appiedStatus && isUserLoggedIn &&
+                                    <Button variant="contained" size="small" onClick={this.apply} style={{position: 'absolute', right: 40}}>Apply Now</Button>
+                                }
+                            <Grid item xs={12}>
+                                <h2 style={{marginTop: 0}}>{this.props.job.jobTitle}</h2>
+                                <p>{this.props.job.organization}</p>
+                                <p>{this.props.job.location + " | " + this.props.job.country}</p>
+                                <div className="description" dangerouslySetInnerHTML={{ __html: this.props.job.jobDescription }} />
+                                <p>{this.props.job.jobSalary}</p>
+                                <p>{this.props.job.pageUrl}</p>
+
+                            </Grid>
+                            <Grid item xs={12}>
+                                {this.state.appiedStatus && isUserLoggedIn && 
+                                    <Alert icon={responseDisplay} severity={severity}>{this.state.appiedResponse}</Alert>
+                                }
+                            </Grid>
+                        </Grid>
+                    </Paper>
                 )
             }
         }
     }
-}
-
-SelectedJob.defaultProps = {
-    status: null
 }
 
 

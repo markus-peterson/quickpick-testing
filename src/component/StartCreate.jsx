@@ -35,6 +35,19 @@ class StartCreate extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
     }
+
+    componentDidMount(){
+        this.setState({
+            jobTitle: this.props.load.jobTitle,
+            organization: this.props.load.organization,
+            country: this.props.load.country,
+            dateAdded: this.props.load.dateAdded,
+            location: this.props.load.location,
+            pageUrl: this.props.load.pageUrl,
+            jobSalary: this.props.load.jobSalary
+        })
+    }
+
     handleChange(event) {
         this.props.updateParent(event);
         this.setState({[event.target.id]: event.target.value});
@@ -45,97 +58,100 @@ class StartCreate extends Component {
         return(
             <Grid container justify="center">
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="jobTitle"
-                        label="Job Title"
-                        name="jobTitle"
-                        autoComplete="jobTitle"
-                        value={this.state.jobTitle}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    className={classes.textField}
+                    id="jobTitle"
+                    label="Job Title"
+                    name="jobTitle"
+                    autoComplete="jobTitle"
+                    value={this.state.jobTitle}
+                    inputProps={{
+                        type: "text",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="organization"
-                        label="Company Name"
-                        name="organization"
-                        autoComplete="organization"
-                        value={this.state.organization}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    className={classes.textField}
+                    id="organization"
+                    label="Company Name"
+                    name="organization"
+                    autoComplete="organization"
+                    value={this.state.organization}
+                    inputProps={{
+                        type: "text",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="country"
-                        label="Country"
-                        name="country"
-                        value={this.state.country}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    className={classes.textField}
+                    id="location"
+                    label="Job Location"
+                    name="location"
+                    value={this.state.location}
+                    inputProps={{
+                        type: "text",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="location"
-                        label="Job Location"
-                        name="location"
-                        value={this.state.location}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    className={classes.textField}
+                    id="country"
+                    label="Country"
+                    name="country"
+                    value={this.state.country}
+                    inputProps={{
+                        type: "text",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="jobSalary"
-                        label="Job Salary"
-                        name="jobSalary"
-                        value={this.state.jobSalary}
-                        inputProps={{
-                            type: "text",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    className={classes.textField}
+                    id="jobSalary"
+                    label="Job Salary"
+                    name="jobSalary"
+                    value={this.state.jobSalary}
+                    inputProps={{
+                        type: "text",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
                 <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        className={classes.textField}
-                        id="pageUrl"
-                        label="Company URL"
-                        name="pageUrl"
-                        value={this.state.pageUrl}
-                        inputProps={{
-                            type: "url",
-                            onChange: this.handleChange,
-                            autoComplete: "off"
-                        }}
-                    />
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    className={classes.textField}
+                    id="pageUrl"
+                    label="Company URL"
+                    name="pageUrl"
+                    value={this.state.pageUrl}
+                    inputProps={{
+                        type: "url",
+                        onChange: this.handleChange,
+                        autoComplete: "off"
+                    }}
+                />
             </Grid>
         )
     }

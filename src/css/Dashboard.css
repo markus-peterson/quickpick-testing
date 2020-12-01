@@ -4,8 +4,6 @@
     position: fixed;
     left: 0;
     bottom: 0;
-    /* z-index: -12; */
-    /* overflow-y: scroll; */
 }
 .background-container {
     background-image: url(../img/dashBack.jpg);
@@ -31,20 +29,16 @@
 }
 
 .content-sections{
-    /* max-width: fit-content; */
-    display: flex;
+    /* display: flex; */
     overflow-y: scroll;
     position: relative;
     height: 100%;
-    /* flex-direction: row;
-    justify-content: center; */
 }
 
 .content-container{
     overflow-y: scroll;
     display: flex;
     position: relative;
-    /* top: 0px; */
     height: 100%;
     margin-left: 0;
 }
