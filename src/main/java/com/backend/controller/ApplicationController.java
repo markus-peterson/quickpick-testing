@@ -63,14 +63,14 @@ public class ApplicationController {
 		return appService.checkIfApplied(app);
 	}
 	
-	@DeleteMapping("/deleteApplicaionById/{id}")
-	public String deleteApplicaionById(@PathVariable String id) {
-		return appService.deleteApplicaionById(id);
+	@DeleteMapping("/deleteApplicationById/{id}")
+	public String deleteApplicationById(@PathVariable String id) {
+		return appService.deleteApplicationById(id);
 	}
 
-	@DeleteMapping("/deleteApplicaionByJobId/{jobId}")
-	public String deleteApplicaionByJobId(@PathVariable String jobId) {
-		return appService.deleteApplicaionByJobId(jobId);
+	@DeleteMapping("/deleteApplicationByJobId/{jobId}")
+	public String deleteApplicationByJobId(@PathVariable String jobId) {
+		return appService.deleteApplicationByJobId(jobId);
 	}
 }
 

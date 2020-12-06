@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.backend.dao.ApplicationDao;
 import com.backend.dao.JobDao;
 import com.backend.model.Job;
 
@@ -17,7 +16,7 @@ public class JobService implements JobServiceInterface {
 	private JobDao jobDao;
 	
 	@Autowired
-	private ApplicationDao appDao;
+	private ApplicationService appService;
 
 	@Override
 	public Job addNewJob(Job jobDetails) {
@@ -47,7 +46,7 @@ public class JobService implements JobServiceInterface {
 	public String deleteJob(String id) {
 		try {
 			jobDao.deleteById(id);
-			appDao.deleteAllByJobId(id);
+			appService.deleteApplicationByJobId(id);
 			return "deleted job " + id;
 		}
 		catch(Exception e) {
