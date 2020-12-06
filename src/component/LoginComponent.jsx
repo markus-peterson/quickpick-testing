@@ -36,8 +36,8 @@ const styles = theme => ({
 });
 
 class LoginComponenet extends Component {
-    constructor(props){
-        super(props)
+    constructor(){
+        super()
         this.state = {
             firstName: '',
 			username:'',
@@ -51,7 +51,8 @@ class LoginComponenet extends Component {
             noUserFound:false,
             externalCond: false,
             userObj: null,
-            incorrect: 0
+            incorrect: 0,
+            usernameError: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.loginClicked = this.loginClicked.bind(this)
@@ -127,7 +128,7 @@ class LoginComponenet extends Component {
     }
 
     handleGoogleLogin(response){
-        UserService.executeCheckRegisteredExternal(response.profileObj.email)
+        UserService.emailExists(response.profileObj.email)
         .then((res) => {
             if(res.data === "registered"){
                 this.loginGoogle(response);
@@ -138,33 +139,40 @@ class LoginComponenet extends Component {
 		.catch(error => this.handleError(error));
     }
     
-    registerGoogle(event){
+    async registerGoogle(event){
         event.preventDefault()
-        const response = this.state.userObj
-        const user = {
-			password: response.profileObj.googleId,
-            emailId: response.profileObj.email,
-            firstName: response.profileObj.givenName,
-            address: null,
-            lastName: response.profileObj.familyName,
-            username: this.state.username
-        };
+        let uError = await UserService.usernameExists(this.state.username).then(res => res.data === 'registered')
+        console.log(uError)
         this.setState({
-            password: response.profileObj.googleId,
-            emailId: response.profileObj.email,
-            firstName: response.profileObj.givenName,
-            address: null,
-            lastName: response.profileObj.familyName,
-            username: this.state.username,
-        });
-		UserService.executePostUserRegisterService(user)
-        .then(res => {
-            if(res.status === 200) {
-                console.log('Register Successful')
-                this.loginGoogle(response)
-            }
+            usernameError: uError
         })
-        .catch(error => this.handleError(error))
+        if(!uError){
+            const response = this.state.userObj
+            const user = {
+                password: response.profileObj.googleId,
+                emailId: response.profileObj.email,
+                firstName: response.profileObj.givenName,
+                address: null,
+                lastName: response.profileObj.familyName,
+                username: this.state.username
+            };
+            this.setState({
+                password: response.profileObj.googleId,
+                emailId: response.profileObj.email,
+                firstName: response.profileObj.givenName,
+                address: null,
+                lastName: response.profileObj.familyName,
+                username: this.state.username,
+            });
+            UserService.executePostUserRegisterService(user)
+            .then(res => {
+                if(res.status === 200) {
+                    console.log('Register Successful')
+                    this.loginGoogle(response)
+                }
+            })
+            .catch(error => this.handleError(error))
+        }
     }
 
     loginGoogle(response){
@@ -204,6 +212,8 @@ class LoginComponenet extends Component {
                         <form className={`${classes.form} login-paper`} noValidate  onSubmit={this.registerGoogle}>
                             <Typography component="h1" variant="h5">Set Username</Typography>
                             <TextField
+                                error={ this.state.usernameError}
+                                helperText={this.state.usernameError? (this.state.username === '' ? "Please enter a username" :"Username already registered") : ""}
                                 variant="outlined"
                                 margin="normal"
                                 required

@@ -381,12 +381,11 @@ class SelectedJob extends Component {
         } else {
             if(this.props.loading){
                 return(
-					<div style={{marginTop:'20px', marginRight: '20px'}}>
-						<LoadingComponent/>
-					</div>
+                    <div style={{marginTop:'20px', marginRight: '20px'}}>
+                        <LoadingComponent/>
+                    </div>
                 )
             }else{
-                // console.log(this.state.appStatus)
                 return(
                     <Paper style={style.paper}>
                         <Grid container>

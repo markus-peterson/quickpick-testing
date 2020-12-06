@@ -2,9 +2,6 @@ import React from 'react';
 import { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from "@material-ui/core/styles";
-import GridContainer from "../Design/Grid/GridContainer.js";
-import GridItem from "../Design/Grid/GridItem.js";
-// import Button from "../Design/CustomButtons/Button.js";
 import { Paper, Grid, List, ListItem, Button } from '@material-ui/core/';
 
 const styles = theme => ({

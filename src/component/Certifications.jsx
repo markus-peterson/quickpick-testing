@@ -13,7 +13,7 @@ class Certifications extends Component {
     constructor() {
         super();
         this.state = {
-			quizes: []
+            quizes: []
         }
     }
 
@@ -67,7 +67,7 @@ class Certificate extends Component{
     constructor(){
         super();
         this.state = {
-			isLoading: true,
+            isLoading: true,
             title: '',
             certId: '',
             qCount: 0,
@@ -104,7 +104,7 @@ class Certificate extends Component{
             us.push(0)
         }
         this.setState({
-			isLoading: false,
+            isLoading: false,
             title: this.props.quiz[0].title,
             certId: this.props.quiz[0].certId,
             qCount: this.props.quiz[0].qCount,
@@ -257,10 +257,6 @@ class Question extends Component{
                 <ListItem>
                     <RadioGroup aria-label="gender" name="gender1" value={this.state.userAnswer} onChange={this.handleClick} style={style.item} >
                         {this.state.options}
-                        {/* <FormControlLabel value={'0'} control={<Radio />} label={this.state.options[0]} />
-                        <FormControlLabel value={'1'} control={<Radio />} label={this.state.options[1]} />
-                        <FormControlLabel value={'2'} control={<Radio />} label={this.state.options[2]} />
-                        <FormControlLabel value={'3'} control={<Radio />} label={this.state.options[3]} /> */}
                     </RadioGroup>
                 </ListItem>
             </List>

@@ -1,8 +1,7 @@
 import React from "react";
-import PlacesAutocomplete, {
-geocodeByAddress,
-getLatLng
-} from "react-places-autocomplete";
+import PlacesAutocomplete,
+	 { geocodeByAddress,
+	   getLatLng } from "react-places-autocomplete";
 import TextField from '@material-ui/core/TextField';
 import LoadingComponent from './LoadingComponent';
 

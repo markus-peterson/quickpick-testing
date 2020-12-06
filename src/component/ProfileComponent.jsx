@@ -68,7 +68,7 @@ class ProfileComponent extends Component {
 
 	async componentDidMount() {
 		const pathUser = window.location.href.split('profile/')[1];
-		let exist = await UserService.userExists(pathUser);
+		let exist = await UserService.usernameExists(pathUser);
 		this.setState({exists : exist});
 		const data = await	UserService
 							.executeGetUserService(pathUser)

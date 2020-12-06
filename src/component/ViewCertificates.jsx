@@ -7,7 +7,6 @@ import {CheckCircleOutline as CheckCircleOutlineIcon,
         Star as StarIcon} from '@material-ui/icons';
 import { green, red, blue } from '@material-ui/core/colors';
 import ErrorMessage from './ErrorMessage';
-import Alert from '@material-ui/lab/Alert';
 
 class ViewCertificates extends Component {
     constructor(){
@@ -28,11 +27,7 @@ class ViewCertificates extends Component {
         const data = await CertifyService.executeGetCertifications(this.props.userId).then(result => result.data)
         let certObjects = []
         for(let i = 0; i < data.length; i++){
-			console.log("HELLO " + this.props.showFailed + " " + this.props.userId)
-			if(data[i].score >= 80)
-				certObjects.push(<CertItem cert={data[i]} />)
-			else if(this.props.showFailed === 'true')
-            	certObjects.push(<CertItem cert={data[i]} />)
+            certObjects.push(<CertItem cert={data[i]} />)
         }
         this.setState({
             certificates: certObjects,
@@ -49,14 +44,9 @@ class ViewCertificates extends Component {
             }
         };
         return(
-			<>
-			{this.state.certificates.length === 0 ?
-				<Alert variant="outlined" severity='info' style={{'width':'fit-content'}}>no certifications completed</Alert> :
-				<List style={style.List}>
-					{this.state.certificates}
-				</List>
-			}
-			</>
+            <List style={style.List}>
+                {this.state.certificates}
+            </List>
         )
     }
 }
