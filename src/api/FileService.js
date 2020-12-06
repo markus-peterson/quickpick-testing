@@ -1,8 +1,6 @@
 import http from "./http-common";
 
 class FileService {
-
-	
 	uploadProfile(file, onUploadProgress) {
 		let formData = new FormData();
 		let user = sessionStorage.getItem('authenticatedUser');

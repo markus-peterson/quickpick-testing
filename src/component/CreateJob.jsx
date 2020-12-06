@@ -134,7 +134,8 @@ class CreateJob extends Component {
         if(this.state.isSubmitted){
             return(
                 <div className='jobContainer'>
-                    <div className="registerBack">
+                    <div className="background-container"/>
+                    <div>
                         <Container component="main" maxWidth="sm" style={style.container}>
                             <Grid container spacing={3} direction="column" alignContent="center" justify="center">
                                 <Grid item></Grid>
@@ -153,7 +154,7 @@ class CreateJob extends Component {
         }else{
             return(
                 <div className='jobContainer'>
-                    <div className="registerBack"></div>
+                    <div className="background-container"/>
                     <form>
                         <Container component="main" maxWidth={this.state.page === 1 ? "md":"sm"} style={style.container}>
                             <Grid container justify="center" spacing={3} direction="column">

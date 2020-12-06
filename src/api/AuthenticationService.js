@@ -13,6 +13,7 @@ class AutheticationService{
 
     logout(){
         sessionStorage.removeItem('authenticatedUser');
+        sessionStorage.removeItem('authenticatedUserId');
     }
 
     isUserLoggedIn(){

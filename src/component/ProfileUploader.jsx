@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 
+import LoadingComponent from './LoadingComponent';
+
 import output from '../api/connections';
 import FileService from "../api/FileService";
 import UserService from '../api/UserService';
+
 import blank_profile from '../img/blank-profile.png';
 import '../css/ProfileUploader.css';
 
 // import PDFViewer from 'pdf-viewer-reactjs'
 
 export default class ProfileUploader extends Component {
-	constructor(props) {
-		super(props);
-		
+	constructor() {
+		super();
 		this.state = {
 			urlTag: output + '/load/',
 			selectedFiles: undefined,
@@ -91,7 +93,7 @@ export default class ProfileUploader extends Component {
 	render() {
 		const style = {
 			Paper : {padding:20, marginTop:10, marginBottom:10},
-			image : {borderRadius:'50%', maxWidth: '100%', maxHeight: '100%', objectFit:"cover"}//width:"200px", height:"200px", 
+			image : {'borderRadius':'50%', width:"200px", height:"200px", "objectFit":"cover"}
 		}
 		// Upload once selected file exists
 		if(this.state.selectedFiles !== undefined && !this.state.uploaded) {
@@ -99,7 +101,11 @@ export default class ProfileUploader extends Component {
 			this.setState({uploaded: true});
 		}
 		if(this.state.isLoading)
-			return (<div>Loading...</div>);
+			return (
+				<div style={{marginTop:'20px', marginRight: '20px'}}>
+					<LoadingComponent/>
+				</div>
+			);
 		if(!this.state.uploadable)
 			return (
 				<div>
@@ -116,7 +122,9 @@ export default class ProfileUploader extends Component {
 					(<img className="image" src={this.state.urlTag + this.state.userObj.profileFileId} alt={this.state.userObj.username + "-profile-image"} style={style.image}/>) :
 					(<img className="image" src={blank_profile} alt="profile-blank" style={style.image}/>)
 				}
-				<div style={style.image} className="overlay"></div>
+				<div style={style.image} className="overlay">
+					<div style={{marginTop:'12px'}}>+</div>
+				</div>
 			</label>
 		);
 	}

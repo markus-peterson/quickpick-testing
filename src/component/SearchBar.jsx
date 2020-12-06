@@ -4,7 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from "@material-ui/core/styles";
 import GridContainer from "../Design/Grid/GridContainer.js";
 import GridItem from "../Design/Grid/GridItem.js";
-import Button from "../Design/CustomButtons/Button.js";
+// import Button from "../Design/CustomButtons/Button.js";
+import { Paper, Grid, List, ListItem, Button } from '@material-ui/core/';
 
 const styles = theme => ({
 	textField: {
@@ -66,13 +67,12 @@ class SearchBar extends Component{
             },
             button: {
                 margin: '0 20px',
-                backgroundColor: 'var(--light-blue)'
             }
         };
         return (
             <form onSubmit={this.handleSubmit}>
-                <GridContainer container justify="center" alignItems="center">
-                    <GridItem item xs={12} sm={5}>
+                <Grid container justify="center" alignItems="center" spacing={2}>
+                    <Grid item xs={12} sm={5}>
                         <TextField
                             variant="filled"
                             margin="normal"
@@ -92,8 +92,8 @@ class SearchBar extends Component{
                                 autoComplete: "off"
                             }}
                             />
-                    </GridItem>
-                    <GridItem item xs={12} sm={5}>
+                    </Grid>
+                    <Grid item xs={12} sm={5}>
                         <TextField
                             variant="filled"
                             margin="normal"
@@ -113,8 +113,8 @@ class SearchBar extends Component{
                                 autoComplete: "off"
                             }}
                             />
-                    </GridItem>
-                    <GridItem item xs={12} sm={2}>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
                         <Button
                             type="button"
                             variant="contained"
@@ -125,8 +125,8 @@ class SearchBar extends Component{
                             >
                             Search
                         </Button>
-                    </GridItem>
-                </GridContainer>
+                    </Grid>
+                </Grid>
             </form>
         );
     }

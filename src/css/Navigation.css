@@ -8,6 +8,7 @@
 	--yellow-color-transparent: #fffad1e6;
     --dark-blue: #00A29E;
     --white-transparent: #fffffff2;
+    --light-shadow: rgba(0, 0, 0, 0.4);
 }
 
 .navBar {

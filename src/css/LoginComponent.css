@@ -36,7 +36,7 @@ form[class^="jss"] {
     left: 0;
     bottom: 0;
     display: flex;
-    height: calc(100% - 90px);
+    height: calc(100% - 72px);
     z-index: -1;
     overflow-y: auto;
     flex-direction: column;

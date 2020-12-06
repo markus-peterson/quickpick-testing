@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import { Button, Paper } from '@material-ui/core/';
+
+import {ListItem, List, Button} from '@material-ui/core';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import {FindInPageOutlined as FindInPageOutlinedIcon, 
+		AnnouncementOutlined as AnnouncementOutlinedIcon} from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 
 import ProgressBar from './ProgressBar';
-import output from '../api/connections';
+import LoadingComponent from './LoadingComponent';
+
 import FileService from "../api/FileService";
 import UserService from '../api/UserService';
 
-// import PDFViewer from 'pdf-viewer-reactjs'
 
 export default class ResumeUploader extends Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		
 		this.state = {
-			urlTag: output + '/load/',
+			urlTag: window.location.href.split('profile/')[0]+'resume/',
 			selectedFiles: undefined,
 			currentFile: undefined,
 			progress: 0,
@@ -25,6 +31,7 @@ export default class ResumeUploader extends Component {
 			resumeI: null,
 			resumeCond: false,
 			uploadable: false,
+			uploaded: false,
 		};
 
 		this.selectFile = this.selectFile.bind(this);
@@ -47,14 +54,14 @@ export default class ResumeUploader extends Component {
 	selectFile(event) {
 		this.setState({
 			selectedFiles: event.target.files,
-			progress: 0
+			progress: 0,
+			uploaded: false
 		});
 	}
 
 	async uploadResume() {
 		let currentFile = this.state.selectedFiles[0];
 		this.setState({ progress: 0, currentFile: currentFile});
-		console.log(currentFile);
 		await FileService.uploadResume(currentFile, (event) => {
 			this.setState({
 				progress: Math.round((100 * event.loaded) / event.total),
@@ -79,61 +86,84 @@ export default class ResumeUploader extends Component {
 
 		this.setState({
 			selectedFiles: undefined,
+			uploaded: true
 		});
 	}
 
 	render() {
-		const style = {
-			Paper : {padding:20, marginTop:10, marginBottom:10}
-		}
+		let fileName = this.state.selectedFiles && this.state.selectedFiles.length > 0 ? this.state.selectedFiles[0].name : null;
+		const FileLoaded = () => (
+			<Alert severity="info">
+				{fileName} Selected
+			</Alert>
+		)
+		const ResumeLink = () => (
+			<List>
+				<a style={{'color': 'inherit', 'text-decoration' : 'none'}} href={this.state.urlTag + this.state.userObj.username} target="_blank">
+					<ListItem button>
+						<ListItemIcon title="PDF"><FindInPageOutlinedIcon /></ListItemIcon>
+						<ListItemText primary={'View Resume'} />
+					</ListItem>
+				</a>
+			</List>
+		)
+		const NoResumeLink = (props) => (
+			<List>
+				<ListItem>
+					<ListItemIcon title="Not Uploaded"><AnnouncementOutlinedIcon /></ListItemIcon>
+					<ListItemText primary={props.message} />
+				</ListItem>
+			</List>
+		)
 
 		if(this.state.isLoading)
-			return (<div>Loading...</div>);
+			return (
+				<div style={{marginTop:'20px', marginRight: '20px'}}>
+					<LoadingComponent/>
+				</div>
+			);
 		if(!this.state.uploadable)
 			return (
 				<div>
-					{/* <Paper style={style.Paper}> */}
-						{this.state.userObj.resumeFileId != null?
-							(<a href={this.state.urlTag + this.state.userObj.resumeFileId}>resume download</a>) :
-							"Resume Not Uploaded"
-						}
-					{/* </Paper> */}
+					{this.state.userObj.resumeFileId != null?
+						// (<a href={this.state.urlTag + this.state.userObj.username} target="_blank">view resume</a>) :
+						(<ResumeLink/>) :
+						<NoResumeLink message="Resume Not Uploaded"/>
+					}
 				</div>
 			);
 		return (
 			<div>
-				<Paper style={style.Paper}>
-					{this.state.userObj.resumeFileId != null?
-						(<a href={this.state.urlTag + this.state.userObj.resumeFileId}>resume download</a>) :
-						"Upload Resume"
-					}
-				</Paper>
+				{this.state.userObj.resumeFileId != null?
+					(<ResumeLink/>) :
+					<NoResumeLink message="Resume Not Found"/>
+				}
 				{/* <label className="btn btn-default">
 				<input type="file" onChange={this.selectFile} />
 				</label> */}
-				<label htmlFor="contained-button-file" className="btn btn-default">
-					<input
-					accept="application/*"
-					id="contained-button-file"
-					type="file"
-					onChange={this.selectFile}
-					style={{"display":"none"}}
-					/>
-					<Button variant="contained" color="primary" component="span">
-						Choose File
+				<div style={{'paddingBottom' : '10px'}}>
+					<label
+						htmlFor="contained-button-file"
+						className="btn btn-default"
+						style={{'paddingRight' : '10px'}}
+					>
+						<input
+						accept="application/*"
+						id="contained-button-file"
+						type="file"
+						onChange={this.selectFile}
+						style={{"display":"none"}}
+						/>
+						<Button variant="contained" color="default" component="span">
+							Choose File
+						</Button>
+					</label>
+					<Button variant="contained" color="primary" className="btn btn-success" disabled={!fileName} onClick={this.uploadResume}>
+						Upload
 					</Button>
-				</label>
-				<Button variant="contained" color="primary" className="btn btn-success" disabled={!this.state.selectedFiles} onClick={this.uploadResume}>
-					Upload
-				</Button>
-				{/* <button
-				className="btn btn-success"
-				disabled={!this.state.selectedFiles}
-				onClick={this.uploadResume}
-				>
-				Upload
-				</button> */}
-				{this.state.currentFile && ( <ProgressBar value={this.state.progress} /> )}
+				</div>
+				{fileName !== null && <FileLoaded/>}
+				{this.state.uploaded && ( <ProgressBar value={this.state.progress} /> )}
 				<div className="alert alert-light" role="alert">
 					{this.state.message}
 				</div>
