@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.ApplicationDao;
-import com.backend.dao.ShiftDao;
 import com.backend.dao.UserDao;
 import com.backend.model.Application;
 import com.backend.model.User;
@@ -21,9 +20,6 @@ public class ApplicationService {
 	
 	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
-	private ShiftDao shiftDao;
 	
 	@Transactional
 	public Application addApplication(Application app) {
@@ -92,30 +88,28 @@ public class ApplicationService {
 		return null;
 	}
 	@Transactional
-	public String deleteApplicationByJobId(String jobId) {
+	public String deleteApplicaionByJobId(String jobId) {
 		try {
-			List<Application> apps = appDao.findAllByJobId(jobId);
-			for(Application app : apps)
-				deleteApplicationById(app.getId());
-			return "deleted applications with jobId " + jobId;
+			appDao.deleteAllByJobId(jobId);
+			return "deleted applications for " + jobId;
 		}
 		catch(Exception e) {
-			return "could not delete applications with jobId " + jobId;
+			return "could not delete applications for " + jobId;
 		}
 	}
 
 	@Transactional
-	public String deleteApplicationById(String id) {
+	public String deleteApplicaionById(String id) {
 		try {
 			appDao.deleteById(id);
-			shiftDao.deleteAllByApplicationId(id);
 			return "deleted application " + id;
 		}
 		catch(Exception e) {
 			return "could not delete application " + id;
 		}
 	}
-
+	
+	@Transactional
 	public Application getApplication(String id) {
 		return appDao.findById(id).orElse(null);
 	}

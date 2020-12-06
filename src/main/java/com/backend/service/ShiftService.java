@@ -9,10 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.ApplicationDao;
 import com.backend.dao.ShiftDao;
-import com.backend.dao.UserDao;
 import com.backend.model.Application;
 import com.backend.model.Shift;
-import com.backend.model.User;
 
 @Service
 public class ShiftService {

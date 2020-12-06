@@ -28,7 +28,7 @@ public class ShiftController {
 		return shiftService.getShifts();
 	}
 	
-	@GetMapping("/getShiftById/{applicationId}")
+	@GetMapping("/getShiftById/{id}")
 	public Shift getShiftById(@PathVariable String id){
 		return shiftService.getShiftById(id);
 	}

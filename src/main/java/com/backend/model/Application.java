@@ -21,7 +21,7 @@ public class Application {
 	
 	private String jobId;
 	
-	private String userId;
+	private String userId;	
 	
 	private String status;
 	
