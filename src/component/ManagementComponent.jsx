@@ -115,7 +115,16 @@ class ManagementComponent extends Component {
                 position: "relative"
             }
         };
-
+        if(!isUserLoggedIn) {
+			return (
+				<div>
+					<div className="background-container"/>
+					<div style={{marginTop : '20px'}}>
+						<ErrorMessage text="Not Logged In"/>
+					</div>
+				</div>
+			)
+		}
         if(isUserLoggedIn && this.state.exists){
             return(
                 <div className="container">
@@ -610,7 +619,7 @@ class Application extends Component {
                     </ListItem>
                     }
                     <ListItem>
-                        <ListItemIcon title="cert"><VerifiedUserIcon /></ListItemIcon>
+                        <ListItemIcon title="certification"><VerifiedUserIcon /></ListItemIcon>
                         {this.state.certsExist ?
                             <ViewCertificates userId={this.state.application.userId} row/>:
                             <ErrorMessage severity='info' text='No certifications completed' justify='flex-start'/>

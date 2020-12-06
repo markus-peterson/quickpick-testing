@@ -142,9 +142,9 @@ class RegisterComponenet extends Component {
 		this.setState({errorMessage:errorM})
 	}
 
-	handleCharCheck(){
-		// const ignore
-	}
+	// handleCharCheck(){
+	// 	// const ignore
+	// }
 
 	render(){
 		const { classes } = this.props;

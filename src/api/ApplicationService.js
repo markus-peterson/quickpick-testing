@@ -104,7 +104,7 @@ class ApplicationService{
 		let passwordAuth =  'password'
 		let basicAuthHeader = 'Basic '+window.btoa(usernameAuth+':'+passwordAuth)
 
-		return axios.delete(`${appsTag}deleteApplicaionById/${id}`,{
+		return axios.delete(`${appsTag}deleteApplicationById/${id}`,{
 			headers:{
 				authorization: basicAuthHeader
 			}
