@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class JobController {
 	
 	@GetMapping("/getJob/{id}")
 	public Job getjob(@PathVariable String id) {
-		return jobService.getJobByID(id);
+		return jobService.getJobById(id);
 	}
 	
 	@GetMapping("/checkByAuthor/{author}")
@@ -49,13 +50,8 @@ public class JobController {
 	}
 
 	@PostMapping("/createJob")
-	public String createJob(@RequestBody Job jobDetails) {
-		try {
-			jobService.addNewJob(jobDetails);
-			return "Job Created Successfully";
-		} catch (Exception e) {
-			return "Could Not Create Job";
-		}
+	public Job createJob(@RequestBody Job jobDetails) {
+		return jobService.addNewJob(jobDetails);
 	}
 	
 	@PostMapping("/updateJob")
@@ -67,5 +63,8 @@ public class JobController {
 			return "Could Not Create Job";
 		}
 	}
-	
+	@DeleteMapping("/deleteJob/{id}")
+	public String deleteJob(@PathVariable String id) {
+		return jobService.deleteJob(id);
+	}
 }

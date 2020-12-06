@@ -23,7 +23,6 @@ public class Job {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	
-	
 	private String country;
 	private String dateAdded;
 	private String hasExpired;

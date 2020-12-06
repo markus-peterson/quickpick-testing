@@ -24,7 +24,6 @@ public class File {
 	private String type;
 
 	@Lob
-//	@Type(type = "org.hibernate.type.ImageType")
 	private byte[] data;
 
 

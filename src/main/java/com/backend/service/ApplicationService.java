@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.ApplicationDao;
+import com.backend.dao.ShiftDao;
 import com.backend.dao.UserDao;
 import com.backend.model.Application;
 import com.backend.model.User;
@@ -20,6 +21,9 @@ public class ApplicationService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private ShiftDao shiftDao;
 	
 	@Transactional
 	public Application addApplication(Application app) {
@@ -37,7 +41,6 @@ public class ApplicationService {
 		for(Application app : apps) {
 			User user = userDao.findById(app.getUserId()).orElse(null);
 			if(user != null) {
-				user.setPassword("");
 				users.add(user);
 			}
 		}
@@ -51,6 +54,7 @@ public class ApplicationService {
 		return appDao.findAllByUserId(userId);
 	}
 	
+	@Transactional
 	public Application acceptApplicant(String jobId, String userId) {
 		List<Application> appList = appDao.findAllByJobId(jobId);
 		for(Application app : appList) {
@@ -86,5 +90,33 @@ public class ApplicationService {
 			return null;
 		}
 		return null;
+	}
+	@Transactional
+	public String deleteApplicationByJobId(String jobId) {
+		try {
+			List<Application> apps = appDao.findAllByJobId(jobId);
+			for(Application app : apps)
+				deleteApplicationById(app.getId());
+			return "deleted applications with jobId " + jobId;
+		}
+		catch(Exception e) {
+			return "could not delete applications with jobId " + jobId;
+		}
+	}
+
+	@Transactional
+	public String deleteApplicationById(String id) {
+		try {
+			appDao.deleteById(id);
+			shiftDao.deleteAllByApplicationId(id);
+			return "deleted application " + id;
+		}
+		catch(Exception e) {
+			return "could not delete application " + id;
+		}
+	}
+
+	public Application getApplication(String id) {
+		return appDao.findById(id).orElse(null);
 	}
 }

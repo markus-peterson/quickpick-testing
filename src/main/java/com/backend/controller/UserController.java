@@ -60,7 +60,7 @@ public class UserController {
 	public String checkIfUsernameExists(@PathVariable String username){
 		if(userService.checkIfUsernameExists(username).contains("not")) {
 			return "registered";
-		}else {
+		} else {
 			return "new";
 		}
 	}
@@ -69,7 +69,7 @@ public class UserController {
 	public String checkIfEmailExists(@PathVariable String emailId){
 		if(userService.checkIfEmailExists(emailId).contains("not")) {
 			return "registered";
-		}else {
+		} else {
 			return "new";
 		}
 	}

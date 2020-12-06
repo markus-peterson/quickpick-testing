@@ -10,7 +10,7 @@ public interface JobServiceInterface {
 	
 	public List<Job> getJobs();
 	
-	public Job getJobByID(String id);
+	public Job getJobById(String id);
 
 //	List<Job> getJobsByFilter(Job jobDetails);
 	

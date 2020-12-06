@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.dao.FileDao;
 import com.backend.dao.UserDao;
@@ -31,6 +32,7 @@ public class FileController {
 	@Autowired
 	private UserDao userDao;
 
+	@Transactional
 	@PostMapping("/uploadProfile/{username}")
 	public UploadFileResponse uploadProfile(@PathVariable String username, @RequestParam("file") MultipartFile file) {
 		String message = "";
@@ -52,6 +54,7 @@ public class FileController {
 		}
 	}
 
+	@Transactional
 	@PostMapping("/uploadResume/{username}")
 	public UploadFileResponse uploadResume(@PathVariable String username, @RequestParam("file") MultipartFile file) {
 		String message = "";
@@ -73,6 +76,7 @@ public class FileController {
 		}
 	}
 	
+	@Transactional
 	@GetMapping("/load/{id}")
 	public ResponseEntity<byte[]> getFile(@PathVariable String id) {
 		File file = fileService.getFile(id);
@@ -83,6 +87,7 @@ public class FileController {
 				.body(file.getData());
 	}
 	
+	@Transactional
 	@GetMapping("/getFileName/{id}")
 	public String getFileName(@PathVariable String id) {
 		File file = fileService.getFile(id);

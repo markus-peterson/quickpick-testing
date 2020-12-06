@@ -17,36 +17,61 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name="\"Shift\"")
 public class Shift {
+	public enum Status {
+	    accepted,
+	    pending,
+	    denied
+	}
+	
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
-	
+
 	// Approved or not
-	private boolean approved = false;
-	
+	private Status status = Status.pending;
+
 	// Application shift is for
 	private String applicationId;
-	
+
 	// Time start and end of shift, 24 hr time
-	private Integer hourStart;
-	private Integer minuteStart;
-	private Integer hourEnd;
-	private Integer minuteEnd;
-	
-	public String toString() {
-		return hourStart+":"+minuteStart+"-"+hourEnd+":"+minuteEnd;
-	}
+	private int startYear;
+	private int startMonth;
+	private int startDay;
+	private int startHour;
+	private int startMinute;
+	private int endYear;
+	private int endMonth;
+	private int endDay;
+	private int endHour;
+	private int endMinute;
 	
 	public boolean isValid() {
-		if(	hourStart == null	|| hourEnd == null		||
-			minuteStart == null || minuteEnd == null	||
-			hourStart > 24		|| hourEnd > 24			||
-			minuteStart > 60	|| minuteEnd > 60		||
-			hourStart*60 + minuteStart > 1440			||
-			hourEnd*60 + minuteEnd > 1440)
-			return false;
+		return	isValidMonth() && isValidDay() && isValidHour() && isValidMonth();
+	}
+	
+	// js date object is weird, im just gonna store whatever they give me
+	public boolean isValidMonth() {
 		return true;
+//		return startMonth >= 0 && startMonth <= 11 && endMonth >= 0 && endMonth <= 11;
+	}
+	
+	// js date object is weird, im just gonna store whatever they give me
+	public boolean isValidDay() {
+		return true;
+//		return startDay >= 1 && startDay <= 31 && endDay >= 1 && endDay <= 31;
+	}
+	
+	public boolean isValidHour() {
+		return startHour >= 0 && startHour <= 24 && endHour >= 0 && endHour <= 24;
+	}
+	
+	public boolean isValidMinute() {
+		return startMinute >= 0 && startMinute <= 59 && startMinute >= 0 && startMinute <= 59;
+	}
+
+	public String toString() {
+		return "(" + startYear + ", " + startMonth + ", " + startDay + ", " + startHour + ", " + startMinute + " - " + endYear + ", " + endMonth + ", " + endDay + ", " + endHour + ", " + endMinute + ")";
 	}
 
 	public String getApplicationId() {
@@ -57,48 +82,8 @@ public class Shift {
 		this.applicationId = applicationId;
 	}
 
-	public boolean isApproved() {
-		return approved;
-	}
-
-	public void setApproved(boolean approved) {
-		this.approved = approved;
-	}
-
-	public Integer getHourStart() {
-		return hourStart;
-	}
-
-	public void setHourStart(Integer hourStart) {
-		this.hourStart = hourStart;
-	}
-
-	public Integer getMinuteStart() {
-		return minuteStart;
-	}
-
-	public void setMinuteStart(Integer minuteStart) {
-		this.minuteStart = minuteStart;
-	}
-
-	public Integer getHourEnd() {
-		return hourEnd;
-	}
-
-	public void setHourEnd(Integer hourEnd) {
-		this.hourEnd = hourEnd;
-	}
-
-	public Integer getMinuteEnd() {
-		return minuteEnd;
-	}
-
-	public void setMinuteEnd(Integer minuteEnd) {
-		this.minuteEnd = minuteEnd;
-	}
-
 	public String getId() {
 		return id;
 	}
-	
+
 }

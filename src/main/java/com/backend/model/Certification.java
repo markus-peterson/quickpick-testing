@@ -7,51 +7,52 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 @Entity
-@Table(name="\"Application\"")
-public class Application {
-	
+@Table(name="\"Certification\"")
+public class Certification {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	
-	private String jobId;
-	
 	private String userId;
 	
-	private String status;
+	private String certificate;
 	
-	public Application() {
+	private int score;
+
+	public Certification(String userId, String certificate, int score) {
 		super();
-	}
-	public Application(String jobId, String userId) {
-		super();
-		this.jobId = jobId;
 		this.userId = userId;
+		this.certificate = certificate;
+		this.score = score;
 	}
-	public String getJobId() {
-		return jobId;
+
+	public Certification() {
+		super();
 	}
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
-	}
-	public String getId() {
-		return id;
-	}
+
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getStatus() {
-		return status;
+
+	public String getCertificate() {
+		return certificate;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+
+	public void setCertificate(String certificate) {
+		this.certificate = certificate;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

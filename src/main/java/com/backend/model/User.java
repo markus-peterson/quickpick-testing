@@ -1,5 +1,8 @@
 package com.backend.model;
 
+import java.util.Arrays;
+import java.util.stream.Collector;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

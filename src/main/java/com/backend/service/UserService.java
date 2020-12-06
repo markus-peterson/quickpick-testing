@@ -126,7 +126,6 @@ public class UserService implements UserServiceInterface {
 	@Transactional
 	public void save(User resetUser) {
 		userDao.save(resetUser);
-		
 	}
 	
 	@Transactional
@@ -148,9 +147,6 @@ public class UserService implements UserServiceInterface {
 			if(user.getLastName() != null && !user.getLastName().isEmpty())
 				currentUser.setLastName(user.getLastName());
 			out = "lname";
-			if(user.getPassword() != null && !user.getPassword().isEmpty())
-				currentUser.setPassword(user.getPassword());
-			out = "pass";
 			if(user.getProfileFileId() != null && !user.getProfileFileId().isEmpty())
 				currentUser.setProfileFileId(user.getProfileFileId());
 			out = "profile";
