@@ -8,6 +8,8 @@ import CertifyService from '../api/CertifyService';
 import quizes from './certs';
 import { CertItem } from './ViewCertificates';
 import LoadingComponent from './LoadingComponent';
+import AuthenticationService from '../api/AuthenticationService';
+import ErrorMessage from './ErrorMessage';
 
 class Certifications extends Component {
     constructor() {
@@ -26,6 +28,14 @@ class Certifications extends Component {
     }
 
     render(){
+		const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
+		if(!isUserLoggedIn)
+			return (
+				<div style={{marginTop : '20px'}}>
+					<div className="background-container"/>
+					<ErrorMessage text="Not Logged In"/>
+				</div>
+			)
         const style = {
             Paper : {
                 padding:20, 

@@ -22,7 +22,6 @@ import Alert from '@material-ui/lab/Alert';
 import LoadingComponent from './LoadingComponent';
 import ProfileJobDelete from './ProfileJobDelete';
 
-import output from '../api/connections';
 import JobService from '../api/JobService';
 import UserService from '../api/UserService';
 import ApplicationService from '../api/ApplicationService';
@@ -32,7 +31,6 @@ export default class ProfileJobList extends Component{
 	constructor() {
 		super();
 		this.state = {
-			urlTag: output + '/load/',
 			isLoading: true,
 			userObj: null,
 			jobs: null,
@@ -105,9 +103,9 @@ export default class ProfileJobList extends Component{
 							)}
 						</List>
 					</Grid> :
-					// <Grid >
+					<div style={{marginTop : '10px'}}>
 						<Alert variant="outlined" severity='info' style={{'width':'fit-content'}}>no jobs</Alert>
-					// </Grid>
+					</div>
 				}
 			</Grid>
 		)
@@ -209,7 +207,7 @@ class JobElement extends Component {
 									<ListItemIcon title="salary"><AttachMoneyIcon /></ListItemIcon>
 									<ListItemText primary={this.props.jobData.jobSalary} />
 								</ListItem>}
-								<ListItem button style={style.nested}>
+								<ListItem style={style.nested}>
 									{this.props.jobType === 'applied' ?
 										<ProfileJobDelete jobData={this.props.jobData} update={this.props.update} appData={this.props.appData} jobType='applied'/> :
 										(sessionStorage.getItem('authenticatedUserId') === this.props.jobData.author &&

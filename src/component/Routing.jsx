@@ -11,6 +11,7 @@ import LandingComponent from './LandingComponent';
 import ManagementComponent from './ManagementComponent';
 import ForgotPasswordComponent from './ForgotPassword';
 import ResetPasswordComponent from './ResetPassword';
+import ChatHome from './ChatHome';
 import ResumeViewer from './ResumeViewer';
 import Certifications from './Certifications';
 import ShiftSelect from './ShiftSelect';
@@ -36,6 +37,7 @@ class AppRouting extends Component {
                             <Route path="/resume/:name"         component = {ResumeViewer}/>
                             <Route path="/ForgotPassword"       component = {ForgotPasswordComponent}/>
                             <Route path="/resetpassword/:token" component = {ResetPasswordComponent}/>
+                            <Route path="/chatHome"             component = {ChatHome}/>
                             {/* <AuthenticatedRoute path="/dashboard" component= {Dashboard}/> */}
                             <Route component = {ErrorComponent}/>
                         </Switch>

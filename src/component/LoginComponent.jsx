@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AutheticationService from '../api/./AuthenticationService.js'
+import AuthenticationService  from '../api/./AuthenticationService.js'
 import UserService from '../api/UserService';
 // import Facebook from './Facebook'
 import '../css/LoginComponent.css'
@@ -8,6 +8,8 @@ import { Avatar, Button, CssBaseline, TextField, Checkbox, Link, Grid, Box, Typo
 import { withStyles } from "@material-ui/core/styles";
 import { GoogleLogin } from 'react-google-login';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import ReCAPTCHA from "react-google-recaptcha";
+import ErrorMessage from './ErrorMessage';
 
 const styles = theme => ({
     body: {
@@ -52,7 +54,10 @@ class LoginComponenet extends Component {
             externalCond: false,
             userObj: null,
             incorrect: 0,
-            usernameError: false
+            usernameError: false,
+            passwordError: false,
+            captchaError: false,
+			captcha: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.loginClicked = this.loginClicked.bind(this)
@@ -62,6 +67,7 @@ class LoginComponenet extends Component {
         this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
         this.registerGoogle = this.registerGoogle.bind(this);
         this.loginGoogle = this.loginGoogle.bind(this);
+        this.captcha = this.captcha.bind(this);
     }
 
     handleChange(event){
@@ -76,32 +82,43 @@ class LoginComponenet extends Component {
     }
 
     loginClicked(event){
-        console.log('check')
-        event.preventDefault()
-        const user = {
-            password: this.state.password,
-            username:this.state.username,
-            firstName: null,
-            lastName: null,
-            address: null,
-            emailId: null
-        }
-        console.log(user)
-        console.log('Inside the login function')
-        //let loginSccess = false;
-        UserService.registerLogin(user)
-        .then( response => this.handleSuccessResponse(response))
-		.catch((error) => {
-            console.log("ALLAL", error);
-            console.log("data", { user });
+        let uError = this.state.username === ''
+        let pError = this.state.password === ''
+        let cError = !this.state.captcha
+        
+        this.setState({
+            usernameError: uError,
+            passwordError: pError,
+            captchaError: cError
         })
+        if(!uError && !pError && !cError){
+            console.log('check')
+            event.preventDefault()
+            const user = {
+                password: this.state.password,
+                username:this.state.username,
+                firstName: null,
+                lastName: null,
+                address: null,
+                emailId: null
+            }
+            console.log(user)
+            console.log('Inside the login function')
+            //let loginSccess = false;
+            UserService.registerLogin(user)
+            .then( response => this.handleSuccessResponse(response))
+            .catch((error) => {
+                console.log("ALLAL", error);
+                console.log("data", { user });
+            })
+        }
     }
 
     handleSuccessResponse(response){
         if (response.status === 200) {
             if (response.data.username === this.state.username || response.data.emailId === this.state.emailId || response.data.emailId === this.state.username){
                 console.log('Successful Login')
-                AutheticationService.registerSuccessfulLogin(response.data)
+                AuthenticationService .registerSuccessfulLogin(response.data)
                 this.props.history.push(`/`)
                 window.location.reload() // temp solution to user API call bug
             }else if (response.data.username === "Incorrect Password"){
@@ -197,9 +214,40 @@ class LoginComponenet extends Component {
         })
     }
 
-    render(){
+    captcha(){
+		this.setState({
+			captcha: true,
+			captchaError: false
+		})
+	}
 
+    render(){
+        const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
+		if(isUserLoggedIn){
+			return (
+				<div style={{marginTop : '20px'}}>
+					<div className="registerBack"/>
+					<ErrorMessage severity='info' text="User Already Logged In"/>
+				</div>
+            )
+        }
         const { classes } = this.props;
+		const captchaStyles = {
+			normal: {
+				border: 'none',
+				width: 304,
+				height: 78,
+				borderRadius: 3,
+				margin: 'auto'
+			},
+			error: {
+				border: 'red solid 1px',
+				width: 304,
+				height: 78,
+				borderRadius: 3,
+				margin: 'auto'
+			}
+		}
         if (this.state.externalCond){
             return(
                 <Container component="main" maxWidth="xs">
@@ -250,7 +298,7 @@ class LoginComponenet extends Component {
                         <form className={classes.form} noValidate  onSubmit={this.loginClicked} >
                             <Typography component="h1" variant="h5">Sign in</Typography>
                             <TextField
-                                error={ this.state.incorrect === 1 }
+                                error={ this.state.incorrect === 1 || this.state.usernameError}
                                 variant="outlined"
                                 margin="normal"
                                 required
@@ -259,7 +307,7 @@ class LoginComponenet extends Component {
                                 label="Username or Email"
                                 name="username"
                                 autoComplete="username"
-                                helperText={this.state.incorrect === 1 ? "Username or email not registered" : ""}
+                                helperText={(this.state.incorrect === 1 ? "Username or email not registered" : "") || (this.state.usernameError ? 'Please enter you username' : '')}
                                 value={this.state.username}
                                 autoFocus
                                 inputProps={{
@@ -268,7 +316,7 @@ class LoginComponenet extends Component {
                                     autoComplete: "off"
                                 }}/>
                             <TextField
-                                error={ this.state.incorrect > 0 }
+                                error={ this.state.incorrect > 0 || this.state.passwordError}
                                 variant="outlined"
                                 margin="normal"
                                 required
@@ -279,7 +327,7 @@ class LoginComponenet extends Component {
                                 id="password"
                                 value={this.state.password}
                                 autoComplete="current-password"
-                                helperText={this.state.incorrect === 2 ? "Incorrect password" : ""}
+                                helperText={(this.state.incorrect === 2 ? "Incorrect password" : "") || (this.state.passwordError ? 'Please enter you password' : '')}
                                 inputProps={{
                                     type: "password",
                                     onChange: this.handleChange,
@@ -288,6 +336,13 @@ class LoginComponenet extends Component {
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Remember me" />
+                            <ReCAPTCHA 
+                                sitekey='6Le7D_wZAAAAAJMN-rZltYW2SHN4aFCBNDHVMg_N'
+                                onChange={this.captcha}
+                                style={this.state.captchaError ? captchaStyles.error : captchaStyles.normal }
+                                className="captch"
+                                size='normal'
+                                />
                             <Button type="Button" fullWidth variant="contained" color="primary"
                                 className={classes.submit}
                                 onClick={this.loginClicked}>

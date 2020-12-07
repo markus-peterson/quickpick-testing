@@ -13,6 +13,7 @@ import LoadingComponent from './LoadingComponent';
 import ResumeUploader from './ResumeUploader';
 import ProfileUploader from './ProfileUploader';
 import ProfileJobList from './ProfileJobList';
+import ProfileShiftList from './ProfileShiftList';
 import ViewCertificates from './ViewCertificates';
 import CertifyService from '../api/CertifyService';
 
@@ -69,7 +70,7 @@ class ProfileComponent extends Component {
 	async componentDidMount() {
 		const pathUser = window.location.href.split('profile/')[1];
 		let exist = await UserService.usernameExists(pathUser);
-		this.setState({exists : exist});
+		this.setState({exists : exist.data !== 'new'});
 		const data = await	UserService
 							.executeGetUserService(pathUser)
 							.then(result => result.data);
@@ -304,7 +305,17 @@ class ProfileComponent extends Component {
 							</Grid>
 						</Grid>
 					}
+					{this.state.editable && 
+						<Grid container justify="center">
+							<Grid item sm={6}>
+								<Paper style={style.Paper}>
+									<ProfileShiftList key={this.state.userObj.username} username={this.state.userObj.username}/>
+								</Paper>
+							</Grid>
+						</Grid>
+					}
 				</Grid>
+				<div style={{marginBottom : '20px'}}/>
 			</div>
 		);
 	}

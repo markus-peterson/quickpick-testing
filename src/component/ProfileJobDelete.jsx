@@ -100,10 +100,10 @@ export default class ProfileJobDelete extends Component {
 					/>
 					</DialogContent>
 					<DialogActions>
-					<Button variant="contained" color='default' onClick={()=>(this.setState({open : false}))} >
+					<Button variant="outlined" color='primary' onClick={()=>(this.setState({open : false}))} >
 						Cancel
 					</Button>
-					<Button variant="contained" onClick={this.deleteJob} color="secondary" disabled={activateDelete}>
+					<Button variant="outlined" onClick={this.deleteJob} color="secondary" disabled={activateDelete}>
 						Delete
 					</Button>
 					</DialogActions>

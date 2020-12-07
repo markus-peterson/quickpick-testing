@@ -15,6 +15,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { withStyles } from "@material-ui/core/styles";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const styles = theme => ({
 	body: {
@@ -43,8 +44,8 @@ const styles = theme => ({
 });
 
 class RegisterComponenet extends Component {
-	constructor(props){
-		super(props)
+	constructor(){
+		super()
 		
 		this.state = {
 			firstName: '',
@@ -62,12 +63,15 @@ class RegisterComponenet extends Component {
 			addressError: false,
 			emailError: false,
 			passwordError: false,
+			captchaError: false,
+			captcha: false
 		};
 		
 		this.update = this.update.bind(this);
 		this.registerClicked = this.registerClicked.bind(this);
 		this.handleError = this.handleError.bind(this);
 		this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
+		this.captcha = this.captcha.bind(this);
 	}
 
 	update(e) {
@@ -86,22 +90,30 @@ class RegisterComponenet extends Component {
 	}
 
 	async registerClicked(){
-		let uError = (await UserService.usernameExists(this.state.username).then(res => res.data === 'registered')) || this.state.username.includes(' ')
+		let uError = this.state.username === ''
+		if(!uError){
+			uError = (await UserService.usernameExists(this.state.username).then(res => res.data === 'registered')) || this.state.username.includes(' ')
+		}
 		let fError = this.state.firstName === ''
 		let lError = this.state.lastName === ''
 		let aError = this.state.address === ''
-		let eError = await UserService.emailExists(this.state.emailId).then(res => res.data === 'registered')
+		let eError = this.state.emailId === ''
+		if(!eError){
+			eError = await UserService.emailExists(this.state.emailId).then(res => res.data === 'registered')
+		}
 		let pError = this.state.password === '' || this.state.password !== this.state.retype_password
+		let cError = !this.state.captcha
 		this.setState({
 			usernameError: uError,
 			firstNameError: fError,
 			lastNameError: lError,
 			addressError: aError,
 			emailError: eError,
-			passwordError: pError
+			passwordError: pError,
+			captchaError: cError
 		})
 
-		if(!uError && !fError && !lError && !aError && !eError && !pError){
+		if(!uError && !fError && !lError && !aError && !eError && !pError && !cError){
 			const user = {
 				username: this.state.username,
 				firstName: this.state.firstName,
@@ -142,12 +154,32 @@ class RegisterComponenet extends Component {
 		this.setState({errorMessage:errorM})
 	}
 
-	// handleCharCheck(){
-	// 	// const ignore
-	// }
+	captcha(){
+		this.setState({
+			captcha: true,
+			captchaError: false
+		})
+	}
 
 	render(){
 		const { classes } = this.props;
+		const captchaStyles = {
+			normal: {
+				border: 'none',
+				width: 304,
+				height: 78,
+				borderRadius: 3,
+				margin: 'auto'
+			},
+			error: {
+				border: 'red solid 1px',
+				width: 304,
+				height: 78,
+				borderRadius: 3,
+				margin: 'auto'
+			}
+		}
+
 		return(
 			<Container component="main" maxWidth="xs" style={{"z-index":-1}}>
 					<div className="registerBack"></div>
@@ -298,6 +330,13 @@ class RegisterComponenet extends Component {
 							autoComplete: "off"
 						}}
 					/>
+					<ReCAPTCHA 
+						sitekey='6Le7D_wZAAAAAJMN-rZltYW2SHN4aFCBNDHVMg_N'
+						onChange={this.captcha}
+						style={this.state.captchaError ? captchaStyles.error : captchaStyles.normal }
+						className="captch"
+						size='normal'
+						/>
 					<Button
 						type="button"
 						fullWidth
@@ -309,11 +348,11 @@ class RegisterComponenet extends Component {
 					Register
 					</Button>
 					<Grid container>
-					<Grid item >
-						<Link href="login" variant="body2">
-						{"Already have an Account? Sign In"}
-						</Link>
-					</Grid>
+						<Grid item >
+							<Link href="login" variant="body2">
+							{"Already have an Account? Sign In"}
+							</Link>
+						</Grid>
 					</Grid>
 				</form>
 				</div>

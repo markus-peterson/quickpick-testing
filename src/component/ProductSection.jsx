@@ -60,7 +60,7 @@ export default function ProductSection() {
             <div style={style.space}>
                 <GridContainer justify="center">
                     <GridItem xs={12} sm={12} md={12}>
-                        <h2 className={style.title} style={style.feat}>Features</h2>
+                        <h1 className={style.title} style={style.feat}>Core Features</h1>
                         <br />
                         <GridContainer style={style.items}>
                             <GridItem xs={12} sm={12} md={4}>

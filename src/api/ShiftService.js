@@ -99,9 +99,24 @@ class ShiftService{
 		const {userTag} = this.state;
 		let username = 'user'
 		let password =  'password'
-		
+		console.log('approving', id)
 		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-			return axios.post(userTag+'approveShift/'+id,
+		return axios.get(userTag+'approveShift/'+id,
+			{
+				headers:{
+					authorization: basicAuthHeader
+				}
+			}
+		)
+	}
+	
+	pendingShift(id){
+		const {userTag} = this.state;
+		let username = 'user'
+		let password =  'password'
+		console.log('pending', id)
+		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
+		return axios.get(userTag+'pendingShift/'+id,
 			{
 				headers:{
 					authorization: basicAuthHeader
@@ -114,9 +129,9 @@ class ShiftService{
 		const {userTag} = this.state;
 		let username = 'user'
 		let password =  'password'
-		
+		console.log('denying', id)
 		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-			return axios.post(userTag+'denyShift/'+id,
+		return axios.get(userTag+'denyShift/'+id,
 			{
 				headers:{
 					authorization: basicAuthHeader
@@ -131,7 +146,7 @@ class ShiftService{
 		let password =  'password'
 		
 		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-			return axios.post(userTag+'updateShift/'+id, shift,
+		return axios.post(userTag+'updateShift/'+id, shift,
 			{
 				headers:{
 					authorization: basicAuthHeader,
@@ -147,7 +162,7 @@ class ShiftService{
 		let password =  'password'
 		
 		let basicAuthHeader = 'Basic '+window.btoa(username+':'+password)
-			return axios.delete(userTag+'deleteShiftById/'+id,
+		return axios.delete(userTag+'deleteShiftById/'+id,
 			{
 				headers:{
 					authorization: basicAuthHeader

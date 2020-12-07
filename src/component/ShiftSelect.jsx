@@ -11,9 +11,9 @@ import {Scheduler,
 		EditRecurrenceMenu,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import {ListItem, List, Grid, MenuItem, ListItemText, ListItemIcon, FormControl, InputLabel, Select} from '@material-ui/core';
-import {HourglassEmpty as HourglassEmptyIcon,
-		CheckCircleOutline as CheckCircleOutlineIcon,
-		NotInterested as NotInterestedIcon,
+import {DateRange as HourglassEmptyIcon,
+		EventAvailable as CheckCircleOutlineIcon,
+		EventBusy as NotInterestedIcon,
 		AccessTime as AccessTimeIcon,
 	} from '@material-ui/icons';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -173,7 +173,7 @@ class AppointmentFormContainerBasic extends React.PureComponent {
 
 	async commitAppointment(type) {
 		console.log(this.state.startDate + " " + this.state.endDate);
-		if(this.state.title !== "") {
+		if(this.state.title !== "" && this.state.timeStart !== null && this.state.timeEnd !== null) {
 			if(type === 'added') {
 				console.log(this.state.timeStart.getFullYear(),
 							this.state.timeStart.getMonth(),
@@ -306,6 +306,9 @@ class AppointmentFormContainerBasic extends React.PureComponent {
 		visibleChange();
 		cancelAppointment();
 		};
+		let allowCreate =	!(this.state.title !== "" &&
+							this.state.timeStart !== null &&
+							this.state.timeEnd !== null);
 		return (
 		<AppointmentForm.Overlay
 			visible={visible}
@@ -369,7 +372,7 @@ class AppointmentFormContainerBasic extends React.PureComponent {
 				<div className={classes.buttonGroup}>
 					{!isNewAppointment && (
 					<Button
-						variant="outlined"
+						variant="contained"
 						color="secondary"
 						className={classes.button}
 						onClick={() => {
@@ -381,9 +384,10 @@ class AppointmentFormContainerBasic extends React.PureComponent {
 					</Button>
 					)}
 					<Button
-					variant="outlined"
+					variant="contained"
 					color="primary"
 					className={classes.button}
+					disabled={allowCreate}
 					onClick={() => {
 						visibleChange();
 						applyChanges();
@@ -476,13 +480,13 @@ const TooltipContent = ({
 		let statusIcon;
 		switch(appointmentData.status) {
 		case 'pending':
-			statusIcon = () => (<HourglassEmptyIcon style={{color: blue[500]}} />);
+			statusIcon = () => (<HourglassEmptyIcon style={{color: "#FFCA28"}} />);
 			break;
 		case 'accepted':
-			statusIcon = () => (<CheckCircleOutlineIcon style={{color: green[500]}} />);
+			statusIcon = () => (<CheckCircleOutlineIcon style={{color: "#1DE8B5"}} />);
 			break;
 		default: // denied
-			statusIcon = () => (<NotInterestedIcon style={{color: red[500]}} />);
+			statusIcon = () => (<NotInterestedIcon style={{color: "#EF5350"}} />);
 			break;
 		}
 		return (
@@ -507,7 +511,8 @@ const TooltipContent = ({
 							<ListItemIcon>
 								<AccessTimeIcon />
 							</ListItemIcon>
-							<ListItemText primary=
+							<ListItemText
+								primary=
 								{`${formatDate(appointmentData.startDate, {
 										hour: "numeric",
 										minute: "numeric"
@@ -534,7 +539,7 @@ const CustomAppointment = ({ style, ...restProps }) => {
 		return (
 			<Appointments.Appointment
 			{...restProps}
-			style={{ ...style, backgroundColor: "#42A5F5" }}
+			style={{ ...style, backgroundColor: "#FFCA28" }}
 			/>
 		);
 	if (restProps.data.status === "accepted")
@@ -861,11 +866,11 @@ class ShiftSelect extends React.PureComponent {
 			onClose={this.cancelDelete}
 			>
 			<DialogTitle>
-				Delete Appointment
+				Delete Shift
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-				Are you sure you want to delete this appointment?
+				Are you sure you want to delete this shift?
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
